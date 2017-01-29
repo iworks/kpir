@@ -26,37 +26,35 @@ if ( class_exists( 'iworks_kpir_posttypes_invoice' ) ) {
 	return;
 }
 
-class iworks_kpir_posttypes_invoice {
+require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
 
-	private $post_type_name = 'iworks_kpir_invoice';
+class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
+
+	protected $post_type_name = 'iworks_kpir_invoice';
 
 	public function __construct() {
-		add_action( 'init', array( $this, 'register' ), 0 );
-	}
-
-	public function get_name() {
-		return $this->post_type_name;
+		parent::__construct();
 	}
 
 	public function register() {
 
 		$labels = array(
-			'name'                  => _x( 'Post Types', 'Post Type General Name', 'kpir' ),
-			'singular_name'         => _x( 'Post Type', 'Post Type Singular Name', 'kpir' ),
-			'menu_name'             => __( 'Post Types', 'kpir' ),
-			'name_admin_bar'        => __( 'Post Type', 'kpir' ),
+			'name'                  => _x( 'Invoices', 'Invoice General Name', 'kpir' ),
+			'singular_name'         => _x( 'Invoice', 'Invoice Singular Name', 'kpir' ),
+			'menu_name'             => __( 'KPiR', 'kpir' ),
+			'name_admin_bar'        => __( 'Invoice', 'kpir' ),
 			'archives'              => __( 'Item Archives', 'kpir' ),
 			'attributes'            => __( 'Item Attributes', 'kpir' ),
-			'parent_item_colon'     => __( 'Parent Item:', 'kpir' ),
-			'all_items'             => __( 'All Items', 'kpir' ),
-			'add_new_item'          => __( 'Add New Item', 'kpir' ),
+			'parent_item_colon'     => __( 'Parent Invoice:', 'kpir' ),
+			'all_items'             => __( 'All Invoices', 'kpir' ),
+			'add_new_item'          => __( 'Add New Invoice', 'kpir' ),
 			'add_new'               => __( 'Add New', 'kpir' ),
-			'new_item'              => __( 'New Item', 'kpir' ),
-			'edit_item'             => __( 'Edit Item', 'kpir' ),
-			'update_item'           => __( 'Update Item', 'kpir' ),
-			'view_item'             => __( 'View Item', 'kpir' ),
-			'view_items'            => __( 'View Items', 'kpir' ),
-			'search_items'          => __( 'Search Item', 'kpir' ),
+			'new_item'              => __( 'New Invoice', 'kpir' ),
+			'edit_item'             => __( 'Edit Invoice', 'kpir' ),
+			'update_item'           => __( 'Update Invoice', 'kpir' ),
+			'view_item'             => __( 'View Invoice', 'kpir' ),
+			'view_items'            => __( 'View Invoices', 'kpir' ),
+			'search_items'          => __( 'Search Invoice', 'kpir' ),
 			'not_found'             => __( 'Not found', 'kpir' ),
 			'not_found_in_trash'    => __( 'Not found in Trash', 'kpir' ),
 			'featured_image'        => __( 'Featured Image', 'kpir' ),
@@ -70,11 +68,11 @@ class iworks_kpir_posttypes_invoice {
 			'filter_items_list'     => __( 'Filter items list', 'kpir' ),
 		);
 		$args = array(
-			'label'                 => __( 'Post Type', 'kpir' ),
-			'description'           => __( 'Post Type Description', 'kpir' ),
+			'label'                 => __( 'Invoice', 'kpir' ),
+			'description'           => __( 'Invoice Description', 'kpir' ),
 			'labels'                => $labels,
 			'supports'              => array(),
-			'taxonomies'            => array( 'category', 'post_tag' ),
+			'taxonomies'            => array(),
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,
@@ -87,6 +85,7 @@ class iworks_kpir_posttypes_invoice {
 			'exclude_from_search'   => false,
 			'publicly_queryable'    => true,
 			'capability_type'       => 'page',
+			'menu_icon'             => 'dashicons-book',
 		);
 		register_post_type( $this->post_type_name, $args );
 

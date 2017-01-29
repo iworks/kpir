@@ -26,27 +26,28 @@ if ( class_exists( 'iworks_kpir' ) ) {
 	return;
 }
 
-class iworks_kpir
-{
-	private $base;
+require_once( dirname( dirname( __FILE__ ) ) . '/iworks.php' );
+
+class iworks_kpir extends iworks {
+
 	private $capability;
-	private $post_type_company;
+	private $post_type_contractor;
 	private $post_type_invoice;
 
 	public function __construct() {
+		parent::__construct();
 
-		$this->base              = dirname( dirname( __FILE__ ) );
-		$this->capability        = apply_filters( 'iworks_upprev_capability', 'manage_options' );
+		$this->capability        = apply_filters( 'iworks_kpir_capability', 'manage_options' );
 
 		/**
 		 * post_types
 		 */
-		$post_types = array( 'company', 'invoice' );
+		$post_types = array( 'invoice', 'contractor' );
 		foreach ( $post_types as $post_type ) {
 			include_once( $this->base.'/iworks/kpir/posttypes/'.$post_type.'.php' );
-			$class = sprintf( 'iworks_kpir_posttypes_%s', $post_type );
-			$value = sprintf( 'post_type_%s', $post_type );
+            $class = sprintf( 'iworks_kpir_posttypes_%s', $post_type );
+            $value = sprintf( 'post_type_%s', $post_type );
 			$this->$value = new $class();
-		}
+        }
 	}
 }

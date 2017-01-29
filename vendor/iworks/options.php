@@ -61,20 +61,23 @@ class iworks_options
 		$this->get_option_array();
 	}
 
-	public function admin_menu( $parent = false ) {
+	public function admin_menu() {
 
 		$data = $this->get_option_array();
 		$key = 'index';
 		if ( ! isset( $this->options ) ) {
 			return;
 		}
-		if ( ! array_key_exists( 'menu', $data ) ) {
-			$data['menu'] = '';
+		$keys_to_sanitize = array( 'menu', 'parent' );
+		foreach ( $keys_to_sanitize as $key_to_sanitize ) {
+			if ( ! array_key_exists( $key_to_sanitize, $data ) ) {
+				$data[ $key_to_sanitize ] = '';
+			}
 		}
 		if ( 'submenu' == $data['menu'] ) {
-			if ( ! empty( $parent ) ) {
+			if ( ! empty( $data['parent'] ) ) {
 				$this->pagehooks[ $key ] = add_submenu_page(
-					$parent,
+					$data['parent'],
 					isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
 					$data['page_title'],
 					apply_filters( 'iworks_options_capagility', 'manage_options', 'settings' ),
@@ -524,14 +527,12 @@ class iworks_options
 					$content .= apply_filters( $filter_name, $select );
 				break;
 				case 'textarea':
-					$value = $this->get_option( $option_name, $option_group );
-					$content .= sprintf(
-						'<textarea name="%s" class="%s" rows="%d">%s</textarea>',
-						$html_element_name,
-						$option['class'],
-						isset( $option['rows'] )? $option['rows']:3,
-						( ! $value && isset( $option['default'] ))? $option['default']:$value
-					);
+                    $value = $this->get_option( $option_name, $option_group );
+                    $value = ( ! $value && isset( $option['default'] ))? $option['default']:$value;
+                    $atts = array(
+                        'rows' => isset( $option['rows'] )? $option['rows']:3,
+                    );
+                    $content .= $this->textarea( $html_element_name, $value, $option['class'], $atts );
 				break;
 				case 'heading':
 					if ( isset( $option['label'] ) && $option['label'] ) {
@@ -1172,5 +1173,38 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 			$opts[] = $one;
 		}
 		return $opts;
-	}
+    }
+
+
+    /**
+     * input types
+     */
+
+    public function get_field_by_type( $type, $name, $value = '', $class = '', $atts = array() ) {
+        if ( method_exists( $this, $type ) ) {
+            return $this->$type( $name, $value, $class, $atts );
+        }
+        return 'wrong type';
+    }
+
+    private function textarea( $name, $value = '', $class = '', $atts = array() ) {
+        $atts = '';
+        if ( ! empty( $class ) ) {
+            $atts .= sprintf( ' class="%s"', esc_attr( $class ) );
+        }
+        $allowed_attributes = array( 'id', 'rows', 'cols' );
+        foreach( $allowed_attributes as $key ) {
+            if ( isset( $atts[$key] ) && ! empty( $atts[$key] ) ) {
+                $atts .= sprintf( ' %s="%s"', $key, esc_attr( $atts[$key] ) );
+            }
+        }
+        return sprintf(
+            '<textarea name="%s" %s>%s</textarea>',
+            $name,
+            $atts,
+            $value
+        );
+    }
+
+
 }
