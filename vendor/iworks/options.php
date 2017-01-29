@@ -3,13 +3,13 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.4.0
+Version: 2.5.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2011-2015 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2016 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -46,7 +46,7 @@ class iworks_options
 	public function __construct() {
 
 		$this->notices              = array();
-		$this->version              = '2.4.0';
+		$this->version              = '2.5.0';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -61,15 +61,30 @@ class iworks_options
 		$this->get_option_array();
 	}
 
-	public function admin_menu() {
+	public function admin_menu( $parent = false ) {
 
+		$data = $this->get_option_array();
+		$key = 'index';
 		if ( ! isset( $this->options ) ) {
 			return;
 		}
-		foreach ( $this->options as $key => $data ) {
-			if ( ! array_key_exists( 'menu', $data ) ) {
-				$data['menu'] = '';
+		if ( ! array_key_exists( 'menu', $data ) ) {
+			$data['menu'] = '';
+		}
+		if ( 'submenu' == $data['menu'] ) {
+			if ( ! empty( $parent ) ) {
+				$this->pagehooks[ $key ] = add_submenu_page(
+					$parent,
+					isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
+					$data['page_title'],
+					apply_filters( 'iworks_options_capagility', 'manage_options', 'settings' ),
+					$this->get_option_name( $key ),
+					array( $this, 'show_page' )
+				);
+				add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
 			}
+		} else {
+
 			switch ( $data['menu'] ) {
 				case 'comments':
 				case 'dashboard':
@@ -803,7 +818,7 @@ class iworks_options
 		delete_option( $this->option_prefix.'flush_rules' );
 	}
 
-	public function settings_fields( $option_name, $use_prefix = true ) {
+	public function settings_fields( $option_name = 'index', $use_prefix = true ) {
 
 		if ( $use_prefix ) {
 			settings_fields( $this->option_prefix . $option_name );
@@ -934,17 +949,18 @@ class iworks_options
 		return wp_dropdown_pages( $args );
 	}
 
-	public function select_category_helper( $name, $hide_empty = null, $show_option_none = false ) {
+	public function select_category_helper( $name, $hide_empty = null, $show_option_none = false, $taxonomy = 'category' ) {
 
 		$args = array(
-			'echo' => false,
+			'echo'         => false,
 			'name'         => $this->get_option_name( $name ),
 			'selected'     => $this->get_option( $name ),
 			'hierarchical' => true,
 			'hide_empty'   => $hide_empty,
+			'taxonomy'     => $taxonomy,
 		);
 		if ( $show_option_none ) {
-			$args['show_option_none'] = true;
+			$args['show_option_none'] = $show_option_none;
 		}
 		return wp_dropdown_categories( $args );
 	}
@@ -964,19 +980,30 @@ class iworks_options
 		return $key[1];
 	}
 
-	public function show_page() {
+	public function show_page( $check_option_name = true, $url = 'options.php' ) {
 
-		$option_name = $this->get_option_index_from_screen();
-		if ( ! $option_name ) {
-			return;
+		$options = array();
+		$option_name = 'index';
+		if ( $check_option_name ) {
+			$option_name = $this->get_option_index_from_screen();
+			if ( ! $option_name ) {
+				return;
+			}
+			$options = $this->options[ $option_name ];
+		} else {
+			$options = $this->get_option_array();
 		}
-		$options = $this->options[ $option_name ];
+
 		global $screen_layout_columns;
 		$data = array();
+
+		if ( array_key_exists( 'metaboxes', $this->options[ $option_name ] ) ) {
+			include_once( ABSPATH . '/wp-admin/includes/meta-boxes.php' );
+		}
 ?>
 <div class="wrap">
-    <h2><?php echo $options['page_title']; ?></h2>
-    <form method="post" action="options.php" id="iworks_upprev_admin_index">
+    <h1><?php echo $options['page_title']; ?></h1>
+    <form method="post" action="<?php echo esc_url( $url ); ?>" id="iworks_options_admin_index">
         <?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
         <?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
         <input type="hidden" name="action" value="save_howto_metaboxes_general" />
