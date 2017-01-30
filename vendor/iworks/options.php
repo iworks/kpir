@@ -3,7 +3,7 @@
 Class Name: iWorks Options
 Class URI: http://iworks.pl/
 Description: Option class to manage options.
-Version: 2.5.0
+Version: 2.6.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -527,12 +527,13 @@ class iworks_options
 					$content .= apply_filters( $filter_name, $select );
 				break;
 				case 'textarea':
-                    $value = $this->get_option( $option_name, $option_group );
-                    $value = ( ! $value && isset( $option['default'] ))? $option['default']:$value;
-                    $atts = array(
-                        'rows' => isset( $option['rows'] )? $option['rows']:3,
-                    );
-                    $content .= $this->textarea( $html_element_name, $value, $option['class'], $atts );
+					$value = $this->get_option( $option_name, $option_group );
+					$value = ( ! $value && isset( $option['default'] ))? $option['default']:$value;
+					$args = array(
+						'rows' => isset( $option['rows'] )? $option['rows']:3,
+						'class' => $option['class'],
+					);
+					$content .= $this->textarea( $html_element_name, $value, $args );
 				break;
 				case 'heading':
 					if ( isset( $option['label'] ) && $option['label'] ) {
@@ -1173,38 +1174,47 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 			$opts[] = $one;
 		}
 		return $opts;
-    }
+	}
 
 
-    /**
-     * input types
-     */
+	/**
+	 * input types
+	 */
 
-    public function get_field_by_type( $type, $name, $value = '', $class = '', $atts = array() ) {
-        if ( method_exists( $this, $type ) ) {
-            return $this->$type( $name, $value, $class, $atts );
-        }
-        return 'wrong type';
-    }
+	public function get_field_by_type( $type, $name, $value = '', $args = array() ) {
+		if ( method_exists( $this, $type ) ) {
+			return $this->$type( $name, $value, $args );
+		}
+		return sprintf( 'wrong type: %s', esc_html( $type ) );
+	}
 
-    private function textarea( $name, $value = '', $class = '', $atts = array() ) {
-        $atts = '';
-        if ( ! empty( $class ) ) {
-            $atts .= sprintf( ' class="%s"', esc_attr( $class ) );
-        }
-        $allowed_attributes = array( 'id', 'rows', 'cols' );
-        foreach( $allowed_attributes as $key ) {
-            if ( isset( $atts[$key] ) && ! empty( $atts[$key] ) ) {
-                $atts .= sprintf( ' %s="%s"', $key, esc_attr( $atts[$key] ) );
-            }
-        }
-        return sprintf(
-            '<textarea name="%s" %s>%s</textarea>',
-            $name,
-            $atts,
-            $value
-        );
-    }
+	private function build_field_attrigutes( $args ) {
+		$atts = '';
+		foreach ( $args as $key => $value ) {
+			$atts .= sprintf( ' %s="%s"', esc_html( $key ), esc_attr( $value ) );
+		}
+		return $atts;
+	}
 
+	private function text( $name, $value = '', $args = array() ) {
+		return sprintf(
+			'<input type="%s" name="%s" value="%s" %s />',
+			esc_attr( __FUNCTION__ ),
+			esc_attr( $name ),
+			esc_attr( $value ),
+			$this->build_field_attrigutes( $args )
+		);
+	}
 
+	private function textarea( $name, $value = '', $args = array() ) {
+		if ( ! isset( $args['rows'] ) ) {
+			$args['rows'] = 3;
+		}
+		return sprintf(
+			'<textarea name="%s" %s>%s</textarea>',
+			$name,
+			$this->build_field_attrigutes( $args ),
+			$value
+		);
+	}
 }
