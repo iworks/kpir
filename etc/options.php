@@ -11,14 +11,14 @@ function iworks_kpir_options() {
 		'use_tabs' => true,
 		'version'  => '0.0',
 		'page_title' => __( 'Configuration', 'kpir' ),
-        'menu_title' => __( 'KPiR Pro!', 'kpir' ),
-        'menu' => 'submenu',
-        'parent' => add_query_arg(
-            array(
-                'post_type' => 'iworks_kpir_invoice',
-            ),
-            'edit.php'
-        ),
+		'menu_title' => __( 'KPiR Pro!', 'kpir' ),
+		'menu' => 'submenu',
+		'parent' => add_query_arg(
+			array(
+				'post_type' => 'iworks_kpir_invoice',
+			),
+			'edit.php'
+		),
 		'enqueue_scripts' => array(
 			'kpir-admin-js',
 		),
@@ -101,8 +101,7 @@ function iworks_kpir_options() {
 				'sanitize_callback' => 'esc_html',
 			),
 		),
-		'metaboxes' => array(
-		),
+		'metaboxes' => array(),
 	);
 	return $iworks_kpir_options;
 }
