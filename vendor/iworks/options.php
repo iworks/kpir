@@ -1188,7 +1188,7 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		return sprintf( 'wrong type: %s', esc_html( $type ) );
 	}
 
-	private function build_field_attrigutes( $args ) {
+	private function build_field_attributes( $args ) {
 		$atts = '';
 		foreach ( $args as $key => $value ) {
 			$atts .= sprintf( ' %s="%s"', esc_html( $key ), esc_attr( $value ) );
@@ -1202,7 +1202,7 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 			esc_attr( __FUNCTION__ ),
 			esc_attr( $name ),
 			esc_attr( $value ),
-			$this->build_field_attrigutes( $args )
+			$this->build_field_attributes( $args )
 		);
 	}
 
@@ -1213,7 +1213,7 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		return sprintf(
 			'<textarea name="%s" %s>%s</textarea>',
 			$name,
-			$this->build_field_attrigutes( $args ),
+			$this->build_field_attributes( $args ),
 			$value
 		);
 	}
