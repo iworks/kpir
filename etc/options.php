@@ -20,11 +20,17 @@ function iworks_kpir_options() {
 			'edit.php'
 		),
 		'enqueue_scripts' => array(
-			'kpir-admin-js',
+			'admin' => array(
+				'kpir-admin-js',
+			),
 		),
 		'enqueue_styles' => array(
-			'kpir-admin',
-			'kpir',
+			'admin' => array(
+				'kpir-admin',
+			),
+			'frontend' => array(
+				'kpir',
+			),
 		),
 		'options'  => array(
 			array(

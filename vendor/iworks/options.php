@@ -9,7 +9,7 @@ Author URI: http://iworks.pl/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2011-2016 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2011-2017 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -46,7 +46,7 @@ class iworks_options
 	public function __construct() {
 
 		$this->notices              = array();
-		$this->version              = '2.5.0';
+		$this->version              = '2.6.0';
 		$this->option_group         = 'index';
 		$this->option_function_name = null;
 		$this->option_prefix        = null;
@@ -1133,7 +1133,15 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		 * wp_enqueue_script
 		 */
 		if ( array_key_exists( 'enqueue_scripts', $this->options[ $option_name ] ) ) {
-			foreach ( $this->options[ $option_name ]['enqueue_scripts'] as $script ) {
+			$scripts = array();
+			if ( is_admin() && isset( $this->options[ $option_name ]['enqueue_scripts']['admin'] ) ) {
+				$scripts = $this->options[ $option_name ]['enqueue_scripts']['admin'];
+			} else if ( ! is_admin() && isset( $this->options[ $option_name ]['enqueue_scripts']['frontend'] ) ) {
+				$scripts = $this->options[ $option_name ]['enqueue_scripts']['frontend'];
+			} else {
+				$scripts = $this->options[ $option_name ]['enqueue_scripts'];
+			}
+			foreach ( $scripts as $script ) {
 				wp_enqueue_script( $script );
 			}
 		}
@@ -1141,7 +1149,18 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		 * wp_enqueue_style
 		 */
 		if ( array_key_exists( 'enqueue_styles', $this->options[ $option_name ] ) ) {
-			foreach ( $this->options[ $option_name ]['enqueue_styles'] as $style ) {
+			$styles = array();
+			if ( is_admin() && isset( $this->options[ $option_name ]['enqueue_styles']['admin'] ) ) {
+				$styles = $this->options[ $option_name ]['enqueue_styles']['admin'];
+			} else if ( ! is_admin() && isset( $this->options[ $option_name ]['enqueue_styles']['frontend'] ) ) {
+				$styles = $this->options[ $option_name ]['enqueue_styles']['frontend'];
+			} else {
+				$styles = $this->options[ $option_name ]['enqueue_styles'];
+			}
+
+			l( $styles );
+
+			foreach ( $styles as $style ) {
 				wp_enqueue_style( $style );
 			}
 		}

@@ -49,5 +49,31 @@ class iworks_kpir extends iworks {
 			$value = sprintf( 'post_type_%s', $post_type );
 			$this->$value = new $class();
 		}
+
+		/**
+		 * admin init
+		 */
+		add_action( 'admin_init',                 array( $this, 'admin_init' ) );
+	}
+
+	public function admin_init() {
+		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+		$scripts = array( 'jquery-ui-tabs' );
+		wp_register_script(
+			'kpir-admin-js',
+			plugins_url( '/scripts/kpir-admin.js', $this->base ),
+			$scripts,
+			$this->get_version()
+		);
+		$file = 'assets/styles/kpir-admin'.$this->dev.'.css';
+		wp_enqueue_style( 'kpir-admin', plugins_url( $file, $this->base ), array(), $this->get_version( $file ) );
+	}
+
+	public function init() {
+		if ( is_admin() ) {
+		} else {
+			$file = 'assets/styles/kpir'.$this->dev.'.css';
+			wp_enqueue_style( 'kpir', plugins_url( $file, $this->base ), array(), $this->get_version( $file ) );
+		}
 	}
 }

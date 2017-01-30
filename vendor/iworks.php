@@ -39,7 +39,7 @@ class iworks {
 		/**
 		 * static settings
 		 */
-		$this->dev  = ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE )? '.dev':'';
+		$this->dev  = ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE )? '':'.min';
 		$this->base = dirname( __FILE__ );
 		$this->dir  = basename( dirname( $this->base ) );
 	}
