@@ -45,9 +45,9 @@ class iworks_kpir extends iworks {
 		$post_types = array( 'invoice', 'contractor' );
 		foreach ( $post_types as $post_type ) {
 			include_once( $this->base.'/iworks/kpir/posttypes/'.$post_type.'.php' );
-            $class = sprintf( 'iworks_kpir_posttypes_%s', $post_type );
-            $value = sprintf( 'post_type_%s', $post_type );
+			$class = sprintf( 'iworks_kpir_posttypes_%s', $post_type );
+			$value = sprintf( 'post_type_%s', $post_type );
 			$this->$value = new $class();
-        }
+		}
 	}
 }

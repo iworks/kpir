@@ -30,25 +30,36 @@ require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
 
 class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 
-    protected $post_type_name = ' iworks_kpir_contract'; // iworks_kpir_contractor (varchar(20))
-    
+	protected $post_type_name = ' iworks_kpir_contract'; // iworks_kpir_contractor (varchar(20))
+
 
 	public function __construct() {
-        parent::__construct();
-        $this->fields = array(
-            'contractor_data_callback' => array(
-                'full_name' => array(
-                    'label' => __( 'Full Name', 'kpir' ),
-                ),
-                'address' =>  array(
-                    'label' => __( 'Address', 'kpir' ),
-                    'type' => 'textarea',
-                ),
-                'nip' =>  array(
-                    'label' => __( 'NIP', 'kpir' ),
-                ),
-            ),
-        );
+		parent::__construct();
+		$this->fields = array(
+			'contractor_data_callback' => array(
+				'full_name' => array(
+					'label' => __( 'Full Name', 'kpir' ),
+				),
+				'street1' => array(
+					'label' => __( 'Street', 'kpir' ),
+				),
+				'street2' => array(
+					'label' => __( 'Street', 'kpir' ),
+				),
+				'zip' => array(
+					'label' => __( 'ZIP Code', 'kpir' ),
+				),
+				'city' => array(
+					'label' => __( 'City', 'kpir' ),
+				),
+				'country' => array(
+					'label' => __( 'Country', 'kpir' ),
+				),
+				'nip' => array(
+					'label' => __( 'NIP', 'kpir' ),
+				),
+			),
+		);
 	}
 
 	public function register() {
@@ -92,26 +103,25 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 			'public'                => false,
 			'show_ui'               => true,
 			'show_in_menu'          => add_query_arg( array( 'post_type' => 'iworks_kpir_invoice' ), 'edit.php' ),
-            'show_in_admin_bar'     => true,
+			'show_in_admin_bar'     => true,
 			'show_in_nav_menus'     => true,
 			'can_export'            => true,
 			'has_archive'           => true,
 			'exclude_from_search'   => true,
 			'publicly_queryable'    => false,
-            'capability_type'       => 'page',
-            'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
-        );
+			'capability_type'       => 'page',
+			'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
+		);
 		register_post_type( $this->post_type_name, $args );
 
-    }
+	}
 
-    public function register_meta_boxes( $post ) {
-        add_meta_box( 'contractor-data', __( 'Contractor Data', 'kpir' ), array( $this, 'contractor_data_callback'), $this->post_type_name );
-    }
+	public function register_meta_boxes( $post ) {
+		add_meta_box( 'contractor-data', __( 'Contractor Data', 'kpir' ), array( $this, 'contractor_data_callback' ), $this->post_type_name );
+	}
 
-    public function contractor_data_callback( $post ) {
-        $this->get_meta_box_content( $post, $this->fields[__FUNCTION__] );
-    }
-
+	public function contractor_data_callback( $post ) {
+		$this->get_meta_box_content( $post, $this->fields[ __FUNCTION__ ] );
+	}
 }
 
