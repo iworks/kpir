@@ -30,34 +30,31 @@ require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
 
 class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 
-	protected $post_type_name = ' iworks_kpir_contract'; // iworks_kpir_contractor (varchar(20))
-
+	protected $post_type_name = 'iworks_kpir_contract'; // iworks_kpir_contractor (varchar(20))
 
 	public function __construct() {
 		parent::__construct();
 		$this->fields = array(
-			'contractor_data_callback' => array(
-				'full_name' => array(
-					'label' => __( 'Full Name', 'kpir' ),
-				),
-				'street1' => array(
-					'label' => __( 'Street', 'kpir' ),
-				),
-				'street2' => array(
-					'label' => __( 'Street', 'kpir' ),
-				),
-				'zip' => array(
-					'label' => __( 'ZIP Code', 'kpir' ),
-				),
-				'city' => array(
-					'label' => __( 'City', 'kpir' ),
-				),
-				'country' => array(
-					'label' => __( 'Country', 'kpir' ),
-				),
-				'nip' => array(
-					'label' => __( 'NIP', 'kpir' ),
-				),
+			'full_name' => array(
+				'label' => __( 'Full Name', 'kpir' ),
+			),
+			'street1' => array(
+				'label' => __( 'Street', 'kpir' ),
+			),
+			'street2' => array(
+				'label' => __( 'Street', 'kpir' ),
+			),
+			'zip' => array(
+				'label' => __( 'ZIP Code', 'kpir' ),
+			),
+			'city' => array(
+				'label' => __( 'City', 'kpir' ),
+			),
+			'country' => array(
+				'label' => __( 'Country', 'kpir' ),
+			),
+			'nip' => array(
+				'label' => __( 'NIP', 'kpir' ),
 			),
 		);
 	}
@@ -121,7 +118,11 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 	}
 
 	public function contractor_data_callback( $post ) {
-		$this->get_meta_box_content( $post, $this->fields[ __FUNCTION__ ] );
+		$this->get_meta_box_content( $post, $this->fields );
+	}
+
+	public function save_post_meta( $post_id, $post, $update ) {
+		$this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
 	}
 }
 

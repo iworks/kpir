@@ -90,5 +90,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		register_post_type( $this->post_type_name, $args );
 
 	}
+
+	public function save_post_meta( $post_id, $post, $update ) {
+		$this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
+	}
 }
 

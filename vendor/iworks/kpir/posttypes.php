@@ -29,11 +29,16 @@ if ( class_exists( 'iworks_kpir_posttypes_invoice' ) ) {
 class iworks_kpir_posttypes {
 	protected $post_type_name = 'iworks_kpir_invoice';
 	protected $options;
+	protected $fields;
 
 	public function __construct() {
 		global $iworks_kpir_options;
 		$this->options = $iworks_kpir_options;
 		add_action( 'init', array( $this, 'register' ) );
+		/**
+		 * save post
+		 */
+		add_action( 'save_post', array( $this, 'save_post_meta' ), 10, 3 );
 	}
 
 	public function get_name() {
@@ -42,23 +47,72 @@ class iworks_kpir_posttypes {
 
 	protected function get_meta_box_content( $post, $fields ) {
 		$content = '';
+		$basename = $this->options->get_option_name( '' );
 		foreach ( $fields as $key => $data ) {
-			$id = $this->options->get_option_name( $key );
-
+			$args = array();
+			/**
+			 * ID
+			 */
+			$args['id'] = $this->options->get_option_name( $key );
+			/**
+			 * name
+			 */
+			$name = sprintf( '%s[%s]', $basename, $key );
+			/**
+			 * sanitize type
+			 */
 			$type = isset( $data['type'] ) ? $data['type'] : 'text';
-			$args = isset( $data['args'] ) ? $data['args'] : array();
-
-			$value = '';
-
+			/**
+			 * get value
+			 */
+			$value = get_post_meta( $post->ID, $args['id'], true );
+			/**
+			 * build
+			 */
 			$content .= sprintf( '<div class="iworks-kpir-row iworks-kpir-row-%s">', esc_attr( $key ) );
-			$content .= sprintf( '<label for=%s">%s</label>', esc_attr( $id ), esc_html( $data['label'] ) );
-			$content .= $this->options->get_field_by_type( $type, $key, $value, $args );
+			$content .= sprintf( '<label for=%s">%s</label>', esc_attr( $args['id'] ), esc_html( $data['label'] ) );
+			$content .= $this->options->get_field_by_type( $type, $name, $value, $args );
 			if ( isset( $data['description'] ) ) {
 				$content .= sprintf( '<p class="description">%s</p>', $data['description'] );
 			}
 			$content .= '</div>';
 		}
 		echo $content;
+	}
+
+	/**
+	 * Save post metadata when a post is saved.
+	 *
+	 * @param int $post_id The post ID.
+	 * @param post $post The post object.
+	 * @param bool $update Whether this is an existing post being updated or not.
+	 */
+	public function save_post_meta_fields( $post_id, $post, $update, $fields ) {
+
+		/*
+         * In production code, $slug should be set only once in the plugin,
+         * preferably as a class property, rather than in each function that needs it.
+         */
+		$post_type = get_post_type( $post_id );
+
+		// If this isn't a Copyricorrect post, don't update it.
+		if ( $this->post_type_name != $post_type ) {
+			return;
+		}
+
+		$post_key = $this->options->get_option_name( '' );
+		if ( isset( $_POST[ $post_key ] ) ) {
+			foreach ( $fields as $key => $data ) {
+
+				$value = isset( $_POST[ $post_key ][ $key ] )? $_POST[ $post_key ][ $key ]:null;
+				$option_name = $this->options->get_option_name( $key );
+				if ( empty( $value ) ) {
+					delete_post_meta( $post->ID, $option_name );
+				} else {
+					update_post_meta( $post->ID, $option_name, $value );
+				}
+			}
+		}
 	}
 }
 
