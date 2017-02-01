@@ -45,15 +45,15 @@ class iworks_kpir_posttypes {
 		return $this->post_type_name;
 	}
 
-	protected function get_meta_box_content( $post, $fields ) {
+	protected function get_meta_box_content( $post, $fields, $group ) {
 		$content = '';
-		$basename = $this->options->get_option_name( '' );
-		foreach ( $fields as $key => $data ) {
+		$basename = $this->options->get_option_name( $group );
+		foreach ( $fields[ $group ] as $key => $data ) {
 			$args = array();
 			/**
 			 * ID
 			 */
-			$args['id'] = $this->options->get_option_name( $key );
+			$args['id'] = $this->options->get_option_name( $group.'_'.$key );
 			/**
 			 * name
 			 */
@@ -100,16 +100,18 @@ class iworks_kpir_posttypes {
 			return;
 		}
 
-		$post_key = $this->options->get_option_name( '' );
-		if ( isset( $_POST[ $post_key ] ) ) {
-			foreach ( $fields as $key => $data ) {
+		foreach ( $fields as $group => $group_data ) {
+			$post_key = $this->options->get_option_name( $group );
+			if ( isset( $_POST[ $post_key ] ) ) {
+				foreach ( $group_data as $key => $data ) {
 
-				$value = isset( $_POST[ $post_key ][ $key ] )? $_POST[ $post_key ][ $key ]:null;
-				$option_name = $this->options->get_option_name( $key );
-				if ( empty( $value ) ) {
-					delete_post_meta( $post->ID, $option_name );
-				} else {
-					update_post_meta( $post->ID, $option_name, $value );
+					$value = isset( $_POST[ $post_key ][ $key ] )? $_POST[ $post_key ][ $key ]:null;
+					$option_name = $this->options->get_option_name( $group.'_'.$key );
+					if ( empty( $value ) ) {
+						delete_post_meta( $post->ID, $option_name );
+					} else {
+						update_post_meta( $post->ID, $option_name, $value );
+					}
 				}
 			}
 		}

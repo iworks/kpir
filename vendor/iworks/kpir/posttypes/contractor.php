@@ -35,26 +35,28 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 	public function __construct() {
 		parent::__construct();
 		$this->fields = array(
-			'full_name' => array(
-				'label' => __( 'Full Name', 'kpir' ),
-			),
-			'street1' => array(
-				'label' => __( 'Street', 'kpir' ),
-			),
-			'street2' => array(
-				'label' => __( 'Street', 'kpir' ),
-			),
-			'zip' => array(
-				'label' => __( 'ZIP Code', 'kpir' ),
-			),
-			'city' => array(
-				'label' => __( 'City', 'kpir' ),
-			),
-			'country' => array(
-				'label' => __( 'Country', 'kpir' ),
-			),
-			'nip' => array(
-				'label' => __( 'NIP', 'kpir' ),
+			'contractor_data' => array(
+				'full_name' => array(
+					'label' => __( 'Full Name', 'kpir' ),
+				),
+				'street1' => array(
+					'label' => __( 'Street', 'kpir' ),
+				),
+				'street2' => array(
+					'label' => __( 'Street', 'kpir' ),
+				),
+				'zip' => array(
+					'label' => __( 'ZIP Code', 'kpir' ),
+				),
+				'city' => array(
+					'label' => __( 'City', 'kpir' ),
+				),
+				'country' => array(
+					'label' => __( 'Country', 'kpir' ),
+				),
+				'nip' => array(
+					'label' => __( 'NIP', 'kpir' ),
+				),
 			),
 		);
 	}
@@ -114,11 +116,11 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 	}
 
 	public function register_meta_boxes( $post ) {
-		add_meta_box( 'contractor-data', __( 'Contractor Data', 'kpir' ), array( $this, 'contractor_data_callback' ), $this->post_type_name );
+		add_meta_box( 'contractor-data', __( 'Contractor Data', 'kpir' ), array( $this, 'contractor_data' ), $this->post_type_name );
 	}
 
-	public function contractor_data_callback( $post ) {
-		$this->get_meta_box_content( $post, $this->fields );
+	public function contractor_data( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {

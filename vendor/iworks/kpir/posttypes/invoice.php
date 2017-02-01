@@ -34,6 +34,36 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 	public function __construct() {
 		parent::__construct();
+		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
+
+		$this->fields = array(
+			'type' => array(
+				'type' => 'radio',
+				'options' => array(
+					'income' => __( 'Income', 'kpir' ),
+					'expense' => __( 'Expense', 'kpir' ),
+				),
+				'label' => __( 'Type', 'kpir' ),
+			),
+			'street1' => array(
+				'label' => __( 'Street', 'kpir' ),
+			),
+			'street2' => array(
+				'label' => __( 'Street', 'kpir' ),
+			),
+			'zip' => array(
+				'label' => __( 'ZIP Code', 'kpir' ),
+			),
+			'city' => array(
+				'label' => __( 'City', 'kpir' ),
+			),
+			'country' => array(
+				'label' => __( 'Country', 'kpir' ),
+			),
+			'nip' => array(
+				'label' => __( 'NIP', 'kpir' ),
+			),
+		);
 	}
 
 	public function register() {
@@ -71,19 +101,18 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			'label'                 => __( 'Invoice', 'kpir' ),
 			'description'           => __( 'Invoice Description', 'kpir' ),
 			'labels'                => $labels,
-			'supports'              => array(),
+			'supports'              => array( 'title' ),
 			'taxonomies'            => array(),
 			'hierarchical'          => false,
-			'public'                => true,
+			'public'                => false,
 			'show_ui'               => true,
 			'show_in_menu'          => true,
-			'menu_position'         => 5,
 			'show_in_admin_bar'     => true,
-			'show_in_nav_menus'     => true,
+			'show_in_nav_menus'     => false,
 			'can_export'            => true,
 			'has_archive'           => true,
-			'exclude_from_search'   => false,
-			'publicly_queryable'    => true,
+			'exclude_from_search'   => true,
+			'publicly_queryable'    => false,
 			'capability_type'       => 'page',
 			'menu_icon'             => 'dashicons-book',
 		);
@@ -93,6 +122,18 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 	public function save_post_meta( $post_id, $post, $update ) {
 		$this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
+	}
+
+	/**
+	 * Change "Enter title here" to "Enter invoice number"
+	 *
+	 * @since 1.0
+	 */
+	public function enter_title_here( $title, $post ) {
+		if ( $post->post_type == $this->post_type_name ) {
+			return __( 'Enter invoice number', 'kpir' );
+		}
+		return $title;
 	}
 }
 
