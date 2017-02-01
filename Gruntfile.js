@@ -1,77 +1,47 @@
-module.exports = function(grunt) {
-    'use strict';
+/*global require*/
 
-    // Plugin Config
-    var plugin_info = {
-        version: '3.3.30',
-        branches: {
-            base:     'master',
-            standard: 'upprev/standard',
-            pro:      'upprev/pro'
-        },
-		dev_plugin_dir: 'upprev/',
-    };
+/**
+ * When grunt command does not execute try these steps:
+ *
+ * - delete folder 'node_modules' and run command in console:
+ *   $ npm install
+ *
+ * - Run test-command in console, to find syntax errors in script:
+ *   $ grunt hello
+ */
 
-    var plugin_patterns = {
-        pro: [
-            { match: /upPrev Base/g, replace: 'upPrev Pro!' },
-            { match: /<%= iworks.plugin.version %>/g, replace: plugin_info.version },
-            { match: /\/\/<iworks.plugin.free_only([^<]+)/mg, replace: '' },
-            { match: /<\/iworks.plugin.free_only>/g, replace: '' },
-            { match: /\/\/<iworks.plugin.pro_only>/g, replace: '' },
-            { match: /\/\/<\/iworks.plugin.pro_only>/g, replace: '' }
-        ],
-        standard: [
-            { match: /upPrev Base/g, replace: 'upPrev' },
-            { match: /<%= iworks.plugin.version %>/g, replace: plugin_info.version },
-            { match: /\/\/<iworks.plugin.pro_only([^<]+)/mg, replace: '' },
-            { match: /<\/iworks.plugin.pro_only>/g, replace: '' },
-            { match: /\/\/<iworks.plugin.free_only>/g, replace: '' },
-            { match: /\/\/<\/iworks.plugin.free_only>/g, replace: '' },
-            { match: /<%= iworks.plugin.changelog %>/g, replace: (function() {
-                var changelog = grunt.file.read('./changelog.txt');
-                changelog = changelog.replace(/^(\S|\s)*==.changelog.==\S*/igm, '' ).trim();
-                return changelog;
-            })() }
-        ],
-        files: [ { expand: true, src: [
-            '**/*.php',
-            '**/*.css',
-            '**/*.js',
-            '**/*.html',
-            '**/*.txt',
-            '!node_modules/**',
-            '!includes/external/**',
-            '!Gruntfile.js',
-            '!package.json',
-            '!build/**',
-            '!grunt_tasks/**',
-            '!.git/**'
-        ], dest: './' } ],
+module.exports = function( grunt ) {
+	// Show elapsed time at the end.
+	require( 'time-grunt' )(grunt);
+
+	// Load all grunt tasks.
+	require( 'load-grunt-tasks' )(grunt);
+
+	var buildtime = new Date().toISOString();
+
+	var conf = {
+
+		// Concatenate those JS files into a single file (target: [source, source, ...]).
+		js_files_concat: {
+			'js/cs-cloning.js':    ['js/src/cs-cloning.js'],
+			'js/cs-visibility.js': ['js/src/cs-visibility.js'],
+			'js/cs.js':            ['js/src/cs.js']
+		},
+
+		// SASS files to process. Resulting CSS files will be minified as well.
+		css_files_compile: {
+			'assets/styles/kpir-admin.css': 'assets/styles/src/kpir-admin.scss'
+		},
+
 		// BUILD branches.
 		plugin_branches: {
 			exclude_pro: [
 				'./README.MD',
 				'./readme.txt',
-				'./screenshot-*',
 			],
 			exclude_free: [
 				'./README.MD',
-				'./inc/external/wpmudev-dashboard',
-				'./js/cs-cloning.js',
-				'./js/cs-cloning.min.js',
-				'./js/cs-visibility.js',
-				'./js/cs-visibility.min.js',
-				'./css/cs-cloning.css',
-				'./css/cs-cloning.min.css',
-				'./css/cs-visibility.css',
-				'./css/cs-visibility.min.css',
-				'./views/import.php',
-				'./views/quick-edit.php',
-				'./views/col-sidebars.php',
-				'./inc/class-custom-sidebars-cloning.php',
-				'./inc/class-custom-sidebars-export.php',
-				'./inc/class-custom-sidebars-visibility.php',
+				'./changelog.txt',
 			],
 			include_files: [
 				'**',
@@ -105,141 +75,279 @@ module.exports = function(grunt) {
 				'!.log',
 			],
 			base: 'master',
-			pro: 'upprev-pro',
-			free: 'upprev',
+			pro: 'kpir-pro',
+			free: 'kpir-free',
 		},
-    };
 
-	// Grunt configuration.
-	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
-
-        // Plugin config
-        build: {
-            pro: {
-            },
-            standard: {
-            }
-        },
-
-        // Git config
-        gitcheckout: {
-            pro: {
-                options: { branch: plugin_info.branches.pro, overwrite: true }
-            },
-            standard: {
-                options: { branch: plugin_info.branches.standard, overwrite: true }
-            },
-            base: {
-                options: { branch: plugin_info.branches.base }
-            }
-        },
-        gitadd: {
-            pro: {
-                options: { all: true }
-            },
-            standard: {
-                options: { all: true }
-            }
-        },
-        gitcommit: {
-            pro: {
-                options: { message: "Built from '" + plugin_info.branches.base + "'", allowEmpty: true },
-                files: { src: ['.'] }
-            },
-            standard: {
-                options: { message: "Built from '" + plugin_info.branches.base + "'", allowEmpty: true },
-                files: { src: ['.'] }
-            }
-        },
-
-        // Cleanup config
-        clean: {
-            pro: [
-                "./readme.txt",
-            ],
-            standard: [
-                "./includes/classes/class.basic.certificate.php",
-                "./includes/external/dashboard/",
-                './includes/plugins/*marketpress*.zip',
-                './readme.md',
-                './changelog.txt'
-            ]
-        },
-
-        // Replace config
-        replace: {
-            pro: {
-                options: {
-                    patterns: plugin_patterns.pro
-                },
-                files: plugin_patterns.files
-            },
-            standard: {
-                options: {
-                    patterns: plugin_patterns.standard
-                },
-                files: plugin_patterns.files
-            }
-        },
-
-        // i18n config
-		makepot: {
-		    target: {
-		        options: {
-					domainPath: '/languages',
-					mainFile: 'upprev.php',
-					potFilename: 'cp-default.pot',
-					potHeaders: {
-						'poedit': true,
-						'language-team': 'WPMU Dev <support@iworks.org>',
-						'report-msgid-bugs-to': 'http://wordpress.org/support/plugin/upprev',
-						'last-translator': 'WPMU Dev <support@iworks.org>',
-						'x-generator': 'grunt-wp-i18n'
-					},
-		            type: 'wp-plugin'
-		        }
-		    },
-            dev: {
-                options: {
-                    domainPath: '/languages',
-                    mainFile: 'upprev.php',
-                    potFilename: 'cp-default.pot',
-                    potHeaders: {
-                        'poedit': true,
-                        'language-team': 'WPMU Dev <support@iworks.org>',
-                        'report-msgid-bugs-to': 'http://wordpress.org/support/plugin/upprev',
-                        'last-translator': 'WPMU Dev <support@iworks.org>',
-                        'x-generator': 'grunt-wp-i18n'
-                    },
-                    type: 'wp-plugin'
-                }
-            },
-            free: {
-                options: {
-                    domainPath: '/languages',
-                    mainFile: 'upprev.php',
-                    potFilename: 'upprev-default.pot',
-                    potHeaders: {
-                        'poedit': true,
-                        'language-team': 'WPMU Dev <support@iworks.org>',
-                        'report-msgid-bugs-to': 'http://wordpress.org/support/plugin/upprev',
-                        'last-translator': 'WPMU Dev <support@iworks.org>',
-                        'x-generator': 'grunt-wp-i18n'
-                    },
-                    type: 'wp-plugin'
-                }
-            }
+		// BUILD patterns to exclude code for specific builds.
+		plugin_patterns: {
+			pro: [
+				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
+				{ match: /BUILDTIME/g, replace: buildtime },
+				{ match: /\/\* start:pro \*\//g, replace: '' },
+				{ match: /\/\* end:pro \*\//g, replace: '' },
+				{ match: /\/\* start:free \*[^]+?\* end:free \*\//mg, replace: '' },
+			],
+			free: [
+				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
+				{ match: /BUILDTIME/g, replace: buildtime },
+				{ match: /\/\* start:free \*\//g, replace: '' },
+				{ match: /\/\* end:free \*\//g, replace: '' },
+				{ match: /\/\* start:pro \*[^]+?\* end:pro \*\//mg, replace: '' },
+			],
+			// Files to apply above patterns to (not only php files).
+			files: {
+				expand: true,
+				src: [
+					'**/*.php',
+					'**/*.css',
+					'**/*.js',
+					'**/*.html',
+					'**/*.txt',
+					'!node_modules/**',
+					'!lib/**',
+					'!docs/**',
+					'!release/**',
+					'!Gruntfile.js',
+					'!build/**',
+					'!tests/**',
+					'!.git/**'
+				],
+				dest: './'
+			}
 		},
+
+		// Regex patterns to exclude from transation.
+		translation: {
+			ignore_files: [
+				'node_modules/.*',
+				'(^.php)',         // Ignore non-php files.
+				'inc/external/.*', // External libraries.
+				'release/.*',      // Temp release files.
+				'tests/.*',        // Unit testing.
+			],
+			pot_dir: 'lang/', // With trailing slash.
+			textdomain: 'kpir',
+		},
+
+		dev_plugin_file: 'kpir.php',
+		dev_plugin_dir: 'kpir/'
+	};
+
+	// Project configuration
+	grunt.initConfig( {
+		pkg: grunt.file.readJSON( 'package.json' ),
+
+		// JS - Concat .js source files into a single .js file.
+		concat: {
+			options: {
+				stripBanners: true,
+				banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
+					' * <%= pkg.homepage %>\n' +
+					' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
+					' * Licensed GPLv2+' +
+					' */\n'
+			},
+			scripts: {
+				files: conf.js_files_concat
+			}
+		},
+
+
+		// JS - Validate .js source code.
+		jshint: {
+			all: [
+				'Gruntfile.js',
+				'js/src/**/*.js',
+			],
+			options: {
+				curly:   true,
+				eqeqeq:  true,
+				immed:   true,
+				latedef: true,
+				newcap:  true,
+				noarg:   true,
+				sub:     true,
+				undef:   true,
+				boss:    true,
+				eqnull:  true,
+				globals: {
+					exports: true,
+					module:  false
+				}
+			}
+		},
+
+
+		// JS - Uglyfies the source code of .js files (to make files smaller).
+		uglify: {
+			all: {
+				files: [{
+					expand: true,
+					src: ['*.js', '!*.min.js'],
+					cwd: 'js/',
+					dest: 'js/',
+					ext: '.min.js',
+					extDot: 'last'
+				}],
+				options: {
+					banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
+						' * <%= pkg.homepage %>\n' +
+						' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
+						' * Licensed GPLv2+' +
+						' */\n',
+					mangle: {
+						except: ['jQuery']
+					}
+				}
+			}
+		},
+
+
+		// TEST - Run the PHPUnit tests.
+		/* -- Not used right now...
+		phpunit: {
+			classes: {
+				dir: ''
+			},
+			options: {
+				bin: 'phpunit',
+				bootstrap: 'tests/php/bootstrap.php',
+				testsuite: 'default',
+				configuration: 'tests/php/phpunit.xml',
+				colors: true,
+				//tap: true,
+				//testdox: true,
+				//stopOnError: true,
+				staticBackup: false,
+				noGlobalsBackup: false
+			}
+		},
+		*/
+
+
+		// CSS - Compile a .scss file into a normal .css file.
+		sass:   {
+			all: {
+				options: {
+					'sourcemap=none': true, // 'sourcemap': 'none' does not work...
+					unixNewlines: true,
+					style: 'expanded'
+				},
+				files: conf.css_files_compile
+			}
+		},
+
+
+		// CSS - Automaticaly create prefixed attributes in css file if needed.
+		//       e.g. add `-webkit-border-radius` if `border-radius` is used.
+		autoprefixer: {
+			options: {
+				browsers: ['last 2 version', 'ie 8', 'ie 9'],
+				diff: false
+			},
+			single_file: {
+				files: [{
+					expand: true,
+					src: ['**/*.css', '!**/*.min.css'],
+					cwd: 'css/',
+					dest: 'css/',
+					ext: '.css',
+					extDot: 'last',
+					flatten: false
+				}]
+			}
+		},
+
+
+		// CSS - Required for CSS-autoprefixer and maybe some SCSS function.
+		compass: {
+			options: {
+			},
+			server: {
+				options: {
+					debugInfo: true
+				}
+			}
+		},
+
+
+		// CSS - Minify all .css files.
+		cssmin: {
+			options: {
+				banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
+					' * <%= pkg.homepage %>\n' +
+					' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
+					' * Licensed GPLv2+' +
+					' */\n'
+			},
+			minify: {
+				expand: true,
+				src: ['*.css', '!*.min.css'],
+				cwd: 'css/',
+				dest: 'css/',
+				ext: '.min.css',
+				extDot: 'last'
+			}
+		},
+
+
+		// WATCH - Watch filesystem for changes during development.
+		watch:  {
+			sass: {
+				files: ['assets/styles/src/**/*.scss'],
+				tasks: ['sass', 'autoprefixer'],
+				options: {
+					debounceDelay: 500
+				}
+			},
+
+			scripts: {
+				files: ['assets/js/src/*.js'],
+				tasks: ['jshint', 'concat'],
+				options: {
+					debounceDelay: 500
+				}
+			}
+		},
+
+
+		// BUILD - Remove previous build version and temp files.
+		clean: {
+			temp: {
+				src: [
+					'**/*.tmp',
+					'**/.afpDeleted*',
+					'**/.DS_Store',
+				],
+				dot: true,
+				filter: 'isFile'
+			},
+			release_pro: {
+				src: [
+					'release/<%= pkg.version %>-pro/',
+					'release/<%= pkg.name %>-pro-<%= pkg.version %>.zip',
+				],
+			},
+			release_free: {
+				src: [
+					'release/<%= pkg.version %>-free/',
+					'release/<%= pkg.name %>-free-<%= pkg.version %>.zip',
+				],
+			},
+			pro: conf.plugin_branches.exclude_pro,
+			free: conf.plugin_branches.exclude_free
+		},
+
 
 		// BUILD - Copy all plugin files to the release subdirectory.
 		copy: {
 			pro: {
-				src: plugin_patterns.plugin_branches.include_files,
+				src: conf.plugin_branches.include_files,
 				dest: 'release/<%= pkg.version %>-pro/'
 			},
 			free: {
-				src: plugin_patterns.plugin_branches.include_files,
+				src: conf.plugin_branches.include_files,
 				dest: 'release/<%= pkg.version %>-free/'
 			},
 		},
@@ -255,7 +363,7 @@ module.exports = function(grunt) {
 				expand: true,
 				cwd: 'release/<%= pkg.version %>-pro/',
 				src: [ '**/*' ],
-				dest: plugin_info.dev_plugin_dir
+				dest: conf.dev_plugin_dir
 			},
 			free: {
 				options: {
@@ -265,90 +373,155 @@ module.exports = function(grunt) {
 				expand: true,
 				cwd: 'release/<%= pkg.version %>-free/',
 				src: [ '**/*' ],
-				dest: plugin_info.dev_plugin_dir
+				dest: conf.dev_plugin_dir
 			},
 		},
 
-		wpmu_pot2mo: {
-		    files: {
-		        src: 'languages/*.pot',
-		        expand: true
-		    }
+
+		// BUILD - update the translation index .po file.
+		makepot: {
+			target: {
+				options: {
+					cwd: '',
+					domainPath: conf.translation.pot_dir,
+					exclude: conf.translation.ignore_files,
+					mainFile: conf.dev_plugin_file,
+					potFilename: conf.translation.textdomain + '.pot',
+					potHeaders: {
+						poedit: true, // Includes common Poedit headers.
+						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
+					},
+					type: 'wp-plugin' // wp-plugin or wp-theme
+				}
+			}
+		},
+
+		// BUILD: Replace conditional tags in code.
+		replace: {
+			pro: {
+				options: {
+					patterns: conf.plugin_patterns.pro
+				},
+				files: [conf.plugin_patterns.files]
+			},
+			free: {
+				options: {
+					patterns: conf.plugin_patterns.free
+				},
+				files: [conf.plugin_patterns.files]
+			}
+		},
+
+		// BUILD: Git control (check out branch).
+		gitcheckout: {
+			pro: {
+				options: {
+					verbose: true,
+					branch: conf.plugin_branches.pro,
+					overwrite: true
+				}
+			},
+			free: {
+				options: {
+					branch: conf.plugin_branches.free,
+					overwrite: true
+				}
+			},
+			base: {
+				options: {
+					branch: conf.plugin_branches.base
+				}
+			}
+		},
+
+		// BUILD: Git control (add files).
+		gitadd: {
+			pro: {
+				options: {
+				verbose: true, all: true }
+			},
+			free: {
+				options: { all: true }
+			},
+		},
+
+		// BUILD: Git control (commit changes).
+		gitcommit: {
+			pro: {
+				verbose: true,
+				options: {
+					message: 'Built from: ' + conf.plugin_branches.base,
+					allowEmpty: true
+				},
+				files: { src: ['.'] }
+			},
+			free: {
+				options: {
+					message: 'Built from: ' + conf.plugin_branches.base,
+					allowEmpty: true
+				},
+				files: { src: ['.'] }
+			},
+		},
+
+	} );
+
+	// Test task.
+	grunt.registerTask( 'hello', 'Test if grunt is working', function() {
+		grunt.log.subhead( 'Hi there :)' );
+		grunt.log.writeln( 'Looks like grunt is installed!' );
+	});
+
+	// Plugin build tasks
+	grunt.registerTask( 'build', 'Run all tasks.', function(target) {
+		var build = [], i, branch;
+
+		if ( target ) {
+			build.push( target );
+		} else {
+			build = ['pro', 'free'];
+		}
+
+		// First run unit tests.
+		/* -- Not used right now...
+		grunt.task.run( 'phpunit' );
+		*/
+
+		// Run the default tasks (js/css/php validation).
+		grunt.task.run( 'default' );
+
+		// Generate all translation files (same for pro and free).
+		grunt.task.run( 'makepot' );
+
+		for ( i in build ) {
+			branch = build[i];
+			grunt.log.subhead( 'Update product branch [' + branch + ']...' );
+
+			// Checkout the destination branch.
+			grunt.task.run( 'gitcheckout:' + branch );
+
+			// Remove code and files that does not belong to this version.
+			grunt.task.run( 'replace:' + branch );
+			grunt.task.run( 'clean:' + branch );
+
+			// Add the processes/cleaned files to the target branch.
+			grunt.task.run( 'gitadd:' + branch );
+			grunt.task.run( 'gitcommit:' + branch );
+
+			// Create a distributable zip-file of the plugin branch.
+			grunt.task.run( 'clean:release_' + branch );
+			grunt.task.run( 'copy:' + branch );
+			grunt.task.run( 'compress:' + branch );
+
+			grunt.task.run( 'gitcheckout:base');
 		}
 	});
 
-	// Load grunt modules
-	grunt.loadNpmTasks( 'grunt-wp-i18n' );
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-git');
-    grunt.loadNpmTasks('grunt-replace');
+	// Default task.
 
-	// Adapted from https://github.com/MicheleBertoli/grunt-po2mo
-	grunt.registerMultiTask('wpmu_pot2mo', 'Compile .pot files into binary .mo files with msgfmt.', function() {
-		this.files.forEach(function(file) {
+	grunt.registerTask( 'default', ['clean:temp', 'jshint', 'concat', 'uglify', 'sass', 'autoprefixer', 'cssmin'] );
+	//grunt.registerTask( 'test', ['phpunit', 'jshint'] );
 
-		  var dest = file.dest;
-		  if (dest.indexOf('.pot') > -1) {
-		      dest = dest.replace('.pot', '.mo');
-		  }
-		  grunt.file.write(dest);
-
-		  var exec = require('child_process').exec;
-		  var command = 'msgfmt -o ' + dest + ' ' + file.src[0];
-
-		  grunt.verbose.writeln('Executing: ' + command);
-		  exec(command);
-
-		});
-	});
-
-	// Default task(s).
-	grunt.registerTask( 'default', ['makepot', 'wpmu_pot2mo'] );
-
-    // Plugin build tasks
-    grunt.registerTask('build', 'Run all tasks.', function(target) {
-
-    grunt.option('verbose', true );
-
-    if (target == null) {
-    grunt.warn('Target must be specified - build:pro or build:free');
-    }
-
-    grunt.log.subhead( 'Update product branch [' + target + ']...' );
-
-                // Checkout the destination branch.
-                grunt.task.run('gitcheckout:' + target );
-
-                // Remove code and files that does not belong to this version.
-                grunt.task.run('replace:' + target );
-                grunt.task.run('clean:' + target );
-
-
-                //grunt.task.run('makepot:' + target );
-                //grunt.task.run('wpmu_pot2mo:' + target );
-
-                // Add the processes/cleaned files to the target branch.
-                grunt.task.run('gitadd:' + target );
-                grunt.task.run('gitcommit:' + target );
-
-
-
-                // Create a distributable zip-file of the plugin branch.
-                grunt.task.run( 'clean:release_' + target );
-                grunt.task.run( 'copy:' + target );
-                grunt.task.run('compress:' + target );
-
-
-
-                grunt.task.run('gitcheckout:base');
-
-            });
-
-    // Build pro and standard repo
-    grunt.registerTask( 'buildAll', function() {
-        grunt.task.run('build:standard');
-        grunt.task.run('build:pro');
-    } );
-
-
+	grunt.task.run( 'clear' );
+	grunt.util.linefeed = '\n';
 };

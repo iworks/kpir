@@ -1,0 +1,7 @@
+.iworks-kpir-row {
+  display: flex;
+  padding-bottom: .5em;
+}
+.iworks-kpir-row label {
+  width: 100px;
+}
