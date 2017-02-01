@@ -46,10 +46,11 @@ class iworks_kpir_posttypes {
 	}
 
 	protected function get_meta_box_content( $post, $fields, $group ) {
+
 		$content = '';
 		$basename = $this->options->get_option_name( $group );
 		foreach ( $fields[ $group ] as $key => $data ) {
-			$args = array();
+			$args = isset( $data['args'] )? $data['args']:array();
 			/**
 			 * ID
 			 */
@@ -99,12 +100,10 @@ class iworks_kpir_posttypes {
 		if ( $this->post_type_name != $post_type ) {
 			return;
 		}
-
 		foreach ( $fields as $group => $group_data ) {
 			$post_key = $this->options->get_option_name( $group );
 			if ( isset( $_POST[ $post_key ] ) ) {
 				foreach ( $group_data as $key => $data ) {
-
 					$value = isset( $_POST[ $post_key ][ $key ] )? $_POST[ $post_key ][ $key ]:null;
 					$option_name = $this->options->get_option_name( $group.'_'.$key );
 					if ( empty( $value ) ) {

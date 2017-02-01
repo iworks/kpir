@@ -1202,6 +1202,9 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 
 	public function get_field_by_type( $type, $name, $value = '', $args = array() ) {
 		if ( method_exists( $this, $type ) ) {
+			if ( ! isset( $args['class'] ) ) {
+				$args['class'] = 'large-text';
+			}
 			return $this->$type( $name, $value, $args );
 		}
 		return sprintf( 'wrong type: %s', esc_html( $type ) );
@@ -1231,9 +1234,39 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		}
 		return sprintf(
 			'<textarea name="%s" %s>%s</textarea>',
-			$name,
+			esc_attr( $name ),
 			$this->build_field_attributes( $args ),
 			$value
 		);
+	}
+
+	private function radio( $name, $value = '', $args = array() ) {
+		$radio = '';
+		$options = $args['options'];
+		unset( $args['options'] );
+		foreach ( $options as $option_value => $input ) {
+			$id = sprintf( '%s%d', $name, $i++ );
+			$radio .= sprintf(
+				'<li class="%s"><label for="%s"><input type="radio" name="%s" value="%s"%s id="%s"/> %s</label>',
+				esc_attr( sanitize_title( $value ) ),
+				esc_attr( $id ),
+				esc_attr( $name ),
+				esc_attr( $value ),
+				($option_value == $value or ( empty( $option_value ) and isset( $option['default'] ) and $value == $option['default'] ) )? ' checked="checked"':'',
+				esc_attr( $id ),
+				esc_html( $input['label'] )
+			);
+			if ( isset( $input['description'] ) ) {
+				$radio .= sprintf(
+					'<br /><span class="description">%s</span>',
+					$input['description']
+				);
+			}
+			$radio .= '</li>';
+		}
+		if ( $radio ) {
+			$radio = sprintf( '<ul>%s</ul>', $radio );
+		}
+		return $radio;
 	}
 }

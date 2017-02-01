@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: AA KPiR Base
+Plugin Name: KPiR Base
 Text Domain: kpir
 Plugin URI: http://iworks.pl/kpir/
 Description: Podatkowa Księga Przychodu i Rozchodu

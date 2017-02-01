@@ -37,14 +37,37 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
 
 		$this->fields = array(
-			'type' => array(
-				'type' => 'radio',
-				'options' => array(
-					'income' => __( 'Income', 'kpir' ),
-					'expense' => __( 'Expense', 'kpir' ),
+			'basic_data' => array(
+				'type' => array(
+					'type' => 'radio',
+					'args' => array(
+					'options' => array(
+						'income' => array(
+							'label' => __( 'Income', 'kpir' ),
+							),
+							'expense' => array(
+								'label' => __( 'Expense', 'kpir' ),
+							),
+							),
+					),
+					'label' => __( 'Type', 'kpir' ),
 				),
-				'label' => __( 'Type', 'kpir' ),
+				'invoice_number' => array(
+					'label' => __( 'Invoice number', 'kpir' ),
+				),
+				'contractor' => array(
+					'label' => __( 'Contractor', 'kpir' ),
+					'args' => array(
+						'class' => 'select2 large-text',
+					),
+				),
+				'description' => array(
+					'label' => __( 'Invoice description', 'kpir' ),
+				),
+
 			),
+			'income_data' => array(
+
 			'street1' => array(
 				'label' => __( 'Street', 'kpir' ),
 			),
@@ -62,6 +85,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			),
 			'nip' => array(
 				'label' => __( 'NIP', 'kpir' ),
+			),
 			),
 		);
 	}
@@ -115,9 +139,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			'publicly_queryable'    => false,
 			'capability_type'       => 'page',
 			'menu_icon'             => 'dashicons-book',
+			'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
 		);
 		register_post_type( $this->post_type_name, $args );
-
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {
@@ -134,6 +158,19 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			return __( 'Enter invoice number', 'kpir' );
 		}
 		return $title;
+	}
+
+	public function register_meta_boxes( $post ) {
+		add_meta_box( 'basic-data', __( 'Basic Data', 'kpir' ), array( $this, 'basic_data' ), $this->post_type_name );
+		add_meta_box( 'income-data', __( 'income Data', 'kpir' ), array( $this, 'income_data' ), $this->post_type_name );
+	}
+
+	public function basic_data( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
+
+	public function income_data( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 }
 
