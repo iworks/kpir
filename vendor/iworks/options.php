@@ -1202,8 +1202,8 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 
 	public function get_field_by_type( $type, $name, $value = '', $args = array() ) {
 		if ( method_exists( $this, $type ) ) {
-			if ( ! isset( $args['class'] ) ) {
-				$args['class'] = 'large-text';
+            if ( ! isset( $args['class'] ) ) {
+                $args['class'] = array( 'large-text', );
 			}
 			return $this->$type( $name, $value, $args );
 		}
@@ -1212,20 +1212,36 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 
 	private function build_field_attributes( $args ) {
 		$atts = '';
-		foreach ( $args as $key => $value ) {
-			$atts .= sprintf( ' %s="%s"', esc_html( $key ), esc_attr( $value ) );
+        foreach ( $args as $key => $value ) {
+            if ( is_array( $value ) ) {
+                $value = implode( ' ', $value );
+            }
+
+			$atts .= sprintf( ' %s="%s"', esc_html( $key ), esc_attr( trim( $value ) ) );
 		}
 		return $atts;
 	}
 
-	private function text( $name, $value = '', $args = array() ) {
+    private function input( $name, $value = '', $args = array(), $type="text" ) {
 		return sprintf(
 			'<input type="%s" name="%s" value="%s" %s />',
-			esc_attr( __FUNCTION__ ),
+			esc_attr( $type ),
 			esc_attr( $name ),
 			esc_attr( $value ),
 			$this->build_field_attributes( $args )
 		);
+    }
+
+    private function text( $name, $value = '', $args = array() ) {
+        return $this->input( $name, $value, $args, __FUNCTION__ );
+	}
+
+    private function date( $name, $value = '', $args = array() ) {
+        if ( ! isset( $args['class'] ) ) {
+            $args['class'] = array();
+        }
+        $args['class'][] = 'datepicker';
+        return $this->input( $name, $value, $args);
 	}
 
 	private function textarea( $name, $value = '', $args = array() ) {

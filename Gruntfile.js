@@ -23,15 +23,16 @@ module.exports = function( grunt ) {
 
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
-			'js/cs-cloning.js':    ['js/src/cs-cloning.js'],
-			'js/cs-visibility.js': ['js/src/cs-visibility.js'],
-			'js/cs.js':            ['js/src/cs.js']
+			'assets/scripts/admin/kpir.js': ['assets/scripts/admin/src/common.js']
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-			'assets/styles/kpir-admin.css': 'assets/styles/src/kpir-admin.scss'
-		},
+            'assets/styles/kpir-admin.css': [
+                'assets/styles/src/*.scss',
+                'assets/styles/externals/jquery-ui-datepicker.scss'
+                                         ]
+                                         },
 
 		// BUILD branches.
 		plugin_branches: {
@@ -295,7 +296,7 @@ module.exports = function( grunt ) {
 		// WATCH - Watch filesystem for changes during development.
 		watch:  {
 			sass: {
-				files: ['assets/styles/src/**/*.scss'],
+				files: ['assets/styles/src/**/*.scss', 'assets/styles/src/externals/*.scss'],
 				tasks: ['sass', 'autoprefixer'],
 				options: {
 					debounceDelay: 500
@@ -303,7 +304,7 @@ module.exports = function( grunt ) {
 			},
 
 			scripts: {
-				files: ['assets/js/src/*.js'],
+				files: ['assets/scripts/src/**/*.js', 'assets/scripts/admin/src/**/*.js'],
 				tasks: ['jshint', 'concat'],
 				options: {
 					debounceDelay: 500

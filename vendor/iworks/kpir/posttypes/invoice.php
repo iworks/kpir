@@ -38,6 +38,20 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 		$this->fields = array(
 			'basic_data' => array(
+                'date' => array(
+                    'type' => 'date',
+					'label' => __( 'Event date', 'kpir' ),
+					'args' => array(
+						'class' => array( 'small-text', ),
+					),
+				),
+                'contractor' => array(
+                    'type' => 'select2',
+					'label' => __( 'Contractor', 'kpir' ),
+				),
+				'description' => array(
+					'label' => __( 'Invoice description', 'kpir' ),
+				),
 				'type' => array(
 					'type' => 'radio',
 					'args' => array(
@@ -52,19 +66,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 					'label' => __( 'Type', 'kpir' ),
 				),
-				'invoice_number' => array(
-					'label' => __( 'Invoice number', 'kpir' ),
-				),
-				'contractor' => array(
-					'label' => __( 'Contractor', 'kpir' ),
-					'args' => array(
-						'class' => 'select2 large-text',
-					),
-				),
-				'description' => array(
-					'label' => __( 'Invoice description', 'kpir' ),
-				),
-
 			),
 			'income_data' => array(
 
