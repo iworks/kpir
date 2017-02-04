@@ -38,15 +38,15 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 		$this->fields = array(
 			'basic_data' => array(
-                'date' => array(
-                    'type' => 'date',
+				'date' => array(
+					'type' => 'date',
 					'label' => __( 'Event date', 'kpir' ),
 					'args' => array(
-						'class' => array( 'small-text', ),
+						'class' => array( 'small-text' ),
 					),
 				),
-                'contractor' => array(
-                    'type' => 'select2',
+				'contractor' => array(
+					'type' => 'select2',
 					'label' => __( 'Contractor', 'kpir' ),
 				),
 				'description' => array(

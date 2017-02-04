@@ -56,40 +56,40 @@ class iworks_kpir extends iworks {
 		add_action( 'admin_init',                 array( $this, 'admin_init' ) );
 	}
 
-    public function admin_init() {
-        add_action('admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts'));
+	public function admin_init() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
-    }
+	}
 
-    public function admin_enqueue_scripts() {
-        /**
-         * Admin scripts
-         */
-        $deps = array(
-            'jquery-ui-datepicker',
-        );
-        $files = array(
-            'kpir-admin-js' => sprintf( 'assets/scripts/admin/kpir%s.js', $this->dev ),
-        );
-        if ( '' == $this->dev ) {
-            $files = array(
-                'kpir-admin-js-common' => 'assets/scripts/admin/src/common.js',
-            );
-        }
-        foreach( $files as $handle => $file ) {
-            wp_register_script(
-                $handle,
-                plugins_url( $file, $this->base ),
-                $deps,
-                $this->get_version(),
-                true
-            );
-            wp_enqueue_script( $handle );
-        }
-        /**
-         * Admin styles
-         */
-        $deps = array( 'jquery-ui-dialog' );
+	public function admin_enqueue_scripts() {
+		/**
+		 * Admin scripts
+		 */
+		$deps = array(
+			'jquery-ui-datepicker',
+		);
+		$files = array(
+			'kpir-admin-js' => sprintf( 'assets/scripts/admin/kpir%s.js', $this->dev ),
+		);
+		if ( '' == $this->dev ) {
+			$files = array(
+				'kpir-admin-js-common' => 'assets/scripts/admin/src/common.js',
+			);
+		}
+		foreach ( $files as $handle => $file ) {
+			wp_register_script(
+				$handle,
+				plugins_url( $file, $this->base ),
+				$deps,
+				$this->get_version(),
+				true
+			);
+			wp_enqueue_script( $handle );
+		}
+		/**
+		 * Admin styles
+		 */
+		$deps = array( 'jquery-ui-dialog' );
 		$file = 'assets/styles/kpir-admin'.$this->dev.'.css';
 		wp_enqueue_style( 'kpir-admin', plugins_url( $file, $this->base ), array(), $this->get_version( $file ) );
 	}
