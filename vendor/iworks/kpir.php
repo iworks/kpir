@@ -37,7 +37,7 @@ class iworks_kpir extends iworks {
 	public function __construct() {
 		parent::__construct();
 
-		$this->capability        = apply_filters( 'iworks_kpir_capability', 'manage_options' );
+		$this->capability = apply_filters( 'iworks_kpir_capability', 'manage_options' );
 
 		/**
 		 * post_types
@@ -53,12 +53,20 @@ class iworks_kpir extends iworks {
 		/**
 		 * admin init
 		 */
-		add_action( 'admin_init',                 array( $this, 'admin_init' ) );
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
 	}
 
 	public function admin_init() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+		$file = 'assets/styles/externals/jquery-ui-datepicker.css';
+		$file = plugins_url( $file, $this->base );
+		wp_register_style( 'jquery-ui-datepicker', $file, false, '1.12.1' );
+		$file = sprintf( '/assets/styles/kpir-admin%s.css', $this->dev );
+		$version = $this->get_version( $file );
+		$file = plugins_url( $file, $this->base );
+		wp_register_style( 'admin-kpir', $file, array( 'jquery-ui-datepicker' ), $version );
+		wp_enqueue_style( 'admin-kpir' );
 	}
 
 	public function admin_enqueue_scripts() {

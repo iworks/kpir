@@ -37,16 +37,16 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		$this->fields = array(
 			'contractor_data' => array(
 				'full_name' => array(
-					'label' => __( 'Full Name', 'kpir' ),
+					'label' => __( 'Full Name:', 'kpir' ),
 				),
 				'street1' => array(
-					'label' => __( 'Street', 'kpir' ),
+					'label' => __( 'Street Address 1:', 'kpir' ),
 				),
 				'street2' => array(
-					'label' => __( 'Street', 'kpir' ),
+					'label' => __( 'Street Address 2:', 'kpir' ),
 				),
 				'zip' => array(
-					'label' => __( 'ZIP Code', 'kpir' ),
+					'label' => __( 'ZIP Code:', 'kpir' ),
 				),
 				'city' => array(
 					'label' => __( 'City', 'kpir' ),
@@ -102,8 +102,8 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 			'public'                => false,
 			'show_ui'               => true,
 			'show_in_menu'          => add_query_arg( array( 'post_type' => 'iworks_kpir_invoice' ), 'edit.php' ),
-			'show_in_admin_bar'     => true,
-			'show_in_nav_menus'     => true,
+			'show_in_admin_bar'     => false,
+			'show_in_nav_menus'     => false,
 			'can_export'            => true,
 			'has_archive'           => true,
 			'exclude_from_search'   => true,

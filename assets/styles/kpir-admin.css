@@ -1,4 +1,5 @@
 .iworks-kpir-row {
+  display: -ms-flexbox;
   display: flex;
   padding-bottom: .5em;
 }

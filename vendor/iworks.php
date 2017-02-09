@@ -45,7 +45,6 @@ class iworks {
 	}
 
 	public function get_version( $file = null ) {
-
 		if ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) {
 			if ( null != $file ) {
 				$file = dirname( $this->base ). $file;

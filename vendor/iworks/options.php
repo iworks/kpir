@@ -1223,6 +1223,15 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 	}
 
 	private function input( $name, $value = '', $args = array(), $type = 'text' ) {
+		/**
+		 * default value
+		 */
+		if ( isset( $args['default'] ) ) {
+			if ( empty( $value ) ) {
+				$value = $args['default'];
+			}
+			unset( $args['default'] );
+		}
 		return sprintf(
 			'<input type="%s" name="%s" value="%s" %s />',
 			esc_attr( $type ),
@@ -1260,6 +1269,7 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		$radio = '';
 		$options = $args['options'];
 		unset( $args['options'] );
+		$i = 0;
 		foreach ( $options as $option_value => $input ) {
 			$id = sprintf( '%s%d', $name, $i++ );
 			$radio .= sprintf(

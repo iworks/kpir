@@ -21,18 +21,21 @@ module.exports = function( grunt ) {
 
 	var conf = {
 
+		// Folder that contains the CSS files.
+		js_folder: 'assets/scripts/',
+
+		// Folder that contains the CSS files.
+		css_folder: 'assets/styles/',
+
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
-			'assets/scripts/admin/kpir.js': ['assets/scripts/admin/src/common.js']
+			'{js}admin/kpir.js': ['{js}admin/src/common.js']
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-            'assets/styles/kpir-admin.css': [
-                'assets/styles/src/*.scss',
-                'assets/styles/externals/jquery-ui-datepicker.scss'
-                                         ]
-                                         },
+            '{css}kpir-admin.css': '{css}src/*.scss',
+        },
 
 		// BUILD branches.
 		plugin_branches: {
@@ -134,6 +137,24 @@ module.exports = function( grunt ) {
 		dev_plugin_file: 'kpir.php',
 		dev_plugin_dir: 'kpir/'
 	};
+
+	// -------------------------------------------------------------------------
+	var key, ind, newkey, newval;
+	for ( key in conf.js_files_concat ) {
+		newkey = key.replace( '{js}', conf.js_folder );
+		newval = conf.js_files_concat[key];
+		delete conf.js_files_concat[key];
+		for ( ind in newval ) { newval[ind] = newval[ind].replace( '{js}', conf.js_folder ); }
+		conf.js_files_concat[newkey] = newval;
+	}
+
+	for ( key in conf.css_files_compile ) {
+		newkey = key.replace( '{css}', conf.css_folder );
+		newval = conf.css_files_compile[key].replace( '{css}', conf.css_folder );
+		delete conf.css_files_compile[key];
+		conf.css_files_compile[newkey] = newval;
+	}
+	// -------------------------------------------------------------------------
 
 	// Project configuration
 	grunt.initConfig( {
@@ -251,8 +272,8 @@ module.exports = function( grunt ) {
 				files: [{
 					expand: true,
 					src: ['**/*.css', '!**/*.min.css'],
-					cwd: 'css/',
-					dest: 'css/',
+					cwd: 'assets/styles/',
+					dest: 'assets/styles/',
 					ext: '.css',
 					extDot: 'last',
 					flatten: false
@@ -285,8 +306,8 @@ module.exports = function( grunt ) {
 			minify: {
 				expand: true,
 				src: ['*.css', '!*.min.css'],
-				cwd: 'css/',
-				dest: 'css/',
+				cwd: 'assets/styles/',
+				dest: 'assets/styles/',
 				ext: '.min.css',
 				extDot: 'last'
 			}
