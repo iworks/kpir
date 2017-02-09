@@ -27,9 +27,10 @@ if ( class_exists( 'iworks_kpir_posttypes_invoice' ) ) {
 }
 
 class iworks_kpir_posttypes {
-	protected $post_type_name = 'iworks_kpir_invoice';
+	protected $post_type_name;
 	protected $options;
 	protected $fields;
+	protected $post_type_objects = array();
 
 	public function __construct() {
 		global $iworks_kpir_options;
@@ -67,6 +68,12 @@ class iworks_kpir_posttypes {
 			 * get value
 			 */
 			$value = get_post_meta( $post->ID, $args['id'], true );
+			if ( ! empty( $value ) && 'select2' == $type ) {
+				$value = array(
+					'value' => $value,
+					'label' => get_the_title( $value ),
+				);
+			}
 			/**
 			 * build
 			 */

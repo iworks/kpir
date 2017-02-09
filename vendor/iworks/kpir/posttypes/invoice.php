@@ -35,7 +35,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	public function __construct() {
 		parent::__construct();
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
-
+		/**
+		 * fields
+		 */
 		$this->fields = array(
 			'basic_data' => array(
 				'date' => array(
@@ -49,6 +51,10 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				'contractor' => array(
 					'type' => 'select2',
 					'label' => __( 'Contractor', 'kpir' ),
+					'args' => array(
+						'data-source' => 'contractor',
+						'data-nonce-action' => 'get-contractors-list',
+					),
 				),
 				'description' => array(
 					'label' => __( 'Invoice description', 'kpir' ),
@@ -90,6 +96,8 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			),
 			),
 		);
+
+		$this->post_type_objects[ $this->get_name() ] = $this;
 	}
 
 	public function register() {

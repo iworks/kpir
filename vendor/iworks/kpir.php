@@ -59,31 +59,49 @@ class iworks_kpir extends iworks {
 	public function admin_init() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
-		$file = 'assets/styles/externals/jquery-ui-datepicker.css';
+		/**
+		 * datepicker
+		 */
+		$file = 'assets/externals/datepicker/css/jquery-ui-datepicker.css';
 		$file = plugins_url( $file, $this->base );
 		wp_register_style( 'jquery-ui-datepicker', $file, false, '1.12.1' );
+
+		/**
+		 * select2
+		 */
+		$file = 'assets/externals/select2/css/select2.min.css';
+		$file = plugins_url( $file, $this->base );
+		wp_register_style( 'select2', $file, false, '4.0.3' );
+
 		$file = sprintf( '/assets/styles/kpir-admin%s.css', $this->dev );
 		$version = $this->get_version( $file );
 		$file = plugins_url( $file, $this->base );
-		wp_register_style( 'admin-kpir', $file, array( 'jquery-ui-datepicker' ), $version );
+		wp_register_style( 'admin-kpir', $file, array( 'jquery-ui-datepicker', 'select2' ), $version );
 		wp_enqueue_style( 'admin-kpir' );
 	}
 
 	public function admin_enqueue_scripts() {
 		/**
+		 * select2
+		 */
+		wp_register_script( 'select2', plugins_url( 'assets/externals/select2/js/select2.full.min.js', $this->base ), array(), '4.0.3' );
+
+		/**
 		 * Admin scripts
 		 */
-		$deps = array(
-			'jquery-ui-datepicker',
-		);
 		$files = array(
 			'kpir-admin-js' => sprintf( 'assets/scripts/admin/kpir%s.js', $this->dev ),
 		);
 		if ( '' == $this->dev ) {
 			$files = array(
-				'kpir-admin-js-common' => 'assets/scripts/admin/src/common.js',
+				'kpir-admin-js-datepicker' => 'assets/scripts/admin/src/datepicker.js',
+				'kpir-admin-js-select2' => 'assets/scripts/admin/src/select2.js',
 			);
 		}
+		$deps = array(
+			'jquery-ui-datepicker',
+			'select2',
+		);
 		foreach ( $files as $handle => $file ) {
 			wp_register_script(
 				$handle,

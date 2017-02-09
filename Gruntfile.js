@@ -29,7 +29,10 @@ module.exports = function( grunt ) {
 
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
-			'{js}admin/kpir.js': ['{js}admin/src/common.js']
+			'{js}admin/kpir.js': [
+                '{js}admin/src/datepicker.js',
+                '{js}admin/src/select2.js'
+            ]
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.

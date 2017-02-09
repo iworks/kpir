@@ -1222,6 +1222,49 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		return $atts;
 	}
 
+	private function select( $name, $value = '', $args = array(), $type = 'text' ) {
+		/**
+		 * default value
+		 */
+		if ( isset( $args['default'] ) ) {
+			if ( empty( $value ) ) {
+				$value = $args['default'];
+			}
+			unset( $args['default'] );
+		}
+		/**
+		 * options
+		 */
+		$options = array();
+		if ( isset( $args['options'] ) ) {
+			$options = $args['options'];
+			unset( $args['options'] );
+		}
+		if ( empty( $options ) && ! empty( $value ) ) {
+			$options[ $value['value'] ] = $value['label'];
+		}
+
+		$value_to_check = isset( $value['value'] ) ? $value['value'] : false;
+
+		$content = sprintf(
+			'<select type="%s" name="%s" %s >',
+			esc_attr( $type ),
+			esc_attr( $name ),
+			$this->build_field_attributes( $args )
+		);
+		foreach ( $options as $val => $label ) {
+			$content .= sprintf(
+				'<option value="%s" %s>%s</option>',
+				esc_attr( $val ),
+				selected( $val, $value_to_check, false ),
+				esc_html( $label )
+			);
+		}
+		$content .= '</select>';
+		return $content;
+		//          esc_attr( $value ),
+	}
+
 	private function input( $name, $value = '', $args = array(), $type = 'text' ) {
 		/**
 		 * default value
@@ -1251,6 +1294,18 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		}
 		$args['class'][] = 'datepicker';
 		return $this->input( $name, $value, $args );
+	}
+
+	private function select2( $name, $value = '', $args = array() ) {
+		if ( isset( $args['data-nonce-action'] ) ) {
+			$args['data-nonce'] = wp_create_nonce( $args['data-nonce-action'] );
+			unset( $args['data-nonce-action'] );
+		}
+		if ( ! isset( $args['class'] ) ) {
+			$args['class'] = array();
+		}
+		$args['class'][] = 'select2';
+		return $this->select( $name, $value, $args );
 	}
 
 	private function textarea( $name, $value = '', $args = array() ) {

@@ -59,6 +59,10 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 				),
 			),
 		);
+		$this->post_type_objects[ $this->get_name() ] = $this;
+
+		add_action( 'wp_ajax_iworks_get_contractors', array( $this, 'get_contractors_json' ) );
+
 	}
 
 	public function register() {
@@ -125,6 +129,36 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 
 	public function save_post_meta( $post_id, $post, $update ) {
 		$this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
+	}
+
+	public function get_contractors_json() {
+		$data = array(
+			'total_count' => 0,
+			'incomplete_results' => false,
+			'items' => array(),
+		);
+		$args = array(
+			'post_type' => $this->get_name(),
+			'nopaging' => true,
+		);
+		if ( isset( $_REQUEST['q'] ) ) {
+			$args['s'] = $_REQUEST['q'];
+		}
+		$the_query = new WP_Query( $args );
+		if ( $the_query->have_posts() ) {
+			while ( $the_query->have_posts() ) {
+				$the_query->the_post();
+				$one = array(
+					'id' => get_the_ID(),
+					'full_name' => get_the_title(),
+					'nip' => get_post_meta( get_the_ID(), $this->options->get_option_name( 'nip' ), true ),
+				);
+				$data['items'][] = $one;
+			}
+			wp_reset_postdata();
+		}
+		echo wp_json_encode( $data );
+		die;
 	}
 }
 
