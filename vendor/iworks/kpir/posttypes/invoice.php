@@ -72,6 +72,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 								'label' => __( 'Expense', 'kpir' ),
 							),
 						),
+						'default' => 'expense',
 					),
 					'label' => __( 'Type', 'kpir' ),
 				),
@@ -127,8 +128,20 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				),
 				'car' => array(
 					'type' => 'checkbox',
-					'label' => __( 'Spend associated with the car.', 'kpir' ),
+					'label' => __( 'Car related', 'kpir' ),
 					'description' => __( 'It will be calculated as half VAT return.', 'kpir' ),
+					'type' => 'radio',
+					'args' => array(
+						'options' => array(
+							'yes' => array(
+								'label' => __( 'Yes', 'kpir' ),
+							),
+							'no' => array(
+								'label' => __( 'No', 'kpir' ),
+							),
+						),
+						'default' => 'no',
+					),
 				),
 			),
 		);
@@ -273,6 +286,19 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			$data['income'] += $this->add_value( $post_id, 'income_sale' );
 			$data['income'] += $this->add_value( $post_id, 'income_other' );
 			$data['vat_income'] += $this->add_value( $post_id, 'income_vat' );
+
+			$expense = 0;
+			$expense += $this->add_value( $post_id, 'expense_purchase' );
+			$expense += $this->add_value( $post_id, 'expense_cost_of_purchase' );
+			$expense += $this->add_value( $post_id, 'expense_sale' );
+			$expense += $this->add_value( $post_id, 'expense_other' );
+			$data['expense'] += $expense;
+
+			$vat_expense = $this->add_value( $post_id, 'expense_vat' );
+			if ( $vat_expense ) {
+				$data['vat_expense'] += $vat_expense;
+				$data['expense_vat'] += $expense;
+			}
 		}
 
 		$labels = array(

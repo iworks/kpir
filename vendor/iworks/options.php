@@ -1323,6 +1323,12 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		$radio = '';
 		$options = $args['options'];
 		unset( $args['options'] );
+		/**
+		 * default value
+		 */
+		if ( isset( $args['default'] ) && '' == $value ) {
+			$value = $args['default'];
+		}
 		$i = 0;
 		foreach ( $options as $option_value => $input ) {
 			$id = sprintf( '%s%d', $name, $i++ );
@@ -1332,7 +1338,7 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 				esc_attr( $id ),
 				esc_attr( $name ),
 				esc_attr( $option_value ),
-				($option_value == $value or ( empty( $option_value ) and isset( $option['default'] ) and $value == $option['default'] ) )? ' checked="checked"':'',
+				checked( $option_value, $value, false ),
 				esc_attr( $id ),
 				esc_html( $input['label'] )
 			);
