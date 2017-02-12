@@ -107,6 +107,7 @@ class iworks_kpir_posttypes {
 		if ( $this->post_type_name != $post_type ) {
 			return;
 		}
+
 		foreach ( $fields as $group => $group_data ) {
 			$post_key = $this->options->get_option_name( $group );
 			if ( isset( $_POST[ $post_key ] ) ) {
@@ -116,7 +117,14 @@ class iworks_kpir_posttypes {
 					if ( empty( $value ) ) {
 						delete_post_meta( $post->ID, $option_name );
 					} else {
-						update_post_meta( $post->ID, $option_name, $value );
+						if ( isset( $data['type'] ) && 'date' == $data['type'] ) {
+							$value = strtotime( $value );
+						}
+						$result = add_post_meta( $post->ID, $option_name, $value, true );
+						if ( ! $result ) {
+							update_post_meta( $post->ID, $option_name, $value );
+						}
+						do_action( 'iworks_kpir_posttype_update_post_meta', $post->ID, $option_name, $value, $key, $data );
 					}
 				}
 			}

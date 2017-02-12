@@ -31,6 +31,7 @@ require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
 class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 	protected $post_type_name = 'iworks_kpir_invoice';
+	private $custom_field_year_month = 'year_month';
 
 	public function __construct() {
 		parent::__construct();
@@ -98,6 +99,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		);
 
 		$this->post_type_objects[ $this->get_name() ] = $this;
+		add_action( 'iworks_kpir_posttype_update_post_meta', array( $this, 'save_year_month_to_extra_field' ), 10, 5 );
 	}
 
 	public function register() {
@@ -181,6 +183,18 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 	public function income_data( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
+
+
+	public function save_year_month_to_extra_field( $post_id, $option_name, $value, $key, $data ) {
+		if ( 'date' == $key ) {
+			$name = $this->options->get_option_name( $this->custom_field_year_month );
+			$value = date( 'Y-m', $value );
+			$result = add_post_meta( $post_id, $name, $value, true );
+			if ( ! $result ) {
+				update_post_meta( $post_id, $name, $value );
+			}
+		}
 	}
 }
 
