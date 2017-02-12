@@ -1,0 +1,54 @@
+.iworks-kpir-row {
+    display: flex;
+    padding-bottom: .5em;
+    label {
+        width: 100px;
+    }
+    .select2 {
+        min-width: 200px;
+        width: 100%;
+    }
+}
+#income,
+#expense {
+    .iworks-kpir-row {
+        display: block;
+        label {
+            display: block;
+            width: 100%;
+        }
+    }
+}
+body {
+    &.income,
+    &.expense {
+        #expense,
+        #income {
+            .iworks-kpir-row-description {
+                display: none;
+            }
+        }
+    }
+    &.income {
+        #expense {
+            display: none;
+        }
+    }
+    &.expense {
+        #income {
+            display: none;
+        }
+    }
+    &.kpir-not-set {
+        #income,
+        #expense {
+            .iworks-kpir-row {
+                display: none;
+            }
+            .iworks-kpir-row-description {
+                display: block;
+            }
+        }
+    }
+}
+

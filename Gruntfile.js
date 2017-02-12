@@ -31,13 +31,14 @@ module.exports = function( grunt ) {
 		js_files_concat: {
 			'{js}admin/kpir.js': [
                 '{js}admin/src/datepicker.js',
+                '{js}admin/src/invoice.js',
                 '{js}admin/src/select2.js'
             ]
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-            '{css}kpir-admin.css': '{css}src/*.scss',
+            '{css}kpir-admin.css': '{css}src/admin/*.scss',
         },
 
 		// BUILD branches.
@@ -170,7 +171,7 @@ module.exports = function( grunt ) {
 				banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
 					' * <%= pkg.homepage %>\n' +
 					' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
-					' * Licensed GPLv2+' +
+					' * Licensed GPLv2+\n' +
 					' */\n'
 			},
 			scripts: {
