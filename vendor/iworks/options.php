@@ -1332,7 +1332,7 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 				esc_attr( sanitize_title( $value ) ),
 				esc_attr( $id ),
 				esc_attr( $name ),
-				esc_attr( $value ),
+				esc_attr( $option_value ),
 				($option_value == $value or ( empty( $option_value ) and isset( $option['default'] ) and $value == $option['default'] ) )? ' checked="checked"':'',
 				esc_attr( $id ),
 				esc_html( $input['label'] )
