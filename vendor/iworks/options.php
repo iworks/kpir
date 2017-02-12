@@ -1356,4 +1356,25 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		}
 		return sprintf( '<p class="description">%s</p>', $args['value'] );
 	}
+
+	private function money( $name, $value = '', $args = array() ) {
+		if ( empty( $value ) || ! is_array( $value ) ) {
+			$value = array(
+				'integer' => 0,
+				'fractional' => 0,
+			);
+		}
+		$content = '';
+		/**
+		 * Integer
+		 */
+		$n = sprintf( '%s[integer]', $name );
+		$content .= $this->input( $n, $value['integer'], array( 'min' => 0 ), 'number' );
+		/**
+		 * fractional
+		 */
+		$n = sprintf( '%s[fractional]', $name );
+		$content .= $this->input( $n, $value['fractional'], array( 'min' => 0, 'max' => 99 ), 'number' );
+		return $content;
+	}
 }

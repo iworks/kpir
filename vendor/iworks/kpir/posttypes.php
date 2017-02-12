@@ -68,11 +68,20 @@ class iworks_kpir_posttypes {
 			 * get value
 			 */
 			$value = get_post_meta( $post->ID, $args['id'], true );
+			/**
+			 * Handle select2
+			 */
 			if ( ! empty( $value ) && 'select2' == $type ) {
 				$value = array(
 					'value' => $value,
 					'label' => get_the_title( $value ),
 				);
+			}
+			/**
+			 * Handle date
+			 */
+			if ( ! empty( $value ) && 'date' == $type ) {
+				$value = date_i18n( get_option( 'date_format' ), $value );
 			}
 			/**
 			 * build

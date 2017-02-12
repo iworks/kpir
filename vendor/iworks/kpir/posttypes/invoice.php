@@ -32,6 +32,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 	protected $post_type_name = 'iworks_kpir_invoice';
 	private $custom_field_year_month = 'year_month';
+	private $custom_field_year = 'year';
 
 	public function __construct() {
 		parent::__construct();
@@ -84,12 +85,15 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 				),
 				'sale' => array(
+					'type' => 'money',
 					'label' => __( 'Value of goods and services sold', 'kpir' ),
 				),
 				'other' => array(
+					'type' => 'money',
 					'label' => __( 'Other income', 'kpir' ),
 				),
 				'vat' => array(
+					'type' => 'money',
 					'label' => __( 'VAT', 'kpir' ),
 				),
 			),
@@ -102,18 +106,23 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 				),
 				'purchase' => array(
+					'type' => 'money',
 					'label' => __( 'The purchase of commercial goods and materials, according to the purchase price', 'kpir' ),
 				),
 				'cost_of_purchase' => array(
+					'type' => 'money',
 					'label' => __( 'Incidental costs of purchase', 'kpir' ),
 				),
 				'salary' => array(
+					'type' => 'money',
 					'label' => __( 'Salary in cash and in kind', 'kpir' ),
 				),
 				'other' => array(
+					'type' => 'money',
 					'label' => __( 'Other expenses', 'kpir' ),
 				),
 				'vat' => array(
+					'type' => 'money',
 					'label' => __( 'VAT', 'kpir' ),
 				),
 				'car' => array(
@@ -240,6 +249,63 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	public function close_meta_boxes( $classes ) {
 		$classes[] = 'closed';
 		return $classes;
+	}
+
+	public function month_table( $month ) {
+		$args = array(
+			'post_type' => $this->get_name(),
+			'meta_value' => $month,
+			'meta_key' => $this->options->get_option_name( $this->custom_field_year_month ),
+			'nopaging' => true,
+			'fields' => 'ids',
+			'post_status' => array( 'published' ),
+		);
+		$the_query = new WP_Query( $args );
+
+		$data = array(
+			'income' => 0,
+			'expense' => 0,
+			'expense_vat' => 0,
+			'vat_income' => 0,
+			'vat_expense' => 0,
+		);
+		foreach ( $the_query->posts as $post_id ) {
+			$data['income'] += $this->add_value( $post_id, 'income_sale' );
+			$data['income'] += $this->add_value( $post_id, 'income_other' );
+			$data['vat_income'] += $this->add_value( $post_id, 'income_vat' );
+		}
+
+		$labels = array(
+			'income' => __( 'Income', 'kpir' ),
+			'expense' => __( 'Expense', 'kpir' ),
+			'expense_vat' => __( 'Expense (VAT)', 'kpir' ),
+			'vat_income' => __( 'VAT (Income) ', 'kpir' ),
+			'vat_expense' => __( 'VAT (Expense)', 'kpir' ),
+		);
+		echo '<table class="striped">';
+		echo '<tbody>';
+		foreach ( $labels as $key => $label ) {
+			echo '<tr>';
+			printf( '<td>%s</td>', $label );
+			printf( '<td class="textright">%0.2f</td>', $data[ $key ] / 100 );
+			echo '</tr>';
+		}
+		echo '</tbody>';
+		echo '</table>';
+	}
+
+	private function add_value( $post_id, $meta_name ) {
+		$value = 0;
+		$v = get_post_meta( $post_id, $this->options->get_option_name( $meta_name ), true );
+		if ( is_array( $v ) ) {
+			if ( isset( $v['integer'] ) ) {
+				$value += 100 * $v['integer'];
+			}
+			if ( isset( $v['fractional'] ) ) {
+				$value += $v['fractional'];
+			}
+		}
+		return $value;
 	}
 }
 

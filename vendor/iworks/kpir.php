@@ -56,7 +56,33 @@ class iworks_kpir extends iworks {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 	}
 
+	public function dashboard_widget_current_month( $post, $callback_args ) {
+		$date = date( 'Y-m', time() );
+		$this->post_type_invoice->month_table( $date );
+	}
+
+	public function dashboard_widget_past_month( $post, $callback_args ) {
+		$date = sprintf( '%s -1 month', date( 'c', time() ) );
+		$date = date( 'Y-m', strtotime( $date ) );
+		$this->post_type_invoice->month_table( $date );
+	}
+
+	public function add_dashboard_widgets() {
+		$current = date( _x( 'Y F', 'date admin dashbord widget', 'kpir' ), time() );
+		$date = strtotime( sprintf( '%s -1 month', date( 'c', time() ) ) );
+		$past = date( _x( 'Y F', 'date admin dashbord widget', 'kpir' ), $date );
+		$widgets = array(
+			'current_month' => sprintf( __( 'Current month: %s', 'kpir' ), $current ),
+			'past_month' => sprintf( __( 'Past month: %s', 'kpir' ), $past ),
+		);
+		foreach ( $widgets as $widget_id => $widget_name ) {
+			$callback = array( $this, sprintf( 'dashboard_widget_%s', $widget_id ) );
+			wp_add_dashboard_widget( $widget_id, $widget_name, $callback );
+		}
+	}
+
 	public function admin_init() {
+		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 		/**
