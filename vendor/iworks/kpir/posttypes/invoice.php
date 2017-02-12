@@ -40,7 +40,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 * fields
 		 */
 		$this->fields = array(
-			'basic_data' => array(
+			'basic' => array(
 				'date' => array(
 					'type' => 'date',
 					'label' => __( 'Event date', 'kpir' ),
@@ -63,43 +63,79 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				'type' => array(
 					'type' => 'radio',
 					'args' => array(
-					'options' => array(
-						'income' => array(
-							'label' => __( 'Income', 'kpir' ),
+						'options' => array(
+							'income' => array(
+								'label' => __( 'Income', 'kpir' ),
 							),
 							'expense' => array(
 								'label' => __( 'Expense', 'kpir' ),
 							),
-							),
+						),
 					),
 					'label' => __( 'Type', 'kpir' ),
 				),
 			),
-			'income_data' => array(
-
-			'street1' => array(
-				'label' => __( 'Street', 'kpir' ),
+			'income' => array(
+				'description' => array(
+					'type' => 'description',
+					'args' => array(
+						'value' => __( 'Please first choose invoice type.', 'kpir' ),
+						'class' => 'description',
+					),
+				),
+				'sale' => array(
+					'label' => __( 'Value of goods and services sold', 'kpir' ),
+				),
+				'other' => array(
+					'label' => __( 'Other income', 'kpir' ),
+				),
+				'vat' => array(
+					'label' => __( 'VAT', 'kpir' ),
+				),
 			),
-			'street2' => array(
-				'label' => __( 'Street', 'kpir' ),
-			),
-			'zip' => array(
-				'label' => __( 'ZIP Code', 'kpir' ),
-			),
-			'city' => array(
-				'label' => __( 'City', 'kpir' ),
-			),
-			'country' => array(
-				'label' => __( 'Country', 'kpir' ),
-			),
-			'nip' => array(
-				'label' => __( 'NIP', 'kpir' ),
-			),
+			'expense' => array(
+				'description' => array(
+					'type' => 'description',
+					'args' => array(
+						'value' => __( 'Please first choose invoice type.', 'kpir' ),
+						'class' => 'description',
+					),
+				),
+				'purchase' => array(
+					'label' => __( 'The purchase of commercial goods and materials, according to the purchase price', 'kpir' ),
+				),
+				'cost_of_purchase' => array(
+					'label' => __( 'Incidental costs of purchase', 'kpir' ),
+				),
+				'salary' => array(
+					'label' => __( 'Salary in cash and in kind', 'kpir' ),
+				),
+				'other' => array(
+					'label' => __( 'Other expenses', 'kpir' ),
+				),
+				'vat' => array(
+					'label' => __( 'VAT', 'kpir' ),
+				),
+				'car' => array(
+					'type' => 'checkbox',
+					'label' => __( 'Spend associated with the car.', 'kpir' ),
+					'description' => __( 'It will be calculated as half VAT return.', 'kpir' ),
+				),
 			),
 		);
 
 		$this->post_type_objects[ $this->get_name() ] = $this;
 		add_action( 'iworks_kpir_posttype_update_post_meta', array( $this, 'save_year_month_to_extra_field' ), 10, 5 );
+
+		/**
+		 * Meta Boxes to close by default
+		 */
+		$meta_boxes_to_close = array( 'income', 'expense' );
+		foreach ( $meta_boxes_to_close as $meta_box ) {
+			$filter = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $meta_box );
+			add_filter( $filter, array( $this, 'close_meta_boxes' ) );
+		}
+
 	}
 
 	public function register() {
@@ -173,18 +209,22 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	public function register_meta_boxes( $post ) {
-		add_meta_box( 'basic-data', __( 'Basic Data', 'kpir' ), array( $this, 'basic_data' ), $this->post_type_name );
-		add_meta_box( 'income-data', __( 'income Data', 'kpir' ), array( $this, 'income_data' ), $this->post_type_name );
+		add_meta_box( 'basic', __( 'Basic Data', 'kpir' ), array( $this, 'basic' ), $this->post_type_name );
+		add_meta_box( 'income', __( 'Incomes', 'kpir' ), array( $this, 'income' ), $this->post_type_name );
+		add_meta_box( 'expense', __( 'Expenses (costs)', 'kpir' ), array( $this, 'expense' ), $this->post_type_name );
 	}
 
-	public function basic_data( $post ) {
+	public function basic( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
-	public function income_data( $post ) {
+	public function income( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
+	public function expense( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
 
 	public function save_year_month_to_extra_field( $post_id, $option_name, $value, $key, $data ) {
 		if ( 'date' == $key ) {
@@ -195,6 +235,11 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				update_post_meta( $post_id, $name, $value );
 			}
 		}
+	}
+
+	public function close_meta_boxes( $classes ) {
+		$classes[] = 'closed';
+		return $classes;
 	}
 }
 

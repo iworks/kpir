@@ -95,6 +95,7 @@ class iworks_kpir extends iworks {
 		if ( '' == $this->dev ) {
 			$files = array(
 				'kpir-admin-js-datepicker' => 'assets/scripts/admin/src/datepicker.js',
+				'kpir-admin-js-invoice' => 'assets/scripts/admin/src/invoice.js',
 				'kpir-admin-js-select2' => 'assets/scripts/admin/src/select2.js',
 			);
 		}

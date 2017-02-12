@@ -1262,7 +1262,6 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 		}
 		$content .= '</select>';
 		return $content;
-		//          esc_attr( $value ),
 	}
 
 	private function input( $name, $value = '', $args = array(), $type = 'text' ) {
@@ -1349,5 +1348,12 @@ jQuery('#hasadmintabs input[name=<?php echo $this->get_option_name( 'last_used_t
 			$radio = sprintf( '<ul>%s</ul>', $radio );
 		}
 		return $radio;
+	}
+
+	private function description( $name, $value = '', $args = array() ) {
+		if ( ! isset( $args['value'] ) || empty( $args['value'] ) ) {
+			return '';
+		}
+		return sprintf( '<p class="description">%s</p>', $args['value'] );
 	}
 }

@@ -78,7 +78,9 @@ class iworks_kpir_posttypes {
 			 * build
 			 */
 			$content .= sprintf( '<div class="iworks-kpir-row iworks-kpir-row-%s">', esc_attr( $key ) );
-			$content .= sprintf( '<label for=%s">%s</label>', esc_attr( $args['id'] ), esc_html( $data['label'] ) );
+			if ( isset( $data['label'] ) && ! empty( $data['label'] ) ) {
+				$content .= sprintf( '<label for=%s">%s</label>', esc_attr( $args['id'] ), esc_html( $data['label'] ) );
+			}
 			$content .= $this->options->get_field_by_type( $type, $name, $value, $args );
 			if ( isset( $data['description'] ) ) {
 				$content .= sprintf( '<p class="description">%s</p>', $data['description'] );
