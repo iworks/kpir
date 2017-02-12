@@ -211,8 +211,8 @@ module.exports = function( grunt ) {
 				files: [{
 					expand: true,
 					src: ['*.js', '!*.min.js'],
-					cwd: 'js/',
-					dest: 'js/',
+					cwd: 'assets/scripts/admin/',
+					dest: 'assets/scripts/admin/',
 					ext: '.min.js',
 					extDot: 'last'
 				}],
