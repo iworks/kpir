@@ -1,5 +1,5 @@
 /*! Księga Przychodi i Rozchodu - v0.0.0
- * 
+ * https://iworks.pl/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 
-.iworks-kpir-row{display:flex;padding-bottom:.5em}.iworks-kpir-row label{width:100px}
+.iworks-kpir-row{display:-ms-flexbox;display:flex;padding-bottom:.5em}.iworks-kpir-row label{width:100px}.iworks-kpir-row .select2{min-width:200px;width:100%}#income .iworks-kpir-row,#expense .iworks-kpir-row{display:block}#income .iworks-kpir-row label,#expense .iworks-kpir-row label{display:block;width:100%}body.income #expense .iworks-kpir-row-description,body.income #income .iworks-kpir-row-description,body.expense #expense .iworks-kpir-row-description,body.expense #income .iworks-kpir-row-description{display:none}body.income #expense{display:none}body.expense #income{display:none}body.kpir-not-set #income .iworks-kpir-row,body.kpir-not-set #expense .iworks-kpir-row{display:none}body.kpir-not-set #income .iworks-kpir-row-description,body.kpir-not-set #expense .iworks-kpir-row-description{display:block}
