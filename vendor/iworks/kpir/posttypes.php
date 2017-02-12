@@ -81,7 +81,7 @@ class iworks_kpir_posttypes {
 			 * Handle date
 			 */
 			if ( ! empty( $value ) && 'date' == $type ) {
-				$value = date_i18n( get_option( 'date_format' ), $value );
+				$value = date_i18n( 'Y-m-d', $value );
 			}
 			/**
 			 * build

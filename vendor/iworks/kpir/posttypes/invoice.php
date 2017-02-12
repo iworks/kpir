@@ -47,7 +47,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'label' => __( 'Event date', 'kpir' ),
 					'args' => array(
 						'class' => array( 'medium-text' ),
-						'default' => date_i18n( get_option( 'date_format' ), time() - 10 * DAY_IN_SECONDS ),
+						'default' => date_i18n( 'Y-m-d', time() ),
 					),
 				),
 				'contractor' => array(
