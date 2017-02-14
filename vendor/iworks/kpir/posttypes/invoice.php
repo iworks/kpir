@@ -33,6 +33,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	protected $post_type_name = 'iworks_kpir_invoice';
 	private $custom_field_year_month = 'year_month';
 	private $custom_field_year = 'year';
+	private $contractor_post_type_object = null;
 
 	public function __construct() {
 		parent::__construct();
@@ -157,6 +158,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			$filter = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $meta_box );
 			add_filter( $filter, array( $this, 'close_meta_boxes' ) );
 		}
+
+		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
+		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
 
 	}
 
@@ -350,6 +354,62 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			}
 		}
 		return $value;
+	}
+
+	public function custom_columns( $column, $post_id ) {
+
+		switch ( $column ) {
+			case 'contractor':
+				$id = get_post_meta( $post_id, $this->options->get_option_name( 'basic_contractor' ), true );
+				if ( empty( $id ) ) {
+					echo '-';
+				} else {
+					echo get_the_title( $id );
+				}
+			break;
+			case 'expense':
+				$expense = 0;
+				$expense += $this->add_value( $post_id, 'expense_purchase' );
+				$expense += $this->add_value( $post_id, 'expense_cost_of_purchase' );
+				$expense += $this->add_value( $post_id, 'expense_sale' );
+				$expense += $this->add_value( $post_id, 'expense_other' );
+				$expense += $this->add_value( $post_id, 'expense_vat' );
+				if ( 0 == $expense ) {
+					echo '&nbsp;';
+				} else {
+					printf( '%0.2f', $expense / 100 );
+				}
+			break;
+			case 'income':
+				$expense = 0;
+				$income += $this->add_value( $post_id, 'income_sale' );
+				$income += $this->add_value( $post_id, 'income_other' );
+				$income += $this->add_value( $post_id, 'income_vat' );
+				if ( 0 == $income ) {
+					echo '&nbsp;';
+				} else {
+					printf( '%0.2f', $income / 100 );
+				}
+			break;
+			case 'date_of_invoice':
+				$timestamp = get_post_meta( $post_id, $this->options->get_option_name( 'basic_date' ), true );
+				if ( empty( $timestamp ) ) {
+					echo '-';
+				} else {
+					echo date_i18n( get_option( 'date_format' ), $timestamp );
+				}
+			break;
+
+		}
+	}
+
+	public function add_columns( $columns ) {
+		unset( $columns['date'] );
+		$columns['contractor'] = __( 'Contractor', 'kpir' );
+		$columns['date_of_invoice'] = __( 'Date', 'kpir' );
+		$columns['expense'] = __( 'Expense', 'kpir' );
+		$columns['income'] = __( 'Income', 'kpir' );
+		return $columns;
 	}
 }
 
