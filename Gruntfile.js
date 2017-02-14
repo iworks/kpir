@@ -42,10 +42,7 @@ module.exports = function( grunt ) {
                 '{css}admin/wordpress-admin-dashboard.css': '{css}src/admin/wordpress-admin-dashboard.scss'
         },
 		css_files_concat: {
-            '{css}kpir-admin.css': [
-                '{css}admin/post-type-invoice.css',
-                '{css}admin/wordpress-admin-dashboard.css'
-            ]
+            '{css}kpir-admin.css': [ '{css}admin/*.css' ]
         },
 
 		// BUILD branches.
