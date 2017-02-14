@@ -57,7 +57,21 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 				'nip' => array(
 					'label' => __( 'NIP', 'kpir' ),
 				),
-			),
+				'bank' => array(
+					'label' => __( 'Bank', 'kpir' ),
+				),
+				'bank_account' => array(
+					'label' => __( 'Bank account', 'kpir' ),
+				),
+            ),
+            'contact' => array(
+                'website' => array('label' => __('Website', 'kpir' )),
+                'email' => array('label' => __('email', 'kpir' )),
+                'mobile' => array('label' => __('mobile', 'kpir' )),
+                'phone' => array('label' => __('phone', 'kpir' )),
+                'website' => array('label' => __('Website', 'kpir' )),
+                'website' => array('label' => __('Website', 'kpir' )),
+            ),
 		);
 		$this->post_type_objects[ $this->get_name() ] = $this;
 
