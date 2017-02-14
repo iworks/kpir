@@ -38,7 +38,14 @@ module.exports = function( grunt ) {
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-            '{css}kpir-admin.css': '{css}src/admin/*.scss',
+                '{css}admin/post-type-invoice.css': '{css}src/admin/post-type-invoice.scss',
+                '{css}admin/wordpress-admin-dashboard.css': '{css}src/admin/wordpress-admin-dashboard.scss'
+        },
+		css_files_concat: {
+            '{css}kpir-admin.css': [
+                '{css}admin/post-type-invoice.css',
+                '{css}admin/wordpress-admin-dashboard.css'
+            ]
         },
 
 		// BUILD branches.
@@ -151,7 +158,13 @@ module.exports = function( grunt ) {
 		for ( ind in newval ) { newval[ind] = newval[ind].replace( '{js}', conf.js_folder ); }
 		conf.js_files_concat[newkey] = newval;
 	}
-
+	for ( key in conf.css_files_concat ) {
+		newkey = key.replace( '{css}', conf.css_folder );
+		newval = conf.css_files_concat[key];
+		delete conf.css_files_concat[key];
+		for ( ind in newval ) { newval[ind] = newval[ind].replace( '{css}', conf.css_folder ); }
+		conf.css_files_concat[newkey] = newval;
+	}
 	for ( key in conf.css_files_compile ) {
 		newkey = key.replace( '{css}', conf.css_folder );
 		newval = conf.css_files_compile[key].replace( '{css}', conf.css_folder );
@@ -179,6 +192,20 @@ module.exports = function( grunt ) {
 			}
 		},
 
+        // CSS - concat .css source files into single .css file
+		concat_css: {
+			options: {
+				stripBanners: true,
+				banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
+					' * <%= pkg.homepage %>\n' +
+					' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
+					' * Licensed GPLv2+\n' +
+					' */\n'
+			},
+			scripts: {
+				files: conf.css_files_concat
+			}
+		},
 
 		// JS - Validate .js source code.
 		jshint: {
@@ -303,8 +330,8 @@ module.exports = function( grunt ) {
 			options: {
 				banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
 					' * <%= pkg.homepage %>\n' +
-					' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
-					' * Licensed GPLv2+' +
+					' * Copyright (c) <%= grunt.template.today("yyyy") %>;\n' +
+					' * Licensed GPLv2+\n' +
 					' */\n'
 			},
 			minify: {
@@ -322,7 +349,7 @@ module.exports = function( grunt ) {
 		watch:  {
 			sass: {
 				files: ['assets/styles/src/**/*.scss', 'assets/styles/src/externals/*.scss'],
-				tasks: ['sass', 'autoprefixer'],
+				tasks: ['sass', 'autoprefixer', 'concat_css', 'cssmin' ],
 				options: {
 					debounceDelay: 500
 				}
@@ -545,7 +572,7 @@ module.exports = function( grunt ) {
 
 	// Default task.
 
-	grunt.registerTask( 'default', ['clean:temp', 'jshint', 'concat', 'uglify', 'sass', 'autoprefixer', 'cssmin'] );
+	grunt.registerTask( 'default', ['clean:temp', 'jshint', 'concat_css', 'uglify', 'sass', 'autoprefixer', 'cssmin', 'concat' ] );
 	//grunt.registerTask( 'test', ['phpunit', 'jshint'] );
 
 	grunt.task.run( 'clear' );
