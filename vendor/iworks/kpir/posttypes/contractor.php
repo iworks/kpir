@@ -57,6 +57,12 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 				'nip' => array(
 					'label' => __( 'NIP', 'kpir' ),
 				),
+				'regon' => array(
+					'label' => __( 'REGON', 'kpir' ),
+				),
+				'krs' => array(
+					'label' => __( 'KRS', 'kpir' ),
+				),
 				'bank' => array(
 					'label' => __( 'Bank', 'kpir' ),
 				),
@@ -135,9 +141,14 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 
 	public function register_meta_boxes( $post ) {
 		add_meta_box( 'contractor-data', __( 'Contractor Data', 'kpir' ), array( $this, 'contractor_data' ), $this->post_type_name );
+		add_meta_box( 'contact-data', __( 'Contact Data', 'kpir' ), array( $this, 'contact' ), $this->post_type_name );
 	}
 
 	public function contractor_data( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
+
+	public function contact( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
