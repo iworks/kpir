@@ -123,7 +123,10 @@ class iworks_kpir_posttypes {
 			$post_key = $this->options->get_option_name( $group );
 			if ( isset( $_POST[ $post_key ] ) ) {
 				foreach ( $group_data as $key => $data ) {
-					$value = isset( $_POST[ $post_key ][ $key ] )? trim($_POST[ $post_key ][ $key ]):null;
+					$value = isset( $_POST[ $post_key ][ $key ] )? $_POST[ $post_key ][ $key ]:null;
+					if ( is_string( $value ) ) {
+						$value = trim( $value );
+					}
 					$option_name = $this->options->get_option_name( $group.'_'.$key );
 					if ( empty( $value ) ) {
 						delete_post_meta( $post->ID, $option_name );
