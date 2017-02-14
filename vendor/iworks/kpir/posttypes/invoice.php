@@ -281,8 +281,16 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			'expense_vat' => 0,
 			'vat_income' => 0,
 			'vat_expense' => 0,
+			'vat_zero' => 0,
 		);
+
 		foreach ( $the_query->posts as $post_id ) {
+			/**
+		 * check is car related cost
+		 */
+			$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
+			$is_car_related = 'yes' == $is_car_related;
+
 			$data['income'] += $this->add_value( $post_id, 'income_sale' );
 			$data['income'] += $this->add_value( $post_id, 'income_other' );
 			$data['vat_income'] += $this->add_value( $post_id, 'income_vat' );
@@ -296,8 +304,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 			$vat_expense = $this->add_value( $post_id, 'expense_vat' );
 			if ( $vat_expense ) {
-				$data['vat_expense'] += $vat_expense;
-				$data['expense_vat'] += $expense;
+				if ( $is_car_related ) {
+					$vat_expense /= 2;
+					$data['vat_expense'] += $vat_expense;
+					$data['expense_vat'] += $expense + $vat_expense;
+					$data['expense'] += $vat_expense;
+				} else {
+					$data['vat_expense'] += $vat_expense;
+					$data['expense_vat'] += $expense;
+				}
+			} else {
+				$data['vat_zero'] += $expense;
 			}
 		}
 
@@ -307,6 +324,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			'expense_vat' => __( 'Expense (VAT)', 'kpir' ),
 			'vat_income' => __( 'VAT (Income) ', 'kpir' ),
 			'vat_expense' => __( 'VAT (Expense)', 'kpir' ),
+			'vat_zero' => __( 'VAT (zero)', 'kpir' ),
 		);
 		echo '<table class="striped">';
 		echo '<tbody>';
