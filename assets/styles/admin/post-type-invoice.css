@@ -34,22 +34,27 @@
   width: 10em;
 }
 
-body.income #expense .iworks-kpir-row-description,
-body.income #income .iworks-kpir-row-description, body.expense #expense .iworks-kpir-row-description,
-body.expense #income .iworks-kpir-row-description {
+body:not(.kpir-not-set) .iworks-type .iworks-kpir-row-description {
   display: none;
 }
-body.income #expense {
+body.kpir-not-set .iworks-type .iworks-kpir-row {
   display: none;
 }
-body.expense #income {
-  display: none;
-}
-body.kpir-not-set #income .iworks-kpir-row,
-body.kpir-not-set #expense .iworks-kpir-row {
-  display: none;
-}
-body.kpir-not-set #income .iworks-kpir-row-description,
-body.kpir-not-set #expense .iworks-kpir-row-description {
+body.kpir-not-set .iworks-type .iworks-kpir-row-description {
   display: block;
+}
+body.income .iworks-type:not(#income) {
+  display: none;
+}
+body.expense .iworks-type:not(#expense) {
+  display: none;
+}
+body.salary .iworks-type:not(#salary) {
+  display: none;
+}
+body.asset .iworks-type:not(#asset) {
+  display: none;
+}
+body.insurance .iworks-type:not(#insurance) {
+  display: none;
 }

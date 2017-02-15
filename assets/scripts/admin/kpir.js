@@ -11,20 +11,19 @@ jQuery( document ).ready(function($) {
 var iWorksKPiR = {};
 
 (function( $ ) {
+
     iWorksKPiR.ShowMetaBoxes = function() {
         var value = $( "#basic .iworks-kpir-row-type input[type=radio]:checked" ).val();
-        $("#expense, #income").addClass( "closed" );
-        $("body").removeClass( "income expense kpir-not-set" );
+        $('.iworks-type').addClass( "closed" );
+        $("body").removeClass( "kpir-not-set" );
+        $(".iworks-type").each( function() {
+            $("body").removeClass( $(this).attr("id") );
+        });
         if ( "undefined" == typeof( value ) ) {
             $("body").addClass( "kpir-not-set" );
-        } else if ( "income" == value ) {
+        } else {
+            $("#"+value).removeClass( "closed" );
             $("body").addClass( value );
-            $("#income").removeClass( "closed" );
-            $("#expense").addClass( "closed" );
-        } else if ( "expense" == value ) {
-            $("body").addClass( value );
-            $("#income").addClass( "closed" );
-            $("#expense").removeClass( "closed" );
         }
     }
 

@@ -72,6 +72,15 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 							'expense' => array(
 								'label' => __( 'Expense', 'kpir' ),
 							),
+							'salary' => array(
+								'label' => __( 'Salary', 'kpir' ),
+							),
+							'asset' => array(
+								'label' => __( 'Asset', 'kpir' ),
+							),
+							'insurance' => array(
+								'label' => __( 'Insurance', 'kpir' ),
+							),
 						),
 						'default' => 'expense',
 					),
@@ -98,6 +107,20 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'type' => 'money',
 					'label' => __( 'VAT', 'kpir' ),
 				),
+				'vat_type' => array(
+					'type' => 'radio',
+					'args' => array(
+						'options' => array(
+							'c01' => array(
+								'label' => __( '1. Dostawa towarów oraz świadczenie usług na terytorium kraju, zwolnione od podatku', 'kpir' ),
+							),
+							'c06' => array(
+								'label' => __( '6. Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 22% albo 23%', 'kpir' ),
+							),
+						),
+						'default' => 'c06',
+					),
+				),
 			),
 			'expense' => array(
 				'description' => array(
@@ -114,10 +137,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				'cost_of_purchase' => array(
 					'type' => 'money',
 					'label' => __( 'Incidental costs of purchase', 'kpir' ),
-				),
-				'salary' => array(
-					'type' => 'money',
-					'label' => __( 'Salary in cash and in kind', 'kpir' ),
 				),
 				'other' => array(
 					'type' => 'money',
@@ -145,8 +164,48 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 				),
 			),
+			'salary' => array(
+				'salary' => array(
+					'type' => 'money',
+					'label' => __( 'Salary in cash and in kind', 'kpir' ),
+				),
+			),
+			'asset' => array(
+				'depreciation' => array(
+					'type' => 'money',
+					'label' => __( 'Depreciation of asset', 'kpir' ),
+				),
+			),
+			'insurance' => array(
+				'zus51' => array(
+					'type' => 'money',
+					'label' => __( 'ZUS 51', 'kpir' ),
+				),
+				'zus52' => array(
+					'type' => 'money',
+					'label' => __( 'ZUS 52', 'kpir' ),
+				),
+				'zus53' => array(
+					'type' => 'money',
+					'label' => __( 'ZUS 53', 'kpir' ),
+				),
+			),
 		);
 
+		/**
+		 * add class to metaboxes
+		 */
+		foreach ( array_keys( $this->fields ) as $name ) {
+			if ( 'basic' == $name ) {
+				continue;
+			}
+			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
+			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
+		}
+
+		/**
+		 * save extra field
+		 */
 		$this->post_type_objects[ $this->get_name() ] = $this;
 		add_action( 'iworks_kpir_posttype_update_post_meta', array( $this, 'save_year_month_to_extra_field' ), 10, 5 );
 
@@ -166,6 +225,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 * apply default sort order
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
+	}
+
+	/**
+	 * Add default class to postbox,
+	 */
+	public function add_defult_class_to_postbox( $classes ) {
+		$classes[] = 'iworks-type';
+		return $classes;
 	}
 
 	public function register() {
@@ -242,6 +309,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		add_meta_box( 'basic', __( 'Basic Data', 'kpir' ), array( $this, 'basic' ), $this->post_type_name );
 		add_meta_box( 'income', __( 'Incomes', 'kpir' ), array( $this, 'income' ), $this->post_type_name );
 		add_meta_box( 'expense', __( 'Expenses (costs)', 'kpir' ), array( $this, 'expense' ), $this->post_type_name );
+		add_meta_box( 'salary', __( 'Salaries', 'kpir' ), array( $this, 'salary' ), $this->post_type_name );
+		add_meta_box( 'asset', __( 'Assets', 'kpir' ), array( $this, 'asset' ), $this->post_type_name );
+		add_meta_box( 'insurance', __( 'Insurances (ZUS)', 'kpir' ), array( $this, 'insurance' ), $this->post_type_name );
 	}
 
 	public function basic( $post ) {
@@ -253,6 +323,18 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	public function expense( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
+
+	public function salary( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
+
+	public function asset( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
+
+	public function insurance( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
@@ -290,6 +372,8 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			'vat_income' => 0,
 			'vat_expense' => 0,
 			'vat_zero' => 0,
+			'salary' => 0,
+			'asset' => 0,
 		);
 
 		foreach ( $the_query->posts as $post_id ) {
@@ -306,9 +390,18 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			$expense = 0;
 			$expense += $this->add_value( $post_id, 'expense_purchase' );
 			$expense += $this->add_value( $post_id, 'expense_cost_of_purchase' );
-			$expense += $this->add_value( $post_id, 'expense_sale' );
 			$expense += $this->add_value( $post_id, 'expense_other' );
 			$data['expense'] += $expense;
+
+			$salary = 0;
+			$salary += $this->add_value( $post_id, 'salary_salary' );
+			$data['salary'] += $salary;
+			$data['expense'] += $salary;
+
+			$asset = 0;
+			$asset += $this->add_value( $post_id, 'asset_depreciation' );
+			$data['asset'] += $asset;
+			$data['expense'] += $asset;
 
 			$vat_expense = $this->add_value( $post_id, 'expense_vat' );
 			if ( $vat_expense ) {
@@ -327,12 +420,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		}
 
 		$labels = array(
-			'income' => __( 'Income', 'kpir' ),
-			'expense' => __( 'Expense', 'kpir' ),
-			'expense_vat' => __( 'Expense (VAT)', 'kpir' ),
+			'income' => __( 'Incomes', 'kpir' ),
+			'expense' => __( 'Expenses', 'kpir' ),
+			'expense_vat' => __( 'Expenses (VAT)', 'kpir' ),
 			'vat_income' => __( 'VAT (Income) ', 'kpir' ),
 			'vat_expense' => __( 'VAT (Expense)', 'kpir' ),
 			'vat_zero' => __( 'VAT (zero)', 'kpir' ),
+			'salary' => __( 'Salaries', 'kpir' ),
+			'asset' => __( 'Depreciation of assets', 'kpir' ),
 		);
 		echo '<table class="striped">';
 		echo '<tbody>';

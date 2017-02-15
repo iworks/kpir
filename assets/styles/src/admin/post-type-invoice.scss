@@ -39,33 +39,55 @@
 }
 
 body {
-    &.income,
-    &.expense {
-        #expense,
-        #income {
+    &:not(.kpir-not-set) {
+        .iworks-type {
             .iworks-kpir-row-description {
                 display: none;
             }
         }
     }
-    &.income {
-        #expense {
-            display: none;
-        }
-    }
-    &.expense {
-        #income {
-            display: none;
-        }
-    }
     &.kpir-not-set {
-        #income,
-        #expense {
+        .iworks-type {
             .iworks-kpir-row {
                 display: none;
             }
             .iworks-kpir-row-description {
                 display: block;
+            }
+        }
+    }
+    &.income {
+        .iworks-type {
+            &:not(#income) {
+                display: none;
+            }
+        }
+    }
+    &.expense {
+        .iworks-type {
+            &:not(#expense) {
+                display: none;
+            }
+        }
+    }
+    &.salary {
+        .iworks-type {
+            &:not(#salary) {
+                display: none;
+            }
+        }
+    }
+    &.asset {
+        .iworks-type {
+            &:not(#asset) {
+                display: none;
+            }
+        }
+    }
+    &.insurance {
+        .iworks-type {
+            &:not(#insurance) {
+                display: none;
             }
         }
     }
