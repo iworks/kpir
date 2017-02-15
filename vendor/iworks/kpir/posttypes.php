@@ -126,6 +126,13 @@ class iworks_kpir_posttypes {
 					$value = isset( $_POST[ $post_key ][ $key ] )? $_POST[ $post_key ][ $key ]:null;
 					if ( is_string( $value ) ) {
 						$value = trim( $value );
+					} else if ( is_array( $value ) ) {
+						if (
+							isset( $value['integer'] ) && 0 == $value['integer']
+							&& isset( $value['fractional'] ) && 0 == $value['fractional']
+						) {
+							$value = null;
+						}
 					}
 					$option_name = $this->options->get_option_name( $group.'_'.$key );
 					if ( empty( $value ) ) {
