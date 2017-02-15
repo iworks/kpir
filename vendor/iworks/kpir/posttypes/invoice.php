@@ -413,6 +413,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		$columns['date_of_invoice'] = __( 'Date', 'kpir' );
 		$columns['expense'] = __( 'Expense', 'kpir' );
 		$columns['income'] = __( 'Income', 'kpir' );
+		$columns['title'] = __( 'Invoice Number', 'kpir' );
 		return $columns;
 	}
 
