@@ -33,6 +33,7 @@ class iworks {
 	protected $meta_prefix = '_';
 	protected $base;
 	protected $dir;
+	protected $version;
 
 	public function __construct() {
 

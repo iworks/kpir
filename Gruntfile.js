@@ -30,20 +30,20 @@ module.exports = function( grunt ) {
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
 			'{js}admin/kpir.js': [
-                '{js}admin/src/datepicker.js',
-                '{js}admin/src/invoice.js',
-                '{js}admin/src/select2.js'
-            ]
+				'{js}admin/src/datepicker.js',
+				'{js}admin/src/invoice.js',
+				'{js}admin/src/select2.js'
+			]
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-                '{css}admin/post-type-invoice.css': '{css}src/admin/post-type-invoice.scss',
-                '{css}admin/wordpress-admin-dashboard.css': '{css}src/admin/wordpress-admin-dashboard.scss'
-        },
+				'{css}admin/post-type-invoice.css': '{css}src/admin/post-type-invoice.scss',
+				'{css}admin/wordpress-admin-dashboard.css': '{css}src/admin/wordpress-admin-dashboard.scss'
+		},
 		css_files_concat: {
-            '{css}kpir-admin.css': [ '{css}admin/*.css' ]
-        },
+			'{css}kpir-admin.css': [ '{css}admin/*.css' ]
+		},
 
 		// BUILD branches.
 		plugin_branches: {
@@ -133,10 +133,10 @@ module.exports = function( grunt ) {
 		translation: {
 			ignore_files: [
 				'node_modules/.*',
-				'(^.php)',         // Ignore non-php files.
+				'(^.php)',		 // Ignore non-php files.
 				'inc/external/.*', // External libraries.
-				'release/.*',      // Temp release files.
-				'tests/.*',        // Unit testing.
+				'release/.*',	  // Temp release files.
+				'tests/.*',		// Unit testing.
 			],
 			pot_dir: 'lang/', // With trailing slash.
 			textdomain: 'kpir',
@@ -189,7 +189,7 @@ module.exports = function( grunt ) {
 			}
 		},
 
-        // CSS - concat .css source files into single .css file
+		// CSS - concat .css source files into single .css file
 		concat_css: {
 			options: {
 				stripBanners: true,
@@ -217,9 +217,9 @@ module.exports = function( grunt ) {
 				latedef: true,
 				newcap:  true,
 				noarg:   true,
-				sub:     true,
+				sub:	 true,
 				undef:   true,
-				boss:    true,
+				boss:	true,
 				eqnull:  true,
 				globals: {
 					exports: true,
@@ -227,7 +227,6 @@ module.exports = function( grunt ) {
 				}
 			}
 		},
-
 
 		// JS - Uglyfies the source code of .js files (to make files smaller).
 		uglify: {
@@ -275,7 +274,6 @@ module.exports = function( grunt ) {
 		},
 		*/
 
-
 		// CSS - Compile a .scss file into a normal .css file.
 		sass:   {
 			all: {
@@ -288,9 +286,8 @@ module.exports = function( grunt ) {
 			}
 		},
 
-
 		// CSS - Automaticaly create prefixed attributes in css file if needed.
-		//       e.g. add `-webkit-border-radius` if `border-radius` is used.
+		//	   e.g. add `-webkit-border-radius` if `border-radius` is used.
 		autoprefixer: {
 			options: {
 				browsers: ['last 2 version', 'ie 8', 'ie 9'],
@@ -309,7 +306,6 @@ module.exports = function( grunt ) {
 			}
 		},
 
-
 		// CSS - Required for CSS-autoprefixer and maybe some SCSS function.
 		compass: {
 			options: {
@@ -320,7 +316,6 @@ module.exports = function( grunt ) {
 				}
 			}
 		},
-
 
 		// CSS - Minify all .css files.
 		cssmin: {

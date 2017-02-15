@@ -37,6 +37,8 @@ class iworks_kpir extends iworks {
 	public function __construct() {
 		parent::__construct();
 
+		$this->version = 'PLUGIN_VERSION';
+
 		$this->capability = apply_filters( 'iworks_kpir_capability', 'manage_options' );
 
 		/**
