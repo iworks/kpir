@@ -207,10 +207,12 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 	 */
 	public function custom_columns( $column, $post_id ) {
 		switch ( $column ) {
+			case 'full_name':
+				echo  get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_full_name' ), true );
+			break;
 			case 'nip':
 				echo  get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_nip' ), true );
 			break;
-
 		}
 	}
 
@@ -224,6 +226,7 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 	 */
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
+		$columns['full_name'] = __( 'Full Name', 'kpir' );
 		$columns['nip'] = __( 'NIP', 'kpir' );
 		return $columns;
 	}
