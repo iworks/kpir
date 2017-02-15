@@ -431,7 +431,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		if ( isset( $_REQUEST['orderby'] ) ) {
 			return $query;
 		}
-		if ( is_admin() && $query->is_archive && $query->is_post_type_archive && $this->get_name() == $query->query['post_type'] ) {
+		/**
+		 * do not change outsite th admin area
+		 */
+		if ( ! is_admin() ) {
+			return $query;
+		}
+		/**
+		 * check screen post type
+		 */
+		$screen = get_current_screen();
+		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
 			$query->set( 'orderby', 'meta_value_num' );
 			$query->set( 'meta_key', $this->options->get_option_name( 'basic_date' ) );
 		}
