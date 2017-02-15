@@ -64,58 +64,69 @@ class iworks_options
 	public function admin_menu() {
 
 		$data = $this->get_option_array();
-		$key = 'index';
 		if ( ! isset( $this->options ) ) {
 			return;
 		}
-		$keys_to_sanitize = array( 'menu', 'parent' );
-		foreach ( $keys_to_sanitize as $key_to_sanitize ) {
-			if ( ! array_key_exists( $key_to_sanitize, $data ) ) {
-				$data[ $key_to_sanitize ] = '';
-			}
+		$pages = array();
+		$pages['index'] = $data;
+		if ( isset( $data['pages'] ) ) {
+			$pages += $data['pages'];
 		}
-		if ( 'submenu' == $data['menu'] ) {
-			if ( ! empty( $data['parent'] ) ) {
-				$this->pagehooks[ $key ] = add_submenu_page(
-					$data['parent'],
-					isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
-					$data['page_title'],
-					apply_filters( 'iworks_options_capagility', 'manage_options', 'settings' ),
-					$this->get_option_name( $key ),
-					array( $this, 'show_page' )
-				);
-				add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
+		foreach ( $pages as $key => $data ) {
+			$keys_to_sanitize = array( 'menu', 'parent' );
+			foreach ( $keys_to_sanitize as $key_to_sanitize ) {
+				if ( ! array_key_exists( $key_to_sanitize, $data ) ) {
+					$data[ $key_to_sanitize ] = '';
+				}
 			}
-		} else {
+			if ( 'submenu' == $data['menu'] ) {
+				if ( ! empty( $data['parent'] ) ) {
 
-			switch ( $data['menu'] ) {
-				case 'comments':
-				case 'dashboard':
-				case 'links':
-				case 'management':
-				case 'media':
-				case 'options':
-				case 'pages':
-				case 'plugins':
-				case 'posts':
-				case 'posts':
-				case 'theme':
-				case 'users':
-					$function = sprintf( 'add_%s_page', $data['menu'] );
-				break;
-				default:
-					$function = 'add_menu_page';
-				break;
-			}
-			if ( isset( $data['page_title'] ) ) {
-				$this->pagehooks[ $key ] = $function(
+					$callback = array( $this, 'show_page' );
+					if ( isset( $data['show_page_callback'] ) && is_callable( $data['show_page_callback'] ) ) {
+						$callback = $data['show_page_callback'];
+					}
+					$this->pagehooks[ $key ] = add_submenu_page(
+						$data['parent'],
+						isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
+						$data['page_title'],
+						apply_filters( 'iworks_options_capagility', 'manage_options', 'settings' ),
+						$this->get_option_name( $key ),
+						$callback
+					);
+					add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
+				}
+			} else {
+
+				switch ( $data['menu'] ) {
+					case 'comments':
+					case 'dashboard':
+					case 'links':
+					case 'management':
+					case 'media':
+					case 'options':
+					case 'pages':
+					case 'plugins':
+					case 'posts':
+					case 'posts':
+					case 'theme':
+					case 'users':
+						$function = sprintf( 'add_%s_page', $data['menu'] );
+					break;
+					default:
+						$function = 'add_menu_page';
+					break;
+				}
+				if ( isset( $data['page_title'] ) ) {
+					$this->pagehooks[ $key ] = $function(
 					$data['page_title'],
 					isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
 					'manage_options',
 					$this->get_option_name( $key ),
 					array( $this, 'show_page' )
-				);
-				add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
+					);
+					add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
+				}
 			}
 		}
 	}
