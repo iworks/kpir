@@ -468,7 +468,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	 *
 	 */
 	public function custom_columns( $column, $post_id ) {
-
 		switch ( $column ) {
 			case 'contractor':
 				$id = get_post_meta( $post_id, $this->options->get_option_name( 'basic_contractor' ), true );
@@ -478,19 +477,21 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					echo get_the_title( $id );
 				}
 			break;
+
 			case 'expense':
 				$expense = 0;
 				$expense += $this->add_value( $post_id, 'expense_purchase' );
 				$expense += $this->add_value( $post_id, 'expense_cost_of_purchase' );
-				$expense += $this->add_value( $post_id, 'expense_sale' );
 				$expense += $this->add_value( $post_id, 'expense_other' );
 				$expense += $this->add_value( $post_id, 'expense_vat' );
+				$expense += $this->add_value( $post_id, 'salary_salary' );
 				if ( 0 == $expense ) {
 					echo '&nbsp;';
 				} else {
 					printf( '%0.2f', $expense / 100 );
 				}
 			break;
+
 			case 'income':
 				$income = 0;
 				$income += $this->add_value( $post_id, 'income_sale' );
@@ -502,6 +503,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					printf( '%0.2f', $income / 100 );
 				}
 			break;
+
 			case 'date_of_invoice':
 				$timestamp = get_post_meta( $post_id, $this->options->get_option_name( 'basic_date' ), true );
 				if ( empty( $timestamp ) ) {
@@ -511,6 +513,18 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				}
 			break;
 
+			case 'description':
+				echo get_post_meta( $post_id, $this->options->get_option_name( 'basic_description' ), true );
+			break;
+
+			case 'symbol':
+				$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
+				$is_car_related = 'yes' == $is_car_related;
+				if ( $is_car_related ) {
+					echo '<span class="dashicons dashicons-admin-generic"></span>';
+				} else {
+					echo '&nbsp;';
+				}
 		}
 	}
 
@@ -526,6 +540,8 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		unset( $columns['date'] );
 		$columns['contractor'] = __( 'Contractor', 'kpir' );
 		$columns['date_of_invoice'] = __( 'Date', 'kpir' );
+		$columns['symbol'] = '<span class="dashicons dashicons-admin-generic"></span>';
+		$columns['description'] = __( 'Description', 'kpir' );
 		$columns['expense'] = __( 'Expense', 'kpir' );
 		$columns['income'] = __( 'Income', 'kpir' );
 		$columns['title'] = __( 'Invoice Number', 'kpir' );

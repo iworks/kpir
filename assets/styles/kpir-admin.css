@@ -21,9 +21,13 @@
   width: 100%;
 }
 
+.wp-list-table tbody .column-symbol,
 .wp-list-table tbody .column-expense,
 .wp-list-table tbody .column-income {
   text-align: right;
+}
+.wp-list-table tbody .column-expense,
+.wp-list-table tbody .column-income {
   padding-right: 10px;
 }
 .wp-list-table .column-expense,
@@ -32,6 +36,9 @@
 }
 .wp-list-table .column-date_of_invoice {
   width: 10em;
+}
+.wp-list-table .column-symbol {
+  width: 1em;
 }
 
 body:not(.kpir-not-set) .iworks-type .iworks-kpir-row-description {

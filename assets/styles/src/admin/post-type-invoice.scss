@@ -23,9 +23,13 @@
 
 .wp-list-table {
     tbody {
+        .column-symbol,
         .column-expense,
         .column-income {
             text-align: right;
+        }
+        .column-expense,
+        .column-income {
             padding-right: 10px;
         }
     }
@@ -35,6 +39,9 @@
     }
     .column-date_of_invoice {
         width: 10em;
+    }
+    .column-symbol {
+        width: 1em;
     }
 }
 
