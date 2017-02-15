@@ -19,6 +19,14 @@
         }
     }
 }
+.wp-list-table {
+    tbody {
+        .column-expense,
+        .column-income {
+            text-align: right;
+        }
+    }
+}
 body {
     &.income,
     &.expense {

@@ -21,6 +21,11 @@
   width: 100%;
 }
 
+.wp-list-table tbody .column-expense,
+.wp-list-table tbody .column-income {
+  text-align: right;
+}
+
 body.income #expense .iworks-kpir-row-description,
 body.income #income .iworks-kpir-row-description, body.expense #expense .iworks-kpir-row-description,
 body.expense #income .iworks-kpir-row-description {
