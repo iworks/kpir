@@ -218,6 +218,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			add_filter( $filter, array( $this, 'close_meta_boxes' ) );
 		}
 
+		/**
+		 * change default columns
+		 */
 		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
 		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
 
@@ -455,6 +458,15 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		return $value;
 	}
 
+	/**
+	 * Get custom column values.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $column Column name,
+	 * @param integer $post_id Current post id (Invoice),
+	 *
+	 */
 	public function custom_columns( $column, $post_id ) {
 
 		switch ( $column ) {
@@ -502,6 +514,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		}
 	}
 
+	/**
+	 * change default columns
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $columns list of columns.
+	 * @return array $columns list of columns.
+	 */
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
 		$columns['contractor'] = __( 'Contractor', 'kpir' );

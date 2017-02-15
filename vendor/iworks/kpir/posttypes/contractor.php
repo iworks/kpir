@@ -69,20 +69,30 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 				'bank_account' => array(
 					'label' => __( 'Bank account', 'kpir' ),
 				),
-            ),
-            'contact' => array(
-                'website' => array('label' => __('Website', 'kpir' )),
-                'email' => array('label' => __('email', 'kpir' )),
-                'mobile' => array('label' => __('mobile', 'kpir' )),
-                'phone' => array('label' => __('phone', 'kpir' )),
-                'website' => array('label' => __('Website', 'kpir' )),
-                'website' => array('label' => __('Website', 'kpir' )),
-            ),
+			),
+			'contact' => array(
+				'website' => array( 'label' => __( 'Website', 'kpir' ) ),
+				'email' => array( 'label' => __( 'email', 'kpir' ) ),
+				'mobile' => array( 'label' => __( 'mobile', 'kpir' ) ),
+				'phone' => array( 'label' => __( 'phone', 'kpir' ) ),
+				'website' => array( 'label' => __( 'Website', 'kpir' ) ),
+				'website' => array( 'label' => __( 'Website', 'kpir' ) ),
+			),
 		);
 		$this->post_type_objects[ $this->get_name() ] = $this;
 
 		add_action( 'wp_ajax_iworks_get_contractors', array( $this, 'get_contractors_json' ) );
 
+		/**
+		 * change default columns
+		 */
+		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
+		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
+
+		/**
+		 * apply default sort order
+		 */
+		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
 	}
 
 	public function register() {
@@ -184,6 +194,69 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		}
 		echo wp_json_encode( $data );
 		die;
+	}
+
+	/**
+	 * Get custom column values.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $column Column name,
+	 * @param integer $post_id Current post id (contractor),
+	 *
+	 */
+	public function custom_columns( $column, $post_id ) {
+		switch ( $column ) {
+			case 'nip':
+				echo  get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_nip' ), true );
+			break;
+
+		}
+	}
+
+	/**
+	 * change default columns
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $columns list of columns.
+	 * @return array $columns list of columns.
+	 */
+	public function add_columns( $columns ) {
+		unset( $columns['date'] );
+		$columns['nip'] = __( 'NIP', 'kpir' );
+		return $columns;
+	}
+
+	/**
+	 * Add default sorting: post title
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Query $query WP Query object.
+	 */
+	public function apply_default_sort_order( $query ) {
+		/**
+		 * do not change if it is already set by request
+		 */
+		if ( isset( $_REQUEST['orderby'] ) ) {
+			return $query;
+		}
+		/**
+		 * do not change outsite th admin area
+		 */
+		if ( ! is_admin() ) {
+			return $query;
+		}
+		/**
+		 * check screen post type
+		 */
+		$screen = get_current_screen();
+		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
+			$query->set( 'orderby', 'post_title' );
+			$query->set( 'order', 'ASC' );
+		}
+		return $query;
 	}
 }
 
