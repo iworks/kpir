@@ -24,6 +24,14 @@
 .wp-list-table tbody .column-expense,
 .wp-list-table tbody .column-income {
   text-align: right;
+  padding-right: 10px;
+}
+.wp-list-table .column-expense,
+.wp-list-table .column-income {
+  width: 5em;
+}
+.wp-list-table .column-date_of_invoice {
+  width: 10em;
 }
 
 body.income #expense .iworks-kpir-row-description,

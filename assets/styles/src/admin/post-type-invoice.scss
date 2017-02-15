@@ -9,6 +9,7 @@
         width: 100%;
     }
 }
+
 #income,
 #expense {
     .iworks-kpir-row {
@@ -19,14 +20,24 @@
         }
     }
 }
+
 .wp-list-table {
     tbody {
         .column-expense,
         .column-income {
             text-align: right;
+            padding-right: 10px;
         }
     }
+    .column-expense,
+    .column-income {
+        width: 5em;
+    }
+    .column-date_of_invoice {
+        width: 10em;
+    }
 }
+
 body {
     &.income,
     &.expense {
