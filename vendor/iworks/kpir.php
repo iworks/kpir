@@ -154,4 +154,11 @@ class iworks_kpir extends iworks {
 			wp_enqueue_style( 'kpir', plugins_url( $file, $this->base ), array(), $this->get_version( $file ) );
 		}
 	}
+
+	public function show_page_raports() {
+		echo '<div class="wrap">';
+		printf( '<h1 class="wp-heading-inline">%s</h1>', __( 'Raports', 'kpir' ) );
+
+		echo '</div>';
+	}
 }

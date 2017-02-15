@@ -8,7 +8,6 @@ function iworks_kpir_options() {
 	 * main settings
 	 */
 	$iworks_kpir_options['index'] = array(
-		'use_tabs' => true,
 		'version'  => '0.0',
 		'page_title' => __( 'Configuration', 'kpir' ),
 		'menu_title' => __( 'KPiR Pro!', 'kpir' ),
@@ -108,7 +107,25 @@ function iworks_kpir_options() {
 			),
 		),
 		'metaboxes' => array(),
+		'pages' => array(
+			'reports' => array(
+				'page_title' => __( 'Reports', 'kpir' ),
+				'menu_title' => __( 'Reports', 'kpir' ),
+				'menu' => 'submenu',
+				'parent' => add_query_arg(
+					array(
+						'post_type' => 'iworks_kpir_invoice',
+					),
+					'edit.php'
+				),
+				'show_page_callback' => 'iworks_kpir_raports',
+			),
+		),
 	);
 	return $iworks_kpir_options;
 }
 
+function iworks_kpir_raports() {
+	global $iworks_kpir;
+	$iworks_kpir->show_page_raports();
+}
