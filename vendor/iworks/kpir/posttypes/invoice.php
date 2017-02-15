@@ -162,6 +162,10 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
 		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
 
+		/**
+		 * apply default sort order
+		 */
+		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
 	}
 
 	public function register() {
@@ -381,7 +385,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				}
 			break;
 			case 'income':
-				$expense = 0;
+				$income = 0;
 				$income += $this->add_value( $post_id, 'income_sale' );
 				$income += $this->add_value( $post_id, 'income_other' );
 				$income += $this->add_value( $post_id, 'income_vat' );
@@ -410,6 +414,27 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		$columns['expense'] = __( 'Expense', 'kpir' );
 		$columns['income'] = __( 'Income', 'kpir' );
 		return $columns;
+	}
+
+	/**
+	 * Add default sorting
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Query $query WP Query object.
+	 */
+	public function apply_default_sort_order( $query ) {
+		/**
+		 * do not change if it is already set by request
+		 */
+		if ( isset( $_REQUEST['orderby'] ) ) {
+			return $query;
+		}
+		if ( is_admin() && $query->is_archive && $query->is_post_type_archive && $this->get_name() == $query->query['post_type'] ) {
+			$query->set( 'orderby', 'meta_value_num' );
+			$query->set( 'meta_key', $this->options->get_option_name( 'basic_date' ) );
+		}
+		return $query;
 	}
 }
 
