@@ -18,13 +18,12 @@ function iworks_kpir_options() {
 			),
 			'edit.php'
 		),
-		'options'  => array(
-		),
-//		'metaboxes' => array(),
+		'options'  => array(),
+		//      'metaboxes' => array(),
 		'pages' => array(
-			'reports' => array(
-				'page_title' => __( 'Reports', 'kpir' ),
-				'menu_title' => __( 'Reports', 'kpir' ),
+			'report_monthly' => array(
+				'page_title' => __( 'Monthly Report', 'kpir' ),
+				'menu_title' => __( 'Monthly', 'kpir' ),
 				'menu' => 'submenu',
 				'parent' => add_query_arg(
 					array(
@@ -32,14 +31,14 @@ function iworks_kpir_options() {
 					),
 					'edit.php'
 				),
-				'show_page_callback' => 'iworks_kpir_raports',
+				'show_page_callback' => 'iworks_kpir_report_monthly',
 			),
 		),
 	);
 	return $iworks_kpir_options;
 }
 
-function iworks_kpir_raports() {
+function iworks_kpir_report_monthly() {
 	global $iworks_kpir;
-	$iworks_kpir->show_page_raports();
+	$iworks_kpir->show_page_reports( 'monthly' );
 }

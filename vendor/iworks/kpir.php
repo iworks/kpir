@@ -157,9 +157,19 @@ class iworks_kpir extends iworks {
 		}
 	}
 
-	public function show_page_raports() {
+	public function show_page_reports( $report = 'monthly' ) {
 		echo '<div class="wrap">';
-		printf( '<h1 class="wp-heading-inline">%s</h1>', __( 'Raports', 'kpir' ) );
+		switch ( $report ) {
+			case 'monthly':
+				include_once $this->base .'/iworks/kpir/reports/montly.php';
+				printf( '<h1 class="wp-heading-inline">%s</h1>', __( 'Montly report', 'kpir' ) );
+				$report = new iworks_kpir_reports_montly();
+				$report->show( $this->post_type_invoice );
+			break;
+			default:
+				printf( '<h1 class="wp-heading-inline">%s</h1>', __( 'Reaports', 'kpir' ) );
+			break;
+		}
 
 		echo '</div>';
 	}

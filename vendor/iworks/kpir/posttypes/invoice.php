@@ -578,5 +578,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		}
 		return $query;
 	}
+
+	public function get_custom_field_name() {
+		return $this->custom_field_year_month;
+	}
 }
 

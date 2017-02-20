@@ -81,15 +81,20 @@ class iworks_options
 			}
 			if ( 'submenu' == $data['menu'] ) {
 				if ( ! empty( $data['parent'] ) ) {
-
+					/**
+					 * Check callback
+					 */
 					$callback = array( $this, 'show_page' );
 					if ( isset( $data['show_page_callback'] ) && is_callable( $data['show_page_callback'] ) ) {
 						$callback = $data['show_page_callback'];
 					}
+					/**
+					 * add submenu
+					 */
 					$this->pagehooks[ $key ] = add_submenu_page(
 						$data['parent'],
-						isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
 						$data['page_title'],
+						isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
 						apply_filters( 'iworks_options_capagility', 'manage_options', 'settings' ),
 						$this->get_option_name( $key ),
 						$callback
@@ -97,7 +102,6 @@ class iworks_options
 					add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
 				}
 			} else {
-
 				switch ( $data['menu'] ) {
 					case 'comments':
 					case 'dashboard':
@@ -119,11 +123,11 @@ class iworks_options
 				}
 				if ( isset( $data['page_title'] ) ) {
 					$this->pagehooks[ $key ] = $function(
-					$data['page_title'],
-					isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
-					'manage_options',
-					$this->get_option_name( $key ),
-					array( $this, 'show_page' )
+						$data['page_title'],
+						isset( $data['menu_title'] )? $data['menu_title']:$data['page_title'],
+						'manage_options',
+						$this->get_option_name( $key ),
+						array( $this, 'show_page' )
 					);
 					add_action( 'load-'.$this->pagehooks[ $key ], array( $this, 'load_page' ) );
 				}
