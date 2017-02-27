@@ -173,4 +173,19 @@ class iworks_kpir extends iworks {
 
 		echo '</div>';
 	}
+
+	/**
+	 * Plugin row data
+	 */
+	public function plugin_row_meta( $links, $file ) {
+		if ( $this->dir.'/kpir.php' == $file ) {
+			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
+				$links[] = '<a href="themes.php?page='.$this->dir.'/admin/index.php">' . __( 'Settings' ) . '</a>';
+			}
+			if ( ! $this->is_pro ) {
+				$links[] = '<a href="http://iworks.pl/donate/kpir.php">' . __( 'Donate' ) . '</a>';
+			}
+		}
+		return $links;
+	}
 }
