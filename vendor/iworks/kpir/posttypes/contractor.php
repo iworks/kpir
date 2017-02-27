@@ -252,6 +252,12 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 			return $query;
 		}
 		/**
+		 * check get_current_screen()
+		 */
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return $query;
+		}
+		/**
 		 * check screen post type
 		 */
 		$screen = get_current_screen();
