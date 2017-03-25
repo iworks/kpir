@@ -1,7 +1,7 @@
 .kpir-report {
   border-collapse: collapse;
 }
-.kpir-report td, .kpir-report tr {
+.kpir-report td, .kpir-report th {
   padding: 5px;
   border: 1px solid #000;
 }

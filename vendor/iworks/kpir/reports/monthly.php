@@ -60,6 +60,8 @@ class iworks_kpir_reports_monthly {
 		if ( $query->have_posts() ) {
 			$i = 1;
 			echo '<table class="kpir-report kpir-report-monthly">';
+			echo $this->html_table_thead();
+			echo '<tbody>';
 			while ( $query->have_posts() ) {
 				$query->the_post();
 				$ID = get_the_ID();
@@ -75,6 +77,10 @@ class iworks_kpir_reports_monthly {
 				 */
 				echo $this->html_table_td( date_i18n( $date_format, get_post_meta( $ID, $cf_date_name, true ) ), 'date' );
 				/**
+				 * Invoice ID
+				 */
+				echo $this->html_table_td( get_the_title(), 'title' );
+				/**
 				 * contractor name
 				 */
 				echo $this->html_table_td( get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_full_name', true ) );
@@ -86,9 +92,13 @@ class iworks_kpir_reports_monthly {
 						get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_city', true )
 					)
 				);
-				echo $this->html_table_td( get_the_title(), 'title' );
+				/**
+				 * Opis zdarzenia gospodarczego
+				 */
+				echo $this->html_table_td( get_post_meta( $ID, 'iworks_kpir_basic_description', true ) );
 				echo '</tr>';
 			}
+			echo '</tbody>';
 			echo '</table>';
 			/* Restore original Post Data */
 			wp_reset_postdata();
@@ -99,13 +109,82 @@ class iworks_kpir_reports_monthly {
 		}
 	}
 
+	private function html_table_thead() {
+		$content = '<thead>';
+		$content .= '<tr>';
+		$content .= $this->html_table_th( 'Lp.', null, 3 );
+		$content .= $this->html_table_th( 'Data zdarzenia gospodarczego', null, 3 );
+		$content .= $this->html_table_th( 'Nr dowodu księgowego', null, 3 );
+		$content .= $this->html_table_th( 'Kontrahent', null, null, 2 );
+		$content .= $this->html_table_th( 'Opis zdarzenia gospodarczego', null, 3 );
+		$content .= $this->html_table_th( 'Przychód', null, null, 6 );
+		$content .= '</tr>';
+		$content .= '<tr>';
+		$content .= $this->html_table_th( 'imię i nazwisko (firma)', null, 2 );
+		$content .= $this->html_table_th( 'adres', null, 2 );
+		$content .= $this->html_table_th( 'wartość sprzedanych towarów i usług', null, null, 2 );
+		$content .= $this->html_table_th( 'pozostałe przychody', null, null, 2 );
+		$content .= $this->html_table_th( 'razem przychód (7+8)', null, null, 2 );
+		$content .= '</tr>';
+		$content .= '<tr>';
+		$content .= $this->html_table_th( 'zł' );
+		$content .= $this->html_table_th( 'gr' );
+		$content .= $this->html_table_th( 'zł' );
+		$content .= $this->html_table_th( 'gr' );
+		$content .= $this->html_table_th( 'zł' );
+		$content .= $this->html_table_th( 'gr' );
+		$content .= '</tr>';
+		$content .= '<tr>';
+		$content .= $this->html_table_th( 1 );
+		$content .= $this->html_table_th( 2 );
+		$content .= $this->html_table_th( 3 );
+		$content .= $this->html_table_th( 4 );
+		$content .= $this->html_table_th( 5 );
+		$content .= $this->html_table_th( 6 );
+		$content .= $this->html_table_th( 7, null, null, 2 );
+		$content .= $this->html_table_th( 8, null, null, 2 );
+		$content .= $this->html_table_th( 9, null, null, 2 );
+		$content .= '</tr>';
+		$content .= '</thead>';
+		return $content;
+	}
+
 	private function html_table_td( $value, $class = '' ) {
-		if ( ! is_string( $class ) ) {
-			$class = '';
-		} else if ( ! empty( $class ) ) {
-			$class = sprintf( ' class="%s"', esc_attr( $class ) );
+		$args = array(
+			'tag' => 'td',
+			'value' => $value,
+			'class' => $class,
+		);
+		return $this->html_table_cell( $args );
+	}
+
+	private function html_table_th( $value, $class = '', $rowspan = '', $colspan = '' ) {
+		$args = array(
+			'tag' => 'th',
+			'value' => $value,
+			'class' => $class,
+			'rowspan' => $rowspan,
+			'colspan' => $colspan,
+		);
+		return $this->html_table_cell( $args );
+	}
+
+	private function html_table_cell( $args ) {
+		$attributes = '';
+		foreach ( array( 'class', 'rowspan', 'colspan' ) as $key ) {
+			if ( isset( $args[ $key ] ) ) {
+				if ( ! empty( $args[ $key ] ) ) {
+					$attributes .= sprintf( ' %s="%s"', $key, esc_attr( $args[ $key ] ) );
+				}
+			}
 		}
-		return sprintf( '<td%s>%s</td>', $class, $value );
+		$tag = 'td';
+		if ( isset( $args['tag'] ) ) {
+			$tag = $args['tag'];
+		}
+		return sprintf(
+			'<%s%s>%s</%s>', $tag, $attributes, $args['value'], $tag
+		);
 	}
 
 	private function get_contractor( $contractor_id ) {
