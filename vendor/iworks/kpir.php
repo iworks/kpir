@@ -161,9 +161,9 @@ class iworks_kpir extends iworks {
 		echo '<div class="wrap">';
 		switch ( $report ) {
 			case 'monthly':
-				include_once $this->base .'/iworks/kpir/reports/montly.php';
-				printf( '<h1 class="wp-heading-inline">%s</h1>', __( 'Montly report', 'kpir' ) );
-				$report = new iworks_kpir_reports_montly();
+				include_once $this->base .'/iworks/kpir/reports/monthly.php';
+				printf( '<h1 class="wp-heading-inline">%s</h1>', __( 'monthly report', 'kpir' ) );
+				$report = new iworks_kpir_reports_monthly();
 				$report->show( $this->post_type_invoice );
 			break;
 			default:
@@ -172,5 +172,20 @@ class iworks_kpir extends iworks {
 		}
 
 		echo '</div>';
+	}
+
+	/**
+	 * Plugin row data
+	 */
+	public function plugin_row_meta( $links, $file ) {
+		if ( $this->dir.'/kpir.php' == $file ) {
+			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
+				$links[] = '<a href="themes.php?page='.$this->dir.'/admin/index.php">' . __( 'Settings' ) . '</a>';
+			}
+			if ( ! $this->is_pro ) {
+				$links[] = '<a href="http://iworks.pl/donate/kpir.php">' . __( 'Donate' ) . '</a>';
+			}
+		}
+		return $links;
 	}
 }

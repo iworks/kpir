@@ -65,6 +65,13 @@ body.asset .iworks-type:not(#asset) {
 body.insurance .iworks-type:not(#insurance) {
   display: none;
 }
+.kpir-report {
+  border-collapse: collapse;
+}
+.kpir-report td, .kpir-report tr {
+  padding: 5px;
+  border: 1px solid #000;
+}
 #dashboard-widgets #current_month table,
 #dashboard-widgets #past_month table {
   width: 100%;
