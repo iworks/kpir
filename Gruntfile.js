@@ -39,7 +39,8 @@ module.exports = function( grunt ) {
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
 				'{css}admin/post-type-invoice.css': '{css}src/admin/post-type-invoice.scss',
-				'{css}admin/wordpress-admin-dashboard.css': '{css}src/admin/wordpress-admin-dashboard.scss'
+				'{css}admin/wordpress-admin-dashboard.css': '{css}src/admin/wordpress-admin-dashboard.scss',
+				'{css}admin/reports.css': '{css}src/admin/reports.scss'
 		},
 		css_files_concat: {
 			'{css}kpir-admin.css': [ '{css}admin/*.css' ]

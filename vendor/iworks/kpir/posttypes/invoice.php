@@ -31,7 +31,6 @@ require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
 class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 	protected $post_type_name = 'iworks_kpir_invoice';
-	private $custom_field_year_month = 'year_month';
 	private $custom_field_year = 'year';
 	private $contractor_post_type_object = null;
 
@@ -343,7 +342,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 	public function save_year_month_to_extra_field( $post_id, $option_name, $value, $key, $data ) {
 		if ( 'date' == $key ) {
-			$name = $this->options->get_option_name( $this->custom_field_year_month );
+			$name = $this->get_custom_field_year_month_name();
 			$value = date( 'Y-m', $value );
 			$result = add_post_meta( $post_id, $name, $value, true );
 			if ( ! $result ) {
@@ -361,7 +360,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		$args = array(
 			'post_type' => $this->get_name(),
 			'meta_value' => $month,
-			'meta_key' => $this->options->get_option_name( $this->custom_field_year_month ),
+			'meta_key' => $this->get_custom_field_year_month_name(),
 			'nopaging' => true,
 			'fields' => 'ids',
 			'post_status' => array( 'published' ),
@@ -470,7 +469,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	public function custom_columns( $column, $post_id ) {
 		switch ( $column ) {
 			case 'contractor':
-				$id = get_post_meta( $post_id, $this->options->get_option_name( 'basic_contractor' ), true );
+				$id = get_post_meta( $post_id, $this->get_custom_field_basic_contractor_name() , true );
 				if ( empty( $id ) ) {
 					echo '-';
 				} else {
@@ -505,7 +504,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			break;
 
 			case 'date_of_invoice':
-				$timestamp = get_post_meta( $post_id, $this->options->get_option_name( 'basic_date' ), true );
+				$timestamp = get_post_meta( $post_id, $this->get_custom_field_basic_date_name(), true );
 				if ( empty( $timestamp ) ) {
 					echo '-';
 				} else {
@@ -574,13 +573,42 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		$screen = get_current_screen();
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
 			$query->set( 'orderby', 'meta_value_num' );
-			$query->set( 'meta_key', $this->options->get_option_name( 'basic_date' ) );
+			$query->set( 'meta_key', $this->get_custom_field_basic_date_name() );
 		}
 		return $query;
 	}
 
-	public function get_custom_field_name() {
-		return $this->custom_field_year_month;
+	/**
+	 * Get "basic_date" custom filed name.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Custom Field meta_key.
+	 */
+	public function get_custom_field_basic_date_name() {
+		return $this->options->get_option_name( 'basic_date' );
+	}
+
+	/**
+	 * Get "year_month" custom filed name.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Custom Field meta_key.
+	 */
+	public function get_custom_field_year_month_name() {
+		return $this->options->get_option_name( 'year_month' );
+	}
+
+	/**
+	 * Get "basic_contractor" custom filed name.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Custom Field meta_key.
+	 */
+	public function get_custom_field_basic_contractor_name() {
+		return $this->options->get_option_name( 'basic_contractor' );
 	}
 }
 
