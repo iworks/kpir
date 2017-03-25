@@ -254,6 +254,9 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		/**
 		 * check screen post type
 		 */
+        if ( ! function_exists( 'get_current_screen' ) ) {
+            return $query;
+        }
 		$screen = get_current_screen();
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
 			$query->set( 'orderby', 'post_title' );
