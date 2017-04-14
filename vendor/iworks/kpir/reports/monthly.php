@@ -35,6 +35,8 @@ class iworks_kpir_reports_monthly {
 
 	public function show( $post_type_object ) {
 
+		$this->show_filter( $post_type_object );
+
 		$cf_date_name = $post_type_object->get_custom_field_basic_date_name();
 		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
 		$date_format = get_option( 'date_format' );
@@ -48,7 +50,7 @@ class iworks_kpir_reports_monthly {
 			'meta_query' => array(
 				array(
 					'key' => $post_type_object->get_custom_field_year_month_name(),
-					'value' => '2017-02',
+					'value' => get_query_var( 'm', '' ),
 				),
 				array(
 					'key' => $post_type_object->get_custom_field_basic_date_name(),
@@ -192,6 +194,38 @@ class iworks_kpir_reports_monthly {
 			$this->contractors[ $contractor_id ] = get_post( $contractor_id );
 		}
 		return $this->contractors[ $contractor_id ];
+	}
+
+	public function show_filter( $post_type_object ) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare( "select distinct meta_value from {$wpdb->postmeta} where meta_key = '{$post_type_object->get_custom_field_year_month_name()}'order by meta_value desc" );
+
+		$values = $wpdb->get_col( $sql );
+
+		if ( empty( $values ) ) {
+			return;
+		}
+
+		$current = get_query_var( 'm', '' );
+
+		echo '<div class="tablenav top">';
+		echo '<div class="alignleft actions">';
+		printf( '<label for="filter-by-date" class="screen-reader-text">%s</label>', esc_html__( 'Filter by date', 'kpir' ) );
+		echo '<select name="m" id="filter-by-date">';
+		foreach ( $values as $value ) {
+			printf(
+				'<option value="%s" %s>%s</option>',
+				esc_attr( $value ),
+				selected( $value, $current, false ),
+				esc_html( $value )
+			);
+		}
+		echo '</select>';
+		printf( '<input type="submit" name="filter_action" id="post-query-submit" class="button" value="%s">', esc_attr__( 'Filter', 'kpir' ) );
+		echo '</div>';
+		echo '</div>';
+
 	}
 }
 
