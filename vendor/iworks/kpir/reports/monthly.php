@@ -209,6 +209,9 @@ class iworks_kpir_reports_monthly {
 
 		$current = get_query_var( 'm', '' );
 
+		echo '<form id="posts-filter" method="get">';
+		printf( '<input name="post_type" type="hidden" value="%s" />', esc_attr( $post_type_object->get_name() ) );
+		printf( '<input name="page" type="hidden" value="%s" />', esc_attr( get_query_var( 'page' ) ) );
 		echo '<div class="tablenav top">';
 		echo '<div class="alignleft actions">';
 		printf( '<label for="filter-by-date" class="screen-reader-text">%s</label>', esc_html__( 'Filter by date', 'kpir' ) );
@@ -225,6 +228,7 @@ class iworks_kpir_reports_monthly {
 		printf( '<input type="submit" name="filter_action" id="post-query-submit" class="button" value="%s">', esc_attr__( 'Filter', 'kpir' ) );
 		echo '</div>';
 		echo '</div>';
+		echo '</form>';
 
 	}
 }
