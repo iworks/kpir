@@ -211,7 +211,7 @@ class iworks_kpir_reports_monthly {
 
 		echo '<form id="posts-filter" method="get">';
 		printf( '<input name="post_type" type="hidden" value="%s" />', esc_attr( $post_type_object->get_name() ) );
-		printf( '<input name="page" type="hidden" value="%s" />', esc_attr( get_query_var( 'page' ) ) );
+		printf( '<input name="page" type="hidden" value="%s" />', esc_attr( __CLASS__ ) );
 		echo '<div class="tablenav top">';
 		echo '<div class="alignleft actions">';
 		printf( '<label for="filter-by-date" class="screen-reader-text">%s</label>', esc_html__( 'Filter by date', 'kpir' ) );
