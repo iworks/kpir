@@ -30,16 +30,28 @@ class iworks_kpir_reports_monthly {
 
 	private $contractors = array();
 
-	public function __construct() {
-	}
+    public function __construct() {
+    }
 
 	public function show( $post_type_object ) {
 
-		$this->show_filter( $post_type_object );
+        /**
+         * get current month
+         */
+        $current = isset( $_GET['m'] )? $_GET['m']:'';
+        if ( ! preg_match( '/^\d{4}\-\d{2}$/', $current ) ) {
+            $current = date( 'Y-m' );
+        }
+        /**
+         * show filter
+         */
+		$this->show_filter( $post_type_object, $current );
 
 		$cf_date_name = $post_type_object->get_custom_field_basic_date_name();
 		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
-		$date_format = get_option( 'date_format' );
+        $date_format = get_option( 'date_format' );
+
+
 
 		$args = array(
 			'post_type' => $post_type_object->get_name(),
@@ -50,7 +62,7 @@ class iworks_kpir_reports_monthly {
 			'meta_query' => array(
 				array(
 					'key' => $post_type_object->get_custom_field_year_month_name(),
-					'value' => get_query_var( 'm', '' ),
+					'value' => $current,
 				),
 				array(
 					'key' => $post_type_object->get_custom_field_basic_date_name(),
@@ -196,7 +208,7 @@ class iworks_kpir_reports_monthly {
 		return $this->contractors[ $contractor_id ];
 	}
 
-	public function show_filter( $post_type_object ) {
+	public function show_filter( $post_type_object, $current ) {
 		global $wpdb;
 
 		$sql = $wpdb->prepare( "select distinct meta_value from {$wpdb->postmeta} where meta_key = '{$post_type_object->get_custom_field_year_month_name()}'order by meta_value desc" );
@@ -206,8 +218,6 @@ class iworks_kpir_reports_monthly {
 		if ( empty( $values ) ) {
 			return;
 		}
-
-		$current = get_query_var( 'm', '' );
 
 		echo '<form id="posts-filter" method="get">';
 		printf( '<input name="post_type" type="hidden" value="%s" />', esc_attr( $post_type_object->get_name() ) );
