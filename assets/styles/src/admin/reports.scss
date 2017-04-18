@@ -4,5 +4,20 @@
         padding: 5px;
         border: 1px solid #000;
     }
+    td {
+        &.money {
+            font-family: monospace;
+            padding: 0 5px;
+            text-align: right;
+            width: 3em;
+        }
+    }
+    tr {
+        &:nth-child(even) {
+            td {
+                background-color: #ddd;
+            }
+        }
+    }
 }
 

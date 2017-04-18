@@ -72,6 +72,15 @@ body.insurance .iworks-type:not(#insurance) {
   padding: 5px;
   border: 1px solid #000;
 }
+.kpir-report td.money {
+  font-family: monospace;
+  padding: 0 5px;
+  text-align: right;
+  width: 3em;
+}
+.kpir-report tr:nth-child(even) td {
+  background-color: #ddd;
+}
 #dashboard-widgets #current_month table,
 #dashboard-widgets #past_month table {
   width: 100%;

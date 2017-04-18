@@ -30,28 +30,26 @@ class iworks_kpir_reports_monthly {
 
 	private $contractors = array();
 
-    public function __construct() {
-    }
+	public function __construct() {
+	}
 
 	public function show( $post_type_object ) {
 
-        /**
-         * get current month
-         */
-        $current = isset( $_GET['m'] )? $_GET['m']:'';
-        if ( ! preg_match( '/^\d{4}\-\d{2}$/', $current ) ) {
-            $current = date( 'Y-m' );
-        }
-        /**
-         * show filter
-         */
+		/**
+		 * get current month
+		 */
+		$current = isset( $_GET['m'] )? $_GET['m']:'';
+		if ( ! preg_match( '/^\d{4}\-\d{2}$/', $current ) ) {
+			$current = date( 'Y-m' );
+		}
+		/**
+		 * show filter
+		 */
 		$this->show_filter( $post_type_object, $current );
 
 		$cf_date_name = $post_type_object->get_custom_field_basic_date_name();
 		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
-        $date_format = get_option( 'date_format' );
-
-
+		$date_format = get_option( 'date_format' );
 
 		$args = array(
 			'post_type' => $post_type_object->get_name(),
@@ -110,6 +108,64 @@ class iworks_kpir_reports_monthly {
 				 * Opis zdarzenia gospodarczego
 				 */
 				echo $this->html_table_td( get_post_meta( $ID, 'iworks_kpir_basic_description', true ) );
+
+				/**
+				 * type
+				 */
+				$type = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
+					$value = array( 'integer' => 0, 'fractional' => 0 );
+
+				switch ( $type ) {
+					case 'expense':
+					case 'asset':
+					case 'salary':
+						echo $this->html_table_td( '&nbsp;', null, 1, 6 );
+
+						switch ( $type ) {
+							case 'asset':
+								echo $this->html_table_td( '&nbsp;' );
+								echo $this->html_table_td( '&nbsp;' );
+								$value = get_post_meta( $ID, 'iworks_kpir_asset_depreciation', true );
+								echo $this->html_table_td( $value['integer'], 'money' );
+								echo $this->html_table_td( $value['fractional'], 'money' );
+							break;
+							case 'expense':
+								echo $this->html_table_td( '&nbsp;' );
+								echo $this->html_table_td( '&nbsp;' );
+								$value = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
+								echo $this->html_table_td( $value['integer'], 'money' );
+								echo $this->html_table_td( $value['fractional'], 'money' );
+							break;
+							case 'salary':
+								$value = get_post_meta( $ID, 'iworks_kpir_salary_salary', true );
+								echo $this->html_table_td( $value['integer'], 'money' );
+								echo $this->html_table_td( $value['fractional'], 'money' );
+								echo $this->html_table_td( '&nbsp;' );
+								echo $this->html_table_td( '&nbsp;' );
+							break;
+						}
+						echo $this->html_table_td( $value['integer'], 'money' );
+						echo $this->html_table_td( $value['fractional'], 'money' );
+				break;
+					case 'income':
+						switch ( $type ) {
+							case 'income':
+								$value = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
+								echo $this->html_table_td( $value['integer'], 'money' );
+								echo $this->html_table_td( $value['fractional'], 'money' );
+								echo $this->html_table_td( '&nbsp;' );
+								echo $this->html_table_td( '&nbsp;' );
+								echo $this->html_table_td( $value['integer'], 'money' );
+								echo $this->html_table_td( $value['fractional'], 'money' );
+								echo $this->html_table_td( '&nbsp;', null, 1, 6 );
+							break;
+						}
+				break;
+					default:
+
+						l( $ID );
+				}
+
 				echo '</tr>';
 			}
 			echo '</tbody>';
@@ -132,6 +188,7 @@ class iworks_kpir_reports_monthly {
 		$content .= $this->html_table_th( 'Kontrahent', null, null, 2 );
 		$content .= $this->html_table_th( 'Opis zdarzenia gospodarczego', null, 3 );
 		$content .= $this->html_table_th( 'Przychód', null, null, 6 );
+		$content .= $this->html_table_th( 'Wydatki', null, null, 6 );
 		$content .= '</tr>';
 		$content .= '<tr>';
 		$content .= $this->html_table_th( 'imię i nazwisko (firma)', null, 2 );
@@ -139,8 +196,17 @@ class iworks_kpir_reports_monthly {
 		$content .= $this->html_table_th( 'wartość sprzedanych towarów i usług', null, null, 2 );
 		$content .= $this->html_table_th( 'pozostałe przychody', null, null, 2 );
 		$content .= $this->html_table_th( 'razem przychód (7+8)', null, null, 2 );
+		$content .= $this->html_table_th( 'wynagrodzenie', null, null, 2 );
+		$content .= $this->html_table_th( 'pozostale', null, null, 2 );
+		$content .= $this->html_table_th( 'razem wydatki (10+11)', null, null, 2 );
 		$content .= '</tr>';
 		$content .= '<tr>';
+		$content .= $this->html_table_th( 'zł' );
+		$content .= $this->html_table_th( 'gr' );
+		$content .= $this->html_table_th( 'zł' );
+		$content .= $this->html_table_th( 'gr' );
+		$content .= $this->html_table_th( 'zł' );
+		$content .= $this->html_table_th( 'gr' );
 		$content .= $this->html_table_th( 'zł' );
 		$content .= $this->html_table_th( 'gr' );
 		$content .= $this->html_table_th( 'zł' );
@@ -158,16 +224,21 @@ class iworks_kpir_reports_monthly {
 		$content .= $this->html_table_th( 7, null, null, 2 );
 		$content .= $this->html_table_th( 8, null, null, 2 );
 		$content .= $this->html_table_th( 9, null, null, 2 );
+		$content .= $this->html_table_th( 10, null, null, 2 );
+		$content .= $this->html_table_th( 11, null, null, 2 );
+		$content .= $this->html_table_th( 12, null, null, 2 );
 		$content .= '</tr>';
 		$content .= '</thead>';
 		return $content;
 	}
 
-	private function html_table_td( $value, $class = '' ) {
+	private function html_table_td( $value, $class = '', $rowspan = '', $colspan = '' ) {
 		$args = array(
 			'tag' => 'td',
 			'value' => $value,
 			'class' => $class,
+			'rowspan' => $rowspan,
+			'colspan' => $colspan,
 		);
 		return $this->html_table_cell( $args );
 	}
@@ -211,7 +282,7 @@ class iworks_kpir_reports_monthly {
 	public function show_filter( $post_type_object, $current ) {
 		global $wpdb;
 
-		$sql = $wpdb->prepare( "select distinct meta_value from {$wpdb->postmeta} where meta_key = '{$post_type_object->get_custom_field_year_month_name()}'order by meta_value desc" );
+		$sql = "select distinct meta_value from {$wpdb->postmeta} where meta_key = '{$post_type_object->get_custom_field_year_month_name()}'order by meta_value desc";
 
 		$values = $wpdb->get_col( $sql );
 
