@@ -28,6 +28,8 @@ if ( class_exists( 'iworks_kpir_reports_monthly' ) ) {
 
 class iworks_kpir_reports_monthly {
 
+	private $show_fractional_separetly = false;
+
 	private $contractors = array();
 
 	public function __construct() {
@@ -66,6 +68,16 @@ class iworks_kpir_reports_monthly {
 					'key' => $post_type_object->get_custom_field_basic_date_name(),
 					'compare' => 'EXISTS',
 				),
+			),
+		);
+		$sum = array(
+			'income' => array(
+				'integer' => 0,
+				'fractional' => 0,
+			),
+			'expense' => array(
+				'integer' => 0,
+				'fractional' => 0,
 			),
 		);
 		$query = new WP_Query( $args );
@@ -119,45 +131,64 @@ class iworks_kpir_reports_monthly {
 					case 'expense':
 					case 'asset':
 					case 'salary':
-						echo $this->html_table_td( '&nbsp;', null, 1, 6 );
-
+						echo $this->html_table_td( '&nbsp;' );
+						echo $this->html_table_td( '&nbsp;' );
+						echo $this->html_table_td( '&nbsp;' );
+						if ( $this->show_fractional_separetly ) {
+							echo $this->html_table_td( '&nbsp;' );
+							echo $this->html_table_td( '&nbsp;' );
+							echo $this->html_table_td( '&nbsp;' );
+						}
 						switch ( $type ) {
 							case 'asset':
 								echo $this->html_table_td( '&nbsp;' );
-								echo $this->html_table_td( '&nbsp;' );
+								if ( $this->show_fractional_separetly ) {
+									echo $this->html_table_td( '&nbsp;' );
+								}
 								$value = get_post_meta( $ID, 'iworks_kpir_asset_depreciation', true );
-								echo $this->html_table_td( $value['integer'], 'money' );
-								echo $this->html_table_td( $value['fractional'], 'money' );
+								echo $this->html_helper_money( $value );
 							break;
 							case 'expense':
 								echo $this->html_table_td( '&nbsp;' );
-								echo $this->html_table_td( '&nbsp;' );
+								if ( $this->show_fractional_separetly ) {
+									echo $this->html_table_td( '&nbsp;' );
+								}
 								$value = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
-								echo $this->html_table_td( $value['integer'], 'money' );
-								echo $this->html_table_td( $value['fractional'], 'money' );
+								echo $this->html_helper_money( $value );
 							break;
 							case 'salary':
 								$value = get_post_meta( $ID, 'iworks_kpir_salary_salary', true );
-								echo $this->html_table_td( $value['integer'], 'money' );
-								echo $this->html_table_td( $value['fractional'], 'money' );
+								echo $this->html_helper_money( $value );
 								echo $this->html_table_td( '&nbsp;' );
-								echo $this->html_table_td( '&nbsp;' );
+								if ( $this->show_fractional_separetly ) {
+									echo $this->html_table_td( '&nbsp;' );
+								}
 							break;
 						}
-						echo $this->html_table_td( $value['integer'], 'money' );
-						echo $this->html_table_td( $value['fractional'], 'money' );
+						echo $this->html_helper_money( $value );
+						$sum['expense']['integer'] += $value['integer'];
+						$sum['expense']['fractional'] += $value['fractional'];
 				break;
 					case 'income':
 						switch ( $type ) {
 							case 'income':
 								$value = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
-								echo $this->html_table_td( $value['integer'], 'money' );
-								echo $this->html_table_td( $value['fractional'], 'money' );
+								echo $this->html_helper_money( $value );
+								echo $this->html_table_td( '&nbsp;' );
+								if ( $this->show_fractional_separetly ) {
+									echo $this->html_table_td( '&nbsp;' );
+								}
+								echo $this->html_helper_money( $value );
 								echo $this->html_table_td( '&nbsp;' );
 								echo $this->html_table_td( '&nbsp;' );
-								echo $this->html_table_td( $value['integer'], 'money' );
-								echo $this->html_table_td( $value['fractional'], 'money' );
-								echo $this->html_table_td( '&nbsp;', null, 1, 6 );
+								echo $this->html_table_td( '&nbsp;' );
+								if ( $this->show_fractional_separetly ) {
+									echo $this->html_table_td( '&nbsp;' );
+									echo $this->html_table_td( '&nbsp;' );
+									echo $this->html_table_td( '&nbsp;' );
+								}
+								$sum['income']['integer'] += $value['integer'];
+								$sum['income']['fractional'] += $value['fractional'];
 							break;
 						}
 				break;
@@ -169,6 +200,19 @@ class iworks_kpir_reports_monthly {
 				echo '</tr>';
 			}
 			echo '</tbody>';
+			/**
+			 * sum
+			 */
+			echo '<tbody class="sum">';
+			echo '<tr>';
+			echo $this->html_table_td( '&nbsp;', null, 1, 6 );
+			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly? 4:2 );
+			echo $this->html_helper_money( $sum['income'] );
+			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly? 4:2 );
+			echo $this->html_helper_money( $sum['expense'] );
+			echo '</tr>';
+			echo '</tbody>';
+
 			echo '</table>';
 			/* Restore original Post Data */
 			wp_reset_postdata();
@@ -180,40 +224,48 @@ class iworks_kpir_reports_monthly {
 	}
 
 	private function html_table_thead() {
+
+		$show_currency_symbol = false;
+
+		$fix_row = $show_currency_symbol? 0: -1;
+		$fix_col = $this->show_fractional_separetly? 0: -1;
+
 		$content = '<thead>';
 		$content .= '<tr>';
-		$content .= $this->html_table_th( 'Lp.', null, 3 );
-		$content .= $this->html_table_th( 'Data zdarzenia gospodarczego', null, 3 );
-		$content .= $this->html_table_th( 'Nr dowodu księgowego', null, 3 );
+		$content .= $this->html_table_th( 'Lp.', null, 3 + $fix_row );
+		$content .= $this->html_table_th( 'Data zdarzenia gospodarczego', null, 3 + $fix_row );
+		$content .= $this->html_table_th( 'Nr dowodu księgowego', null, 3 + $fix_row );
 		$content .= $this->html_table_th( 'Kontrahent', null, null, 2 );
-		$content .= $this->html_table_th( 'Opis zdarzenia gospodarczego', null, 3 );
-		$content .= $this->html_table_th( 'Przychód', null, null, 6 );
-		$content .= $this->html_table_th( 'Wydatki', null, null, 6 );
+		$content .= $this->html_table_th( 'Opis zdarzenia gospodarczego', null, 3 + $fix_row );
+		$content .= $this->html_table_th( 'Przychód', null, null, $this->show_fractional_separetly? 6:3 );
+		$content .= $this->html_table_th( 'Wydatki', null, null, $this->show_fractional_separetly? 6:3 );
 		$content .= '</tr>';
 		$content .= '<tr>';
-		$content .= $this->html_table_th( 'imię i nazwisko (firma)', null, 2 );
-		$content .= $this->html_table_th( 'adres', null, 2 );
-		$content .= $this->html_table_th( 'wartość sprzedanych towarów i usług', null, null, 2 );
-		$content .= $this->html_table_th( 'pozostałe przychody', null, null, 2 );
-		$content .= $this->html_table_th( 'razem przychód (7+8)', null, null, 2 );
-		$content .= $this->html_table_th( 'wynagrodzenie', null, null, 2 );
-		$content .= $this->html_table_th( 'pozostale', null, null, 2 );
-		$content .= $this->html_table_th( 'razem wydatki (10+11)', null, null, 2 );
+		$content .= $this->html_table_th( 'imię i nazwisko (firma)', null, 2 + $fix_row );
+		$content .= $this->html_table_th( 'adres', null, 2 + $fix_row );
+		$content .= $this->html_table_th( 'wartość sprzedanych towarów i usług', null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 'pozostałe przychody', null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 'razem przychód (7+8)', null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 'wynagrodzenie', null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 'pozostale', null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 'razem wydatki (10+11)', null, null, 2 + $fix_col );
 		$content .= '</tr>';
-		$content .= '<tr>';
-		$content .= $this->html_table_th( 'zł' );
-		$content .= $this->html_table_th( 'gr' );
-		$content .= $this->html_table_th( 'zł' );
-		$content .= $this->html_table_th( 'gr' );
-		$content .= $this->html_table_th( 'zł' );
-		$content .= $this->html_table_th( 'gr' );
-		$content .= $this->html_table_th( 'zł' );
-		$content .= $this->html_table_th( 'gr' );
-		$content .= $this->html_table_th( 'zł' );
-		$content .= $this->html_table_th( 'gr' );
-		$content .= $this->html_table_th( 'zł' );
-		$content .= $this->html_table_th( 'gr' );
-		$content .= '</tr>';
+		if ( $show_currency_symbol ) {
+			$content .= '<tr>';
+			$content .= $this->html_table_th( 'zł' );
+			$content .= $this->html_table_th( 'gr' );
+			$content .= $this->html_table_th( 'zł' );
+			$content .= $this->html_table_th( 'gr' );
+			$content .= $this->html_table_th( 'zł' );
+			$content .= $this->html_table_th( 'gr' );
+			$content .= $this->html_table_th( 'zł' );
+			$content .= $this->html_table_th( 'gr' );
+			$content .= $this->html_table_th( 'zł' );
+			$content .= $this->html_table_th( 'gr' );
+			$content .= $this->html_table_th( 'zł' );
+			$content .= $this->html_table_th( 'gr' );
+			$content .= '</tr>';
+		}
 		$content .= '<tr>';
 		$content .= $this->html_table_th( 1 );
 		$content .= $this->html_table_th( 2 );
@@ -221,12 +273,12 @@ class iworks_kpir_reports_monthly {
 		$content .= $this->html_table_th( 4 );
 		$content .= $this->html_table_th( 5 );
 		$content .= $this->html_table_th( 6 );
-		$content .= $this->html_table_th( 7, null, null, 2 );
-		$content .= $this->html_table_th( 8, null, null, 2 );
-		$content .= $this->html_table_th( 9, null, null, 2 );
-		$content .= $this->html_table_th( 10, null, null, 2 );
-		$content .= $this->html_table_th( 11, null, null, 2 );
-		$content .= $this->html_table_th( 12, null, null, 2 );
+		$content .= $this->html_table_th( 7, null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 8, null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 9, null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 10, null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 11, null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 12, null, null, 2 + $fix_col );
 		$content .= '</tr>';
 		$content .= '</thead>';
 		return $content;
@@ -312,6 +364,22 @@ class iworks_kpir_reports_monthly {
 		echo '</div>';
 		echo '</form>';
 
+	}
+
+	private function html_helper_money( $value ) {
+		if ( $value['fractional'] > 99 ) {
+			$value['integer'] += intval( $value['fractional'] / 100 );
+			$value['fractional'] = $value['fractional'] % 100;
+		}
+		$content = '';
+		if ( $this->show_fractional_separetly ) {
+			$content .= $this->html_table_td( $value['integer'], 'money' );
+			$content .= $this->html_table_td( $value['fractional'], 'money' );
+		} else {
+			$val = sprintf( '%d,%02d', $value['integer'], $value['fractional'] );
+			$content .= $this->html_table_td( $val, 'money' );
+		}
+		return $content;
 	}
 }
 
