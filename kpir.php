@@ -53,7 +53,7 @@ require_once $base.'/etc/options.php';
  * require: IworksOptions Class
  */
 if ( ! class_exists( 'iworks_options' ) ) {
-	require_once $vendor.'/iworks/options.php';
+	require_once $vendor.'/iworks/options/options.php';
 }
 
 /**
