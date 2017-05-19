@@ -87,6 +87,19 @@ class iworks_kpir extends iworks {
 		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+	}
+
+	public function admin_enqueue_scripts() {
+
+		$screen = get_current_screen();
+		/**
+		 * off on not KPiR pages
+		 */
+		$re = sprintf( '/%s_/', __CLASS__ );
+		if ( ! preg_match( $re, $screen->id ) ) {
+			return;
+		}
+
 		/**
 		 * datepicker
 		 */
@@ -106,9 +119,6 @@ class iworks_kpir extends iworks {
 		$file = plugins_url( $file, $this->base );
 		wp_register_style( 'admin-kpir', $file, array( 'jquery-ui-datepicker', 'select2' ), $version );
 		wp_enqueue_style( 'admin-kpir' );
-	}
-
-	public function admin_enqueue_scripts() {
 		/**
 		 * select2
 		 */
@@ -182,9 +192,9 @@ class iworks_kpir extends iworks {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
 				$links[] = '<a href="themes.php?page='.$this->dir.'/admin/index.php">' . __( 'Settings' ) . '</a>';
 			}
-			if ( ! $this->is_pro ) {
-				$links[] = '<a href="http://iworks.pl/donate/kpir.php">' . __( 'Donate' ) . '</a>';
-			}
+			/* start:free */
+			$links[] = '<a href="http://iworks.pl/donate/kpir.php">' . __( 'Donate' ) . '</a>';
+			/* end:free */
 		}
 		return $links;
 	}
