@@ -40,6 +40,9 @@
 .wp-list-table .column-symbol {
   width: 1em;
 }
+.wp-list-table .duplicate_invoice a {
+  cursor: default;
+}
 
 body:not(.kpir-not-set) .iworks-type .iworks-kpir-row-description {
   display: none;

@@ -43,6 +43,11 @@
     .column-symbol {
         width: 1em;
     }
+    .duplicate_invoice {
+        a {
+            cursor: default;
+        }
+    }
 }
 
 body {

@@ -83,11 +83,13 @@ class iworks_kpir extends iworks {
 		}
 	}
 
-	public function admin_init() {
-		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
-	}
+    public function admin_init() {
+        add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+        add_action( 'wp_ajax_kpir_duplicate_invoice', array( $this, 'duplicate_invoice' ) );
+        add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
+        add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+        add_filter( 'post_row_actions', array( $this, 'row_actions' ) , 10, 2 ); 
+    }
 
 	public function admin_enqueue_scripts() {
 
@@ -150,7 +152,22 @@ class iworks_kpir extends iworks {
 				true
 			);
 			wp_enqueue_script( $handle );
-		}
+        }
+        /**
+         * JavaScript messages
+         *
+         * @since 1.0.0
+         */
+        wp_localize_script(
+            'kpir-admin-js-invoice',
+            __CLASS__,
+            array(
+                'messages' => array(
+                    'duplicate_confirm' => __( 'Are you sure you want to create a duplicate copy of this invoice?', 'kpir' ),
+                    'duplicate_error' => __( 'An error occurred duplicating invoice. Please try again.', 'kpir' ),
+                )
+            )
+        );
 		/**
 		 * Admin styles
 		 */
@@ -197,5 +214,94 @@ class iworks_kpir extends iworks {
 			/* end:free */
 		}
 		return $links;
-	}
+    }
+    
+    /**
+     * Get wp nonce action name.
+     *
+     * @since 1.0.0
+     *
+     * @param string $id Entry ID.
+     * @returns string $action WP nonce string
+     */
+    private function get_nonce_action( $id ) {
+    $action = sprintf( 'duplicate_invoice_%d', $id );
+        return $action;
+    }
+
+    /**
+     * entry actions on list table
+     *
+     * @since 1.0.0
+     */
+    public function row_actions( $actions, $item ) {
+        $post_type = $this->post_type_invoice->get_name();
+        if ( $post_type == $item->post_type ) {
+            $nonce_action = $this->get_nonce_action( $item->ID );
+            $duplicate_nonce = wp_create_nonce( $nonce_action );
+            $actions['duplicate_invoice'] = sprintf(
+                '<a data-nonce="%s" data-id="%s" class="duplicate-invoice-link">%s</a>',
+                $duplicate_nonce,
+                $item->ID, __( 'Duplicate', 'kpir' )
+            );
+        }
+        return $actions;
+    }
+
+    public function duplicate_invoice() {
+        /**
+         * check required data
+         */
+        if ( ! isset( $_POST['ID'] ) || ! isset( $_POST['nonce'] ) ) {
+            wp_send_json_error();
+        }
+        /**
+         * check nonce
+         */
+        $nonce_action = $this->get_nonce_action( $_POST['ID'] );
+        if ( ! wp_verify_nonce( $_POST['nonce'], $nonce_action ) ) {
+            wp_send_json_error();
+        }
+        /**
+         * check post type
+         */
+        $is_correct_post_type = $this->post_type_invoice->check_post_type_by_id( $_POST['ID'] );
+        if ( ! $is_correct_post_type ) {
+            wp_send_json_error();
+        }
+        $post_data = get_post( $_POST['ID'], ARRAY_A );
+        /**
+         * set post meta
+         */
+        $post_meta = get_post_meta( $_POST['ID'] );
+        foreach( $post_meta as $key => $value ) {
+            if ( preg_match( '/^iworks_kpir/', $key ) ) {
+                $post_data['meta_input'][$key] = array_shift( $value );
+            }
+        }
+        /**
+         * remove some keys
+         */
+        $keys_to_remove = array(
+            'ID',
+            'post_date',
+            'post_date_gmt',
+            'post_modified',
+            'post_modified_gmt',
+            'guid',
+        );
+        foreach( $keys_to_remove as $key ) {
+            if ( isset( $post_data[$key] ) ) {
+                unset( $post_data[ $key ] );
+            }
+        }
+        $post_data['post_title'] = sprintf( __( 'Copy of %s', 'kpir' ), $post_data['post_title'] );
+        $post_data['post_status'] = 'draft';
+        $result = wp_insert_post( $post_data );
+        if ( $result ) {
+            wp_send_json_success();
+        }
+        wp_send_json_error();
+    }
+
 }
