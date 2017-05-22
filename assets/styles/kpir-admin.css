@@ -41,7 +41,7 @@
   width: 1em;
 }
 .wp-list-table .duplicate_invoice a {
-  cursor: default;
+  cursor: pointer;
 }
 
 body:not(.kpir-not-set) .iworks-type .iworks-kpir-row-description {

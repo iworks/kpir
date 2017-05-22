@@ -116,6 +116,9 @@ class iworks_kpir extends iworks {
 		$file = plugins_url( $file, $this->base );
 		wp_register_style( 'select2', $file, false, '4.0.3' );
 
+		/**
+		 * Admin styles
+		 */
 		$file = sprintf( '/assets/styles/kpir-admin%s.css', $this->dev );
 		$version = $this->get_version( $file );
 		$file = plugins_url( $file, $this->base );
@@ -159,7 +162,7 @@ class iworks_kpir extends iworks {
          * @since 1.0.0
          */
         wp_localize_script(
-            'kpir-admin-js-invoice',
+            '' == $this->dev ? 'kpir-admin-js-invoice':'admin-kpir',
             __CLASS__,
             array(
                 'messages' => array(
@@ -168,12 +171,6 @@ class iworks_kpir extends iworks {
                 )
             )
         );
-		/**
-		 * Admin styles
-		 */
-		$deps = array( 'jquery-ui-dialog' );
-		$file = 'assets/styles/kpir-admin'.$this->dev.'.css';
-		wp_enqueue_style( 'kpir-admin', plugins_url( $file, $this->base ), array(), $this->get_version( $file ) );
 	}
 
 	public function init() {
