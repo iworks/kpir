@@ -133,13 +133,13 @@ class iworks_kpir extends iworks {
 		 * Admin scripts
 		 */
 		$files = array(
-			'kpir-admin-js' => sprintf( 'assets/scripts/admin/kpir%s.js', $this->dev ),
+			'kpir-admin' => sprintf( 'assets/scripts/admin/kpir%s.js', $this->dev ),
 		);
 		if ( '' == $this->dev ) {
 			$files = array(
-				'kpir-admin-js-datepicker' => 'assets/scripts/admin/src/datepicker.js',
-				'kpir-admin-js-invoice' => 'assets/scripts/admin/src/invoice.js',
-				'kpir-admin-js-select2' => 'assets/scripts/admin/src/select2.js',
+				'kpir-admin-datepicker' => 'assets/scripts/admin/src/datepicker.js',
+				'kpir-admin-invoice' => 'assets/scripts/admin/src/invoice.js',
+				'kpir-admin-select2' => 'assets/scripts/admin/src/select2.js',
 			);
 		}
 		$deps = array(
@@ -162,7 +162,7 @@ class iworks_kpir extends iworks {
          * @since 1.0.0
          */
         wp_localize_script(
-            '' == $this->dev ? 'kpir-admin-js-invoice':'admin-kpir',
+            '' == $this->dev ? 'kpir-admin-invoice':'kpir-admin',
             __CLASS__,
             array(
                 'messages' => array(
