@@ -29,10 +29,11 @@ if ( class_exists( 'iworks_kpir_reports_monthly' ) ) {
 class iworks_kpir_reports_monthly {
 
 	private $show_fractional_separetly = false;
-
 	private $contractors = array();
+	private $debug = false;
 
 	public function __construct() {
+		$this->debug = defined( 'WP_DEBUG' ) && WP_DEBUG;
 	}
 
 	public function show( $post_type_object ) {
@@ -103,7 +104,12 @@ class iworks_kpir_reports_monthly {
 				/**
 				 * Invoice ID
 				 */
-				echo $this->html_table_td( get_the_title(), 'title' );
+				$title = sprintf(
+					'<a href="%s">%s</a>',
+					get_edit_post_link( $ID ),
+					get_the_title()
+				);
+				echo $this->html_table_td( $title, 'title' );
 				/**
 				 * contractor name
 				 */
@@ -125,7 +131,7 @@ class iworks_kpir_reports_monthly {
 				 * type
 				 */
 				$type = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
-					$value = array( 'integer' => 0, 'fractional' => 0 );
+				$value = array( 'integer' => 0, 'fractional' => 0 );
 
 				switch ( $type ) {
 					case 'expense':
@@ -154,6 +160,12 @@ class iworks_kpir_reports_monthly {
 									echo $this->html_table_td( '&nbsp;' );
 								}
 								$value = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
+								if ( empty( $value ) ) {
+									$value = get_post_meta( $ID, 'iworks_kpir_expense_other', true );
+								}
+								if ( empty( $value ) ) {
+									$value = get_post_meta( $ID, 'iworks_kpir_expense_cost_of_purchase', true );
+								}
 								echo $this->html_helper_money( $value );
 							break;
 							case 'salary':
@@ -166,8 +178,16 @@ class iworks_kpir_reports_monthly {
 							break;
 						}
 						echo $this->html_helper_money( $value );
-						$sum['expense']['integer'] += $value['integer'];
-						$sum['expense']['fractional'] += $value['fractional'];
+						if ( isset( $value['integer'] ) ) {
+							$sum['expense']['integer'] += intval( $value['integer'] );
+						} else if ( $this->debug ) {
+							error_log( sprintf( 'Missing $value[\'integer\'] for invoice %d.', $ID ) );
+						}
+						if ( isset( $value['fractional'] ) ) {
+							$sum['expense']['fractional'] += intval( $value['fractional'] );
+						} else if ( $this->debug ) {
+							error_log( sprintf( 'Missing $value[\'fractional\'] for invoice %d.', $ID ) );
+						}
 				break;
 					case 'income':
 						switch ( $type ) {
@@ -187,14 +207,13 @@ class iworks_kpir_reports_monthly {
 									echo $this->html_table_td( '&nbsp;' );
 									echo $this->html_table_td( '&nbsp;' );
 								}
-								$sum['income']['integer'] += $value['integer'];
-								$sum['income']['fractional'] += $value['fractional'];
+								$sum['income']['integer'] += intval( $value['integer'] );
+								$sum['income']['fractional'] += intval( $value['fractional'] );
 							break;
 						}
 				break;
 					default:
-
-						l( $ID );
+						error_log( $ID );
 				}
 
 				echo '</tr>';
@@ -367,11 +386,17 @@ class iworks_kpir_reports_monthly {
 	}
 
 	private function html_helper_money( $value ) {
+		if ( ! is_array( $value ) ) {
+			return $this->html_table_td( '0,00', 'money' );
+		}
+		$content = '';
+		if ( ! isset( $value['fractional'] ) && ! isset( $value['integer'] ) ) {
+			return $this->html_table_td( '0,00', 'money' );
+		}
 		if ( $value['fractional'] > 99 ) {
 			$value['integer'] += intval( $value['fractional'] / 100 );
 			$value['fractional'] = $value['fractional'] % 100;
 		}
-		$content = '';
 		if ( $this->show_fractional_separetly ) {
 			$content .= $this->html_table_td( $value['integer'], 'money' );
 			$content .= $this->html_table_td( $value['fractional'], 'money' );
