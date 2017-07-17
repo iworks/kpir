@@ -113,7 +113,21 @@ class iworks_kpir_reports_monthly {
 				/**
 				 * contractor name
 				 */
-				echo $this->html_table_td( get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_full_name', true ) );
+				$full_name = sprintf(
+					'<a href="%s">%s</a>',
+					add_query_arg(
+						array(
+							'contractor' => $contractor_id,
+							'post_type' => 'iworks_kpir_invoice',
+						),
+						admin_url( 'edit.php' )
+					),
+					get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_full_name', true )
+				);
+				echo $this->html_table_td( $full_name );
+				/**
+				 * contractor address
+				 */
 				echo $this->html_table_td(
 					sprintf(
 						'<address>%s</address><address>%s %s</address>',

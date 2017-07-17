@@ -93,6 +93,11 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		 * apply default sort order
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
+
+		/**
+		 * add Contractors to invoices as a filter
+		 */
+		add_action( 'restrict_manage_posts', array( $this, 'add_contacators_to_invoices_list' ), 10, 2 );
 	}
 
 	public function register() {
@@ -166,7 +171,7 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		$this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
 	}
 
-	public function get_contractors_json() {
+	public function get_contractors( $get_nip = true ) {
 		$data = array(
 			'total_count' => 0,
 			'incomplete_results' => false,
@@ -175,6 +180,9 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		$args = array(
 			'post_type' => $this->get_name(),
 			'nopaging' => true,
+			'orderby' => 'title',
+			'order' => 'ASC',
+			'suppress_filters' => true,
 		);
 		if ( isset( $_REQUEST['q'] ) ) {
 			$args['s'] = $_REQUEST['q'];
@@ -186,12 +194,19 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 				$one = array(
 					'id' => get_the_ID(),
 					'full_name' => get_the_title(),
-					'nip' => get_post_meta( get_the_ID(), $this->options->get_option_name( 'nip' ), true ),
 				);
+				if ( $get_nip ) {
+					$one['nip'] = get_post_meta( get_the_ID(), $this->options->get_option_name( 'contractor_data_nip' ), true );
+				}
 				$data['items'][] = $one;
 			}
 			wp_reset_postdata();
 		}
+		return $data;
+	}
+
+	public function get_contractors_json() {
+		$data = $this->get_contractors();
 		echo wp_json_encode( $data );
 		die;
 	}
@@ -260,15 +275,40 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		/**
 		 * check screen post type
 		 */
-        if ( ! function_exists( 'get_current_screen' ) ) {
-            return $query;
-        }
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return $query;
+		}
 		$screen = get_current_screen();
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
-			$query->set( 'orderby', 'post_title' );
+			$query->set( 'orderby', 'title' );
 			$query->set( 'order', 'ASC' );
 		}
 		return $query;
+	}
+
+	public function add_contacators_to_invoices_list( $post_type, $which ) {
+		if ( 'top' != $which ) {
+			return;
+		}
+		if ( 'iworks_kpir_invoice' != $post_type ) {
+			return;
+		}
+		$data = $this->get_contractors( false );
+		if ( empty( $data['items'] ) ) {
+			return;
+		}
+		$id = isset( $_REQUEST['contractor'] )? $_REQUEST['contractor']:0;
+		echo '<select name="contractor">';
+		printf( '<option value="">%s</option>', esc_html__( 'All contractors', 'kpir' ) );
+		foreach ( $data['items'] as $one ) {
+			printf(
+				'<option value="%s" %s>%s</option>',
+				esc_attr( $one['id'] ),
+				selected( $one['id'], $id ),
+				esc_html( $one['full_name'] )
+			);
+		}
+		echo '</select>';
 	}
 }
 

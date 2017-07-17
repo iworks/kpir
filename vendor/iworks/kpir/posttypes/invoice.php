@@ -473,7 +473,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				if ( empty( $id ) ) {
 					echo '-';
 				} else {
-					echo get_the_title( $id );
+					printf(
+						'<a href="%s">%s</a>',
+						add_query_arg(
+							array(
+								'contractor' => $id,
+								'post_type' => 'iworks_kpir_invoice',
+							),
+							admin_url( 'edit.php' )
+						),
+						get_post_meta( $id, 'iworks_kpir_contractor_data_full_name', true )
+					);
 				}
 			break;
 
@@ -575,14 +585,40 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		}
 		/**
 		 * check screen post type
-         */
-        if ( ! function_exists( 'get_current_screen' ) ) {
-            return $query;
-        }
+		 */
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return $query;
+		}
+		/**
+		 * query post type
+		 */
+		if ( isset( $query->query['post_type'] ) && $this->get_name() != $query->query['post_type'] ) {
+			return $query;
+		}
+		/**
+		 * screen post type
+		 */
 		$screen = get_current_screen();
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
 			$query->set( 'orderby', 'meta_value_num' );
-			$query->set( 'meta_key', $this->get_custom_field_basic_date_name() );
+			if ( isset( $_REQUEST['contractor'] ) && $_REQUEST['contractor'] ) {
+				$query->set(
+					'meta_query',
+					array(
+						'relation' => 'AND',
+						array(
+							'key' => $this->get_custom_field_basic_date_name(),
+							'compare' => 'EXISTS',
+						),
+						array(
+							'key' => $this->options->get_option_name( 'basic_contractor' ),
+							'value' => intval( $_REQUEST['contractor'] ),
+						),
+					)
+				);
+			} else {
+				$query->set( 'meta_key', $this->get_custom_field_basic_date_name() );
+			}
 		}
 		return $query;
 	}
