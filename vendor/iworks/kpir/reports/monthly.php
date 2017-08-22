@@ -210,20 +210,6 @@ class iworks_kpir_reports_monthly {
 								if ( $this->show_fractional_separetly ) {
 									echo $this->html_table_td( '&nbsp;' );
 								}
-								$vat = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
-								echo $this->html_helper_money( $value );
-								echo $this->html_table_td( '&nbsp;' );
-								if ( $this->show_fractional_separetly ) {
-									echo $this->html_table_td( '&nbsp;' );
-								}
-								echo $this->html_table_td( '&nbsp;' );
-								if ( $this->show_fractional_separetly ) {
-									echo $this->html_table_td( '&nbsp;' );
-								}
-								echo $this->html_table_td( '&nbsp;' );
-								if ( $this->show_fractional_separetly ) {
-									echo $this->html_table_td( '&nbsp;' );
-								}
 							break;
 						}
 						echo $this->html_helper_money( $value );
@@ -341,7 +327,6 @@ class iworks_kpir_reports_monthly {
 							echo $this->html_table_td( '&nbsp;' );
 						}
 					break;
-					default:
 				}
 
 						echo '</tr>';
