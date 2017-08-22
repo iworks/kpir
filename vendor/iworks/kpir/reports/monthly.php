@@ -80,6 +80,14 @@ class iworks_kpir_reports_monthly {
 				'integer' => 0,
 				'fractional' => 0,
 			),
+			'vat_income' => array(
+				'integer' => 0,
+				'fractional' => 0,
+			),
+			'vat_expense' => array(
+				'integer' => 0,
+				'fractional' => 0,
+			),
 		);
 		$query = new WP_Query( $args );
 		if ( $query->have_posts() ) {
@@ -180,11 +188,38 @@ class iworks_kpir_reports_monthly {
 								if ( empty( $value ) ) {
 									$value = get_post_meta( $ID, 'iworks_kpir_expense_cost_of_purchase', true );
 								}
+								$vat = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
+								/**
+								 * car related
+								 */
+								$is_car_related = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
+								if ( 'yes' == $is_car_related ) {
+									$v = round( ($value['integer'] + $vat['integer'] / 2) * 100 + $value['fractional'] + $vat['fractional'] / 2 );
+									$value['fractional'] = $v % 100;
+									$value['integer'] = round( ($v - $value['fractional']) / 100 );
+								}
+								/**
+								 * echo
+								 */
 								echo $this->html_helper_money( $value );
 							break;
 							case 'salary':
 								$value = get_post_meta( $ID, 'iworks_kpir_salary_salary', true );
 								echo $this->html_helper_money( $value );
+								echo $this->html_table_td( '&nbsp;' );
+								if ( $this->show_fractional_separetly ) {
+									echo $this->html_table_td( '&nbsp;' );
+								}
+								$vat = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
+								echo $this->html_helper_money( $value );
+								echo $this->html_table_td( '&nbsp;' );
+								if ( $this->show_fractional_separetly ) {
+									echo $this->html_table_td( '&nbsp;' );
+								}
+								echo $this->html_table_td( '&nbsp;' );
+								if ( $this->show_fractional_separetly ) {
+									echo $this->html_table_td( '&nbsp;' );
+								}
 								echo $this->html_table_td( '&nbsp;' );
 								if ( $this->show_fractional_separetly ) {
 									echo $this->html_table_td( '&nbsp;' );
@@ -229,8 +264,87 @@ class iworks_kpir_reports_monthly {
 					default:
 						error_log( $ID );
 				}
+						/**
+						 * vat
+						 */
+				switch ( $type ) {
+					case 'asset':
+					case 'salary':
+						echo $this->html_table_td( '&nbsp;' );
+						if ( $this->show_fractional_separetly ) {
+							echo $this->html_table_td( '&nbsp;' );
+						}
+						echo $this->html_table_td( '&nbsp;' );
+						if ( $this->show_fractional_separetly ) {
+							echo $this->html_table_td( '&nbsp;' );
+						}
+						echo $this->html_table_td( '&nbsp;' );
+						if ( $this->show_fractional_separetly ) {
+							echo $this->html_table_td( '&nbsp;' );
+						}
+					break;
+					case 'expense':
+						echo $this->html_table_td( '&nbsp;' );
+						if ( $this->show_fractional_separetly ) {
+							echo $this->html_table_td( '&nbsp;' );
+						}
+						$vat = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
+						/**
+							 * car related
+							 */
+						$is_car_related = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
+						if ( 'yes' == $is_car_related ) {
+							$v = round( ($vat['integer'] * 100 + $vat['fractional']) / 2 );
+							$vat_car = array(
+							'integer' => 0,
+							'fractional' => 0,
+							);
+							$vat_car['fractional'] = $v % 100;
+							$vat_car['integer'] = ($v - $vat_car['fractional']) / 100;
+							echo $this->html_helper_money( $vat_car );
+							if ( $this->show_fractional_separetly ) {
+								echo $this->html_table_td( '&nbsp;' );
+							}
+							$sum['vat_expense']['integer'] += intval( $vat_car['integer'] );
+							$sum['vat_expense']['fractional'] += intval( $vat_car['fractional'] );
+						} else {
+							$sum['vat_expense']['integer'] += intval( $vat['integer'] );
+							$sum['vat_expense']['fractional'] += intval( $vat['fractional'] );
+						}
+						echo $this->html_helper_money( $vat );
+						if ( $this->show_fractional_separetly ) {
+							echo $this->html_table_td( '&nbsp;' );
+						}
+						if ( 'yes' != $is_car_related ) {
+							echo $this->html_table_td( '&nbsp;' );
+							if ( $this->show_fractional_separetly ) {
+								echo $this->html_table_td( '&nbsp;' );
+							}
+						}
+					break;
+					case 'income':
+						$vat = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
+						if ( is_array( $vat ) ) {
+							$sum['vat_income']['integer'] += intval( $vat['integer'] );
+							$sum['vat_income']['fractional'] += intval( $vat['fractional'] );
+						}
+						echo $this->html_helper_money( $vat );
+						if ( $this->show_fractional_separetly ) {
+							echo $this->html_table_td( '&nbsp;' );
+						}
+						echo $this->html_table_td( '&nbsp;' );
+						if ( $this->show_fractional_separetly ) {
+							echo $this->html_table_td( '&nbsp;' );
+						}
+						echo $this->html_table_td( '&nbsp;' );
+						if ( $this->show_fractional_separetly ) {
+							echo $this->html_table_td( '&nbsp;' );
+						}
+					break;
+					default:
+				}
 
-				echo '</tr>';
+						echo '</tr>';
 			}
 			echo '</tbody>';
 			/**
@@ -243,6 +357,15 @@ class iworks_kpir_reports_monthly {
 			echo $this->html_helper_money( $sum['income'] );
 			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly? 4:2 );
 			echo $this->html_helper_money( $sum['expense'] );
+			echo $this->html_helper_money( $sum['vat_income'] );
+			if ( $this->show_fractional_separetly ) {
+				echo $this->html_table_td( '&nbsp;' );
+			}
+			echo $this->html_helper_money( $sum['vat_expense'] );
+			if ( $this->show_fractional_separetly ) {
+				echo $this->html_table_td( '&nbsp;' );
+			}
+			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly? 2:1 );
 			echo '</tr>';
 			echo '</tbody>';
 
@@ -272,6 +395,7 @@ class iworks_kpir_reports_monthly {
 		$content .= $this->html_table_th( 'Opis zdarzenia gospodarczego', null, 3 + $fix_row );
 		$content .= $this->html_table_th( 'Przychód', null, null, $this->show_fractional_separetly? 6:3 );
 		$content .= $this->html_table_th( 'Wydatki', null, null, $this->show_fractional_separetly? 6:3 );
+		$content .= $this->html_table_th( 'VAT', null, null, $this->show_fractional_separetly? 6:3 );
 		$content .= '</tr>';
 		$content .= '<tr>';
 		$content .= $this->html_table_th( 'imię i nazwisko (firma)', null, 2 + $fix_row );
@@ -282,6 +406,9 @@ class iworks_kpir_reports_monthly {
 		$content .= $this->html_table_th( 'wynagrodzenie', null, null, 2 + $fix_col );
 		$content .= $this->html_table_th( 'pozostale', null, null, 2 + $fix_col );
 		$content .= $this->html_table_th( 'razem wydatki (10+11)', null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 'sprzedaż', null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 'zakup rozliczenie', null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 'zakup', null, null, 2 + $fix_col );
 		$content .= '</tr>';
 		if ( $show_currency_symbol ) {
 			$content .= '<tr>';
@@ -312,6 +439,9 @@ class iworks_kpir_reports_monthly {
 		$content .= $this->html_table_th( 10, null, null, 2 + $fix_col );
 		$content .= $this->html_table_th( 11, null, null, 2 + $fix_col );
 		$content .= $this->html_table_th( 12, null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 13, null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 14, null, null, 2 + $fix_col );
+		$content .= $this->html_table_th( 15, null, null, 2 + $fix_col );
 		$content .= '</tr>';
 		$content .= '</thead>';
 		return $content;
