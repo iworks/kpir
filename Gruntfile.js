@@ -350,7 +350,7 @@ module.exports = function( grunt ) {
 
 			scripts: {
 				files: ['assets/scripts/src/**/*.js', 'assets/scripts/admin/src/**/*.js'],
-				tasks: ['jshint', 'concat'],
+				tasks: ['jshint', 'concat', 'uglify'],
 				options: {
 					debounceDelay: 500
 				}
