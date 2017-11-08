@@ -80,6 +80,7 @@ class iworks_kpir extends iworks {
 	}
 
 	public function admin_init() {
+		iworks_kpir_options_init();
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'wp_ajax_kpir_duplicate_invoice', array( $this, 'duplicate_invoice' ) );
 		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );

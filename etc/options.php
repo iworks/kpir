@@ -1,16 +1,13 @@
 <?php
 
 function iworks_kpir_options() {
-
 	$iworks_kpir_options = array();
-
 	/**
 	 * main settings
 	 */
 	$iworks_kpir_options['index'] = array(
 		'version'  => '0.0',
 		'page_title' => __( 'Configuration', 'kpir' ),
-		'menu_title' => __( 'KPiR Pro!', 'kpir' ),
 		'menu' => 'submenu',
 		'parent' => add_query_arg(
 			array(
@@ -18,7 +15,22 @@ function iworks_kpir_options() {
 			),
 			'edit.php'
 		),
-		'options'  => array(),
+		'options'  => array(
+			array(
+				'name'              => 'nip',
+				'type'              => 'text',
+				'class'             => 'regular-text',
+				'th'             => __( 'NIP', 'kpir' ),
+				'sanitize_callback' => 'esc_html',
+			),
+			array(
+				'name'              => 'name',
+				'type'              => 'text',
+				'class'             => 'regular-text',
+				'th'             => __( 'Full Name', 'kpir' ),
+				'sanitize_callback' => 'esc_html',
+			),
+		),
 		//      'metaboxes' => array(),
 		'pages' => array(
 			'report_monthly' => array(

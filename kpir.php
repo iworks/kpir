@@ -69,13 +69,11 @@ $iworks_kpir_options->set_option_function_name( 'iworks_kpir_options' );
 $iworks_kpir_options->set_option_prefix( IWORKS_KPIR_PREFIX );
 
 function iworks_kpir_options_init() {
-
 	global $iworks_kpir_options;
 	$iworks_kpir_options->options_init();
 }
 
 function iworks_kpir_activate() {
-
 	$iworks_kpir_options = new iworks_options();
 	$iworks_kpir_options->set_option_function_name( 'iworks_kpir_options' );
 	$iworks_kpir_options->set_option_prefix( IWORKS_KPIR_PREFIX );
