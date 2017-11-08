@@ -45,6 +45,17 @@ function iworks_kpir_options() {
 				),
 				'show_page_callback' => 'iworks_kpir_report_monthly',
 			),
+			'jpk_vat_3' => array(
+				'page_title' => __( 'JPK VAT(3)', 'kpir' ),
+				'menu' => 'submenu',
+				'parent' => add_query_arg(
+					array(
+						'post_type' => 'iworks_kpir_invoice',
+					),
+					'edit.php'
+				),
+				'show_page_callback' => 'iworks_kpir_jpk_vat_3',
+			),
 		),
 	);
 	return $iworks_kpir_options;
@@ -53,4 +64,9 @@ function iworks_kpir_options() {
 function iworks_kpir_report_monthly() {
 	global $iworks_kpir;
 	$iworks_kpir->show_page_reports( 'monthly' );
+}
+
+function iworks_kpir_jpk_vat_3() {
+	global $iworks_kpir;
+	$iworks_kpir->show_page_jpk_vat_3();
 }

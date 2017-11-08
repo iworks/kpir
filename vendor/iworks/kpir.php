@@ -173,20 +173,36 @@ class iworks_kpir extends iworks {
 		}
 	}
 
+	/**
+	 * Show reports page
+	 */
 	public function show_page_reports( $report = 'monthly' ) {
 		echo '<div class="wrap">';
 		switch ( $report ) {
 			case 'monthly':
-				include_once $this->base .'/iworks/kpir/reports/monthly.php';
-				printf( '<h1 class="wp-heading-inline">%s</h1>', __( 'monthly report', 'kpir' ) );
+				$file = $this->get_module_file( 'reports/monthly' );
+				include_once $file;
+				$this->html_title( esc_html__( 'Monthly report', 'kpir' ) );
 				$report = new iworks_kpir_reports_monthly();
 				$report->show( $this->post_type_invoice );
 			break;
 			default:
-				printf( '<h1 class="wp-heading-inline">%s</h1>', __( 'Reaports', 'kpir' ) );
+				$this->html_title( esc_html__( 'Reports', 'kpir' ) );
 			break;
 		}
+		echo '</div>';
+	}
 
+	/**
+	 * Show JPK VAT(3) page
+	 */
+	public function show_page_jpk_vat_3() {
+		echo '<div class="wrap">';
+		$this->html_title( esc_html__( 'JPK VAT(3)', 'kpir' ) );
+		$file = $this->get_module_file( 'jpk/vat_3' );
+		if ( is_readable( $file ) ) {
+		} else {
+		}
 		echo '</div>';
 	}
 
