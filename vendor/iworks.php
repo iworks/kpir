@@ -151,4 +151,8 @@ class iworks {
 			)
 		);
 	}
+
+	protected function html_title( $text ) {
+		printf( '<h1 class="wp-heading-inline">%s</h1>', esc_html( $text ) );
+	}
 }
