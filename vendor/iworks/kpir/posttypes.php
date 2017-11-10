@@ -149,26 +149,26 @@ class iworks_kpir_posttypes {
 				}
 			}
 		}
-    }
+	}
 
-    /**
-     * Check post type
-     *
-     * @since 1.0.0
-     *
-     * @param integer $post_ID Post ID to check.
-     * @returns boolean is correct post type or not
-     */
-    public function check_post_type_by_id( $post_ID ) {
-        $post = get_post( $post_ID );
-        if ( empty( $post ) ) {
-            return false;
-        }
-        if ( $this->post_type_name == $post->post_type ) {
-            return true;
-        }
-        return false;
-    }
+	/**
+	 * Check post type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param integer $post_ID Post ID to check.
+	 * @returns boolean is correct post type or not
+	 */
+	public function check_post_type_by_id( $post_ID ) {
+		$post = get_post( $post_ID );
+		if ( empty( $post ) ) {
+			return false;
+		}
+		if ( $this->post_type_name == $post->post_type ) {
+			return true;
+		}
+		return false;
+	}
 }
 
 
