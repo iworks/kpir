@@ -97,6 +97,7 @@ module.exports = function( grunt ) {
 			pro: [
 				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
 				{ match: /BUILDTIME/g, replace: buildtime },
+				{ match: /KPiR Base/g, replace: 'KPiR Pro' },
 				{ match: /\/\* start:pro \*\//g, replace: '' },
 				{ match: /\/\* end:pro \*\//g, replace: '' },
 				{ match: /\/\* start:free \*[^]+?\* end:free \*\//mg, replace: '' },
@@ -104,6 +105,7 @@ module.exports = function( grunt ) {
 			free: [
 				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
 				{ match: /BUILDTIME/g, replace: buildtime },
+				{ match: /KPiR Base/g, replace: 'KPiR' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
 				{ match: /\/\* end:free \*\//g, replace: '' },
 				{ match: /\/\* start:pro \*[^]+?\* end:pro \*\//mg, replace: '' },
