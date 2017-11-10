@@ -1,0 +1,596 @@
+# Copyright (C) 2017 Marcin Pietrzak
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: KPiR Base master\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kpir\n"
+"POT-Creation-Date: 2017-11-10 09:09:19+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: grunt-wp-i18n 0.5.3\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+
+#: etc/options.php:10
+msgid "Configuration"
+msgstr ""
+
+#: etc/options.php:23 vendor/iworks/kpir/posttypes/contractor.php:58
+#: vendor/iworks/kpir/posttypes/contractor.php:245
+msgid "NIP"
+msgstr ""
+
+#: etc/options.php:30 vendor/iworks/kpir/posttypes/contractor.php:244
+msgid "Full Name"
+msgstr ""
+
+#: etc/options.php:37
+msgid "Monthly Report"
+msgstr ""
+
+#: etc/options.php:38
+msgid "Monthly"
+msgstr ""
+
+#: etc/options.php:49 vendor/iworks/kpir.php:201
+msgid "JPK VAT(3)"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:40
+msgid "Full Name:"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:43
+msgid "Street Address 1:"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:46
+msgid "Street Address 2:"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:49
+msgid "ZIP Code:"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:52
+msgid "City"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:55
+msgid "Country"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:61
+msgid "REGON"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:64
+msgid "KRS"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:67
+msgid "Bank"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:70
+msgid "Bank account"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:74
+#: vendor/iworks/kpir/posttypes/contractor.php:78
+#: vendor/iworks/kpir/posttypes/contractor.php:79
+msgid "Website"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:75
+msgid "email"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:76
+msgid "mobile"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:77
+msgid "phone"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:108
+#: vendor/iworks/kpir/posttypes/contractor.php:113
+msgid "Contractors"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:109
+#: vendor/iworks/kpir/posttypes/contractor.php:135
+#: vendor/iworks/kpir/posttypes/invoice.php:55
+#: vendor/iworks/kpir/posttypes/invoice.php:550
+msgid "Contractor"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:110
+#: vendor/iworks/kpir/posttypes/invoice.php:247
+msgid "Item Archives"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:111
+#: vendor/iworks/kpir/posttypes/invoice.php:248
+msgid "Item Attributes"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:112
+msgid "Parent Contractor:"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:114
+msgid "Add New Contractor"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:115
+#: vendor/iworks/kpir/posttypes/invoice.php:252
+msgid "Add New"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:116
+msgid "New Contractor"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:117
+msgid "Edit Contractor"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:118
+msgid "Update Contractor"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:119
+msgid "View Contractor"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:120
+msgid "View Contractors"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:121
+msgid "Search Contractor"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:122
+#: vendor/iworks/kpir/posttypes/invoice.php:259
+msgid "Not found"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:123
+#: vendor/iworks/kpir/posttypes/invoice.php:260
+msgid "Not found in Trash"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:124
+#: vendor/iworks/kpir/posttypes/invoice.php:261
+msgid "Featured Image"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:125
+#: vendor/iworks/kpir/posttypes/invoice.php:262
+msgid "Set featured image"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:126
+#: vendor/iworks/kpir/posttypes/invoice.php:263
+msgid "Remove featured image"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:127
+#: vendor/iworks/kpir/posttypes/invoice.php:264
+msgid "Use as featured image"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:128
+#: vendor/iworks/kpir/posttypes/invoice.php:265
+msgid "Insert into item"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:129
+#: vendor/iworks/kpir/posttypes/invoice.php:266
+msgid "Uploaded to this item"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:130
+#: vendor/iworks/kpir/posttypes/invoice.php:267
+msgid "Items list"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:131
+#: vendor/iworks/kpir/posttypes/invoice.php:268
+msgid "Items list navigation"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:132
+#: vendor/iworks/kpir/posttypes/invoice.php:269
+msgid "Filter items list"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:136
+msgid "Contractor Description"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:158
+msgid "Contractor Data"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:159
+msgid "Contact Data"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:302
+msgid "All contractors"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:47
+msgid "Event date"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:62
+msgid "Invoice description"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:69
+#: vendor/iworks/kpir/posttypes/invoice.php:555
+msgid "Income"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:72
+#: vendor/iworks/kpir/posttypes/invoice.php:554
+msgid "Expense"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:75
+msgid "Salary"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:78
+msgid "Asset"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:81
+msgid "Insurance"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:86
+msgid "Type"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:93
+#: vendor/iworks/kpir/posttypes/invoice.php:128
+msgid "Please first choose invoice type."
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:99
+msgid "Value of goods and services sold"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:103
+msgid "Other income"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:107
+#: vendor/iworks/kpir/posttypes/invoice.php:146
+msgid "VAT"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:114
+msgid ""
+"1. Dostawa towarów oraz świadczenie usług na terytorium kraju, zwolnione od "
+"podatku"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:117
+msgid ""
+"6. Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane "
+"stawką 22% albo 23%"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:134
+msgid ""
+"The purchase of commercial goods and materials, according to the purchase "
+"price"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:138
+msgid "Incidental costs of purchase"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:142
+msgid "Other expenses"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:150
+msgid "Car related"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:151
+msgid "It will be calculated as half VAT return."
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:156
+msgid "Yes"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:159
+msgid "No"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:169
+msgid "Salary in cash and in kind"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:175
+msgid "Depreciation of asset"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:181
+msgid "ZUS 51"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:185
+msgid "ZUS 52"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:189
+msgid "ZUS 53"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:245
+msgid "KPiR"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:246
+#: vendor/iworks/kpir/posttypes/invoice.php:272
+msgid "Invoice"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:249
+msgid "Parent Invoice:"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:250
+msgid "All Invoices"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:251
+msgid "Add New Invoice"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:253
+msgid "New Invoice"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:254
+msgid "Edit Invoice"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:255
+msgid "Update Invoice"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:256
+msgid "View Invoice"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:257
+msgid "View Invoices"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:258
+msgid "Search Invoice"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:273
+msgid "Invoice Description"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:305
+msgid "Enter invoice number"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:311
+msgid "Basic Data"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:312
+#: vendor/iworks/kpir/posttypes/invoice.php:425
+msgid "Incomes"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:313
+msgid "Expenses (costs)"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:314
+#: vendor/iworks/kpir/posttypes/invoice.php:431
+msgid "Salaries"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:315
+msgid "Assets"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:316
+msgid "Insurances (ZUS)"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:426
+msgid "Expenses"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:427
+msgid "Expenses (VAT)"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:428
+msgid "VAT (Income) "
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:429
+msgid "VAT (Expense)"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:430
+msgid "VAT (zero)"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:432
+msgid "Depreciation of assets"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:551
+msgid "Date"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:553
+msgid "Description"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:556
+msgid "Invoice Number"
+msgstr ""
+
+#: vendor/iworks/kpir/reports/monthly.php:157
+msgid "(car related)"
+msgstr ""
+
+#: vendor/iworks/kpir/reports/monthly.php:394
+msgid "There is no invoices in this month."
+msgstr ""
+
+#: vendor/iworks/kpir/reports/monthly.php:532
+msgid "Filter by date"
+msgstr ""
+
+#: vendor/iworks/kpir/reports/monthly.php:534
+msgid "Select month"
+msgstr ""
+
+#: vendor/iworks/kpir/reports/monthly.php:544
+msgid "Filter"
+msgstr ""
+
+#: vendor/iworks/kpir.php:73
+msgid "Current month: %s"
+msgstr ""
+
+#: vendor/iworks/kpir.php:74
+msgid "Past month: %s"
+msgstr ""
+
+#: vendor/iworks/kpir.php:161
+msgid "Are you sure you want to create a duplicate copy of this invoice?"
+msgstr ""
+
+#: vendor/iworks/kpir.php:162
+msgid "An error occurred duplicating invoice. Please try again."
+msgstr ""
+
+#: vendor/iworks/kpir.php:185
+msgid "Monthly report"
+msgstr ""
+
+#: vendor/iworks/kpir.php:190
+msgid "Reports"
+msgstr ""
+
+#: vendor/iworks/kpir.php:215
+msgid "Settings"
+msgstr ""
+
+#: vendor/iworks/kpir.php:218
+msgid "Donate"
+msgstr ""
+
+#: vendor/iworks/kpir.php:250
+msgid "Duplicate"
+msgstr ""
+
+#: vendor/iworks/kpir.php:301
+msgid "Copy of %s"
+msgstr ""
+
+#: vendor/iworks/options/options.php:196
+msgid "An error occurred while getting the configuration."
+msgstr ""
+
+#: vendor/iworks/options/options.php:695
+msgid "Upload image"
+msgstr ""
+
+#: vendor/iworks/options/options.php:701
+msgid "Delete image"
+msgstr ""
+
+#: vendor/iworks/options/options.php:769
+msgid "Save Changes"
+msgstr ""
+
+#: vendor/iworks/options/options.php:1553
+msgid "OFF"
+msgstr ""
+
+#: vendor/iworks/options/options.php:1554
+msgid "ON"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "KPiR Base"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://iworks.pl/kpir/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Podatkowa Księga Przychodu i Rozchodu"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Marcin Pietrzak"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://iworks.pl/"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:106
+msgctxt "Contractor General Name"
+msgid "Contractors"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/contractor.php:107
+msgctxt "Contractor Singular Name"
+msgid "Contractor"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:243
+msgctxt "Invoice General Name"
+msgid "Invoices"
+msgstr ""
+
+#: vendor/iworks/kpir/posttypes/invoice.php:244
+msgctxt "Invoice Singular Name"
+msgid "Invoice"
+msgstr ""
+
+#: vendor/iworks/kpir.php:69 vendor/iworks/kpir.php:71
+msgctxt "date admin dashbord widget"
+msgid "Y F"
+msgstr ""
