@@ -4,7 +4,7 @@ Plugin Name: KPiR Base
 Text Domain: kpir
 Plugin URI: http://iworks.pl/kpir/
 Description: Podatkowa Księga Przychodu i Rozchodu
-Version: master
+Version: PLUGIN_VERSION
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * static options
  */
-define( 'IWORKS_KPIR_VERSION', '4.0' );
+define( 'IWORKS_KPIR_VERSION', 'PLUGIN_VERSION' );
 define( 'IWORKS_KPIR_PREFIX',  'iworks_kpir_' );
 $base = dirname( __FILE__ );
 $vendor = $base.'/vendor';
