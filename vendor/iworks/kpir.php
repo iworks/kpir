@@ -183,8 +183,8 @@ class iworks_kpir extends iworks {
 				$file = $this->get_module_file( 'reports/monthly' );
 				include_once $file;
 				$this->html_title( esc_html__( 'Monthly report', 'kpir' ) );
-				$report = new iworks_kpir_reports_monthly();
-				$report->show( $this->post_type_invoice );
+				$page = new iworks_kpir_reports_monthly();
+				$page->show( $this->post_type_invoice );
 			break;
 			default:
 				$this->html_title( esc_html__( 'Reports', 'kpir' ) );
@@ -203,8 +203,8 @@ class iworks_kpir extends iworks {
 		if ( is_readable( $file ) ) {
 				include_once $file;
 				$this->html_title( esc_html__( 'Monthly report', 'kpir' ) );
-				$jpk = new iworks_kpir_jpk_vat_3();
-				$report->show();
+				$page = new iworks_kpir_jpk_vat_3();
+				$page->show();
         } else {
             _e( 'Somthing went wrong!', 'kpir' );
 		}
