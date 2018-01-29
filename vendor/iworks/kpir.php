@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright 2017 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2017-2018 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -201,7 +201,12 @@ class iworks_kpir extends iworks {
 		$this->html_title( esc_html__( 'JPK VAT(3)', 'kpir' ) );
 		$file = $this->get_module_file( 'jpk/vat_3' );
 		if ( is_readable( $file ) ) {
-		} else {
+				include_once $file;
+				$this->html_title( esc_html__( 'Monthly report', 'kpir' ) );
+				$jpk = new iworks_kpir_jpk_vat_3();
+				$report->show();
+        } else {
+            _e( 'Somthing went wrong!', 'kpir' );
 		}
 		echo '</div>';
 	}
