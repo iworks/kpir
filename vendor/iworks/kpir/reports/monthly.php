@@ -36,7 +36,8 @@ class iworks_kpir_reports_monthly {
 		$this->debug = defined( 'WP_DEBUG' ) && WP_DEBUG;
 	}
 
-	public function show( $post_type_object ) {
+	public function show( $kpir ) {
+		$post_type_object = $kpir->get_post_type_invoice();
 
 		/**
 		 * get current month
@@ -54,47 +55,31 @@ class iworks_kpir_reports_monthly {
 		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
 		$date_format = get_option( 'date_format' );
 
-		$args = array(
-			'post_type' => $post_type_object->get_name(),
-			'nopaging' => true,
-			'suppress_filters' => true,
-			'orderby' => $cf_date_name,
-			'order' => 'ASC',
-			'meta_query' => array(
-				array(
-					'key' => $post_type_object->get_custom_field_year_month_name(),
-					'value' => $current,
-				),
-				array(
-					'key' => $post_type_object->get_custom_field_basic_date_name(),
-					'compare' => 'EXISTS',
-				),
-			),
-		);
-		$sum = array(
-			'income' => array(
-				'integer' => 0,
-				'fractional' => 0,
-			),
-			'expense' => array(
-				'integer' => 0,
-				'fractional' => 0,
-			),
-			'expense_netto' => array(
-				'integer' => 0,
-				'fractional' => 0,
-			),
-			'vat_income' => array(
-				'integer' => 0,
-				'fractional' => 0,
-			),
-			'vat_expense' => array(
-				'integer' => 0,
-				'fractional' => 0,
-			),
-		);
-		$query = new WP_Query( $args );
+		$query = $kpir->get_month_query( $current );
+
 		if ( $query->have_posts() ) {
+			$sum = array(
+				'income' => array(
+					'integer' => 0,
+					'fractional' => 0,
+				),
+				'expense' => array(
+					'integer' => 0,
+					'fractional' => 0,
+				),
+				'expense_netto' => array(
+					'integer' => 0,
+					'fractional' => 0,
+				),
+				'vat_income' => array(
+					'integer' => 0,
+					'fractional' => 0,
+				),
+				'vat_expense' => array(
+					'integer' => 0,
+					'fractional' => 0,
+				),
+			);
 			$i = 1;
 			echo '<table class="kpir-report kpir-report-monthly">';
 			echo $this->html_table_thead();

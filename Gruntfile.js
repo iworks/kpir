@@ -32,6 +32,7 @@ module.exports = function( grunt ) {
 			'{js}admin/kpir.js': [
 				'{js}admin/src/datepicker.js',
 				'{js}admin/src/invoice.js',
+				'{js}admin/src/jpk.js',
 				'{js}admin/src/select2.js'
 			]
 		},

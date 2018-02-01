@@ -52,6 +52,22 @@ class iworks_kpir extends iworks {
 		 * admin init
 		 */
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
+
+		add_action( 'wp_loaded', array( $this, 'plugins_loaded' ), 1 );
+
+	}
+
+	public function plugins_loaded() {
+		if ( isset( $_REQUEST['action'] ) ) {
+			if ( 'iworks_kpir_jpk_vat_3' == $_REQUEST['action'] ) {
+				$file = $this->get_module_file( 'jpk/vat_3' );
+				if ( is_readable( $file ) ) {
+					include_once $file;
+					$page = new iworks_kpir_jpk_vat_3();
+					$page->get_xml( $this );
+				}
+			}
+		}
 	}
 
 	public function dashboard_widget_current_month( $post, $callback_args ) {
@@ -131,6 +147,7 @@ class iworks_kpir extends iworks {
 			$files = array(
 				'kpir-admin-datepicker' => 'assets/scripts/admin/src/datepicker.js',
 				'kpir-admin-invoice' => 'assets/scripts/admin/src/invoice.js',
+				'kpir-admin-jpk' => 'assets/scripts/admin/src/jpk.js',
 				'kpir-admin-select2' => 'assets/scripts/admin/src/select2.js',
 			);
 		}
@@ -173,6 +190,10 @@ class iworks_kpir extends iworks {
 		}
 	}
 
+	public function get_post_type_invoice() {
+		return $this->post_type_invoice;
+	}
+
 	/**
 	 * Show reports page
 	 */
@@ -184,7 +205,7 @@ class iworks_kpir extends iworks {
 				include_once $file;
 				$this->html_title( esc_html__( 'Monthly report', 'kpir' ) );
 				$page = new iworks_kpir_reports_monthly();
-				$page->show( $this->post_type_invoice );
+				$page->show( $this );
 			break;
 			default:
 				$this->html_title( esc_html__( 'Reports', 'kpir' ) );
@@ -198,15 +219,14 @@ class iworks_kpir extends iworks {
 	 */
 	public function show_page_jpk_vat_3() {
 		echo '<div class="wrap">';
-		$this->html_title( esc_html__( 'JPK VAT(3)', 'kpir' ) );
 		$file = $this->get_module_file( 'jpk/vat_3' );
 		if ( is_readable( $file ) ) {
-				include_once $file;
-				$this->html_title( esc_html__( 'Monthly report', 'kpir' ) );
-				$page = new iworks_kpir_jpk_vat_3();
-				$page->show();
-        } else {
-            _e( 'Somthing went wrong!', 'kpir' );
+			include_once $file;
+			$this->html_title( esc_html__( 'JPK VAT(3)', 'kpir' ) );
+			$page = new iworks_kpir_jpk_vat_3();
+			$page->show( $this );
+		} else {
+			_e( 'Something went wrong!', 'kpir' );
 		}
 		echo '</div>';
 	}
@@ -310,5 +330,37 @@ class iworks_kpir extends iworks {
 			wp_send_json_success();
 		}
 		wp_send_json_error();
+	}
+
+	/**
+	 * Get month query
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $month Month to prepre, format Y-m
+	 *
+	 * @return WP_Query $query WordPress Post Query Object
+	 */
+	public function get_month_query( $month ) {
+		$cf_date_name = $this->post_type_invoice->get_custom_field_basic_date_name();
+		$args = array(
+			'post_type' => $this->post_type_invoice->get_name(),
+			'nopaging' => true,
+			'suppress_filters' => true,
+			'orderby' => $cf_date_name,
+			'order' => 'ASC',
+			'meta_query' => array(
+				array(
+					'key' => $this->post_type_invoice->get_custom_field_year_month_name(),
+					'value' => $month,
+				),
+				array(
+					'key' => $this->post_type_invoice->get_custom_field_basic_date_name(),
+					'compare' => 'EXISTS',
+				),
+			),
+		);
+		$query = new WP_Query( $args );
+		return $query;
 	}
 }

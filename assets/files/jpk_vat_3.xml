@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JPK xmlns="http://jpk.mf.gov.pl/wzor/2016/10/26/10261/" xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Naglowek>
+		<KodFormularza wersjaSchemy="1-1" kodSystemowy="JPK_VAT (3)">JPK_VAT</KodFormularza>
+		<WariantFormularza>3</WariantFormularza>
+		<CelZlozenia>%CelZlozenia%</CelZlozenia>
+		<DataWytworzeniaJPK>%DataWytworzeniaJPK%</DataWytworzeniaJPK>
+		<DataOd>%DataOd%</DataOd>
+        <DataDo>%DataDo%</DataDo>
+        <NazwaSystemu>KPiR Base PLUGIN_VERSION</NazwaSystemu>
+	</Naglowek>
+	<Podmiot1>
+		<IdentyfikatorPodmiotu>
+			<etd:NIP>%NIP%</etd:NIP>
+			<etd:PelnaNazwa>%PelnaNazwa%</etd:PelnaNazwa>
+		</IdentyfikatorPodmiotu>
+	</Podmiot1>
+</JPK>
