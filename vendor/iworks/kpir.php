@@ -177,6 +177,11 @@ class iworks_kpir extends iworks {
 				'messages' => array(
 					'duplicate_confirm' => __( 'Are you sure you want to create a duplicate copy of this invoice?', 'kpir' ),
 					'duplicate_error' => __( 'An error occurred duplicating invoice. Please try again.', 'kpir' ),
+					'jpk' => array(
+						'vat' => array(
+							'select_month' => __( 'Please select month first!', 'kpir' ),
+						),
+					),
 				),
 			)
 		);

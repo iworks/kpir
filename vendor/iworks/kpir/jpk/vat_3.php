@@ -135,7 +135,7 @@ class iworks_kpir_jpk_vat_3 {
 		echo '<td>';
 		$args = array(
 			'min' => 0,
-			'class' => 'small-text',
+			'class' => array( 'small-text' ),
 		);
 		echo $this->options->get_field_by_type( 'number', 'purpose', 0, $args );
 		echo '</td>';
@@ -168,7 +168,7 @@ class iworks_kpir_jpk_vat_3 {
 		echo '</tbody>';
 		echo '</table>';
 		$args = array(
-			'class' => 'button button-primary',
+			'class' => array( 'button', 'button-primary' ),
 		);
 		echo $this->options->get_field_by_type( 'submit', '=iworks_kpir_jpk_vat_3', __( 'Get XML', 'kpir' ), $args );
 		//        echo $this->options->get_field_by_type( 'button', 'iworks_kpir_jpk_vat_3', __( 'Get XML', 'kpir' ), $args );
