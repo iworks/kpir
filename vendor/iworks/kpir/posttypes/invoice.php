@@ -42,6 +42,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 */
 		$this->fields = array(
 			'basic' => array(
+				'date_of_issue' => array(
+					'type' => 'date',
+					'label' => __( 'Date of issue', 'kpir' ),
+					'args' => array(
+						'class' => array( 'medium-text' ),
+						'default' => date_i18n( 'Y-m-d', time() ),
+					),
+				),
 				'date' => array(
 					'type' => 'date',
 					'label' => __( 'Event date', 'kpir' ),

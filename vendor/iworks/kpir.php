@@ -164,7 +164,7 @@ class iworks_kpir extends iworks {
 				true
 			);
 			wp_enqueue_script( $handle );
-		}
+        }
 		/**
 		 * JavaScript messages
 		 *

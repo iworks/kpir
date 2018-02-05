@@ -4,7 +4,11 @@
  */
 jQuery( document ).ready(function($) {
     $( function() {
-        $( ".iworks-kpir-row .datepicker" ).datepicker({ dateFormat: 'dd-mm-yy' });
+        $( ".iworks-kpir-row .datepicker" ).datepicker({
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            dateFormat: 'dd-mm-yy'
+        });
     } );
 });
 
