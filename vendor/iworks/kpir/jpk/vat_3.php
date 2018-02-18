@@ -99,15 +99,15 @@ class iworks_kpir_jpk_vat_3 {
 				}
 			}
 		}
-		$data .= $expenses;
-		$data .= $this->template_summary_expenses( $expenses_counter );
-
 		$data .= $incomes;
 		$data .= $this->template_summary_incomes( $incomes_counter );
 
+		$data .= $expenses;
+		$data .= $this->template_summary_expenses( $expenses_counter );
+
 		$data .= $this->template_footer();
 
-		$filename = sprintf( '%s.xml', $_REQUEST['m'] );
+		$filename = sprintf( 'jpk-vat-%s.xml', $_REQUEST['m'] );
 
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: application/xml' );
@@ -191,7 +191,7 @@ class iworks_kpir_jpk_vat_3 {
 	private function template_header() {
 		$data = '<?xml version="1.0" encoding="UTF-8"?>';
 		$data .= PHP_EOL;
-		$data .= '<JPK xmlns="http://jpk.mf.gov.pl/wzor/2016/10/26/10261/" xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+		$data .= '<JPK xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/" xmlns="http://jpk.mf.gov.pl/wzor/2017/10/12/1012/">';
 		$data .= PHP_EOL;
 		return $data;
 	}
@@ -211,7 +211,7 @@ class iworks_kpir_jpk_vat_3 {
 	private function template_section_head( $purpose, $month ) {
 		$date = strtotime( $month );
 		$data = '   <Naglowek>
-        <KodFormularza wersjaSchemy="1-1" kodSystemowy="JPK_VAT (3)">JPK_VAT</KodFormularza>
+        <KodFormularza wersjaSchemy="1-0">JPK_VAT</KodFormularza>
         <WariantFormularza>3</WariantFormularza>
         <CelZlozenia>%d</CelZlozenia>
         <DataWytworzeniaJPK>%s</DataWytworzeniaJPK>
@@ -234,11 +234,9 @@ class iworks_kpir_jpk_vat_3 {
 
 	private function template_section_company() {
 		$data = '   <Podmiot1>
-        <IdentyfikatorPodmiotu>
-            <etd:NIP>%s</etd:NIP>
-            <etd:PelnaNazwa>%s</etd:PelnaNazwa>
-            <etd:EMAIL>%s</etd:EMAIL>
-        </IdentyfikatorPodmiotu>
+            <NIP>%s</NIP>
+            <PelnaNazwa>%s</PelnaNazwa>
+            <Email>%s</Email>
     </Podmiot1>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
@@ -265,8 +263,8 @@ class iworks_kpir_jpk_vat_3 {
 		$data = '<ZakupWiersz>
     <LpZakupu>%d</LpZakupu>
     <NrDostawcy>%s</NrDostawcy>
-    <NazwaWystawcy>%s</NazwaWystawcy>
-    <AdresWystawcy>%s</AdresWystawcy>
+    <NazwaDostawcy>%s</NazwaDostawcy>
+    <AdresDostawcy>%s</AdresDostawcy>
     <DowodZakupu>%s</DowodZakupu>
     <DataZakupu>%s</DataZakupu>
 %s</ZakupWiersz>';
@@ -330,7 +328,6 @@ class iworks_kpir_jpk_vat_3 {
     <AdresKontrahenta>%s</AdresKontrahenta>
     <DowodSprzedazy>%s</DowodSprzedazy>
     <DataWystawienia>%s</DataWystawienia>
-    <DataSprzedazy></DataSprzedazy>
 %s</SprzedazWiersz>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
@@ -392,7 +389,7 @@ class iworks_kpir_jpk_vat_3 {
 		return $data;
 	}
 
-	private function template_summary_expenses( $counter ) {
+	private function template_summary_incomes( $counter ) {
 		$data = '<SprzedazCtrl>
     <LiczbaWierszySprzedazy>%d</LiczbaWierszySprzedazy>
     <PodatekNalezny>%d.%d</PodatekNalezny>
@@ -415,7 +412,7 @@ class iworks_kpir_jpk_vat_3 {
 		return $data;
 	}
 
-	private function template_summary_incomes( $counter ) {
+	private function template_summary_expenses( $counter ) {
 		$data = '<ZakupCtrl>
     <LiczbaWierszyZakupow>%d</LiczbaWierszyZakupow>
     <PodatekNaliczony>%d.%d</PodatekNaliczony>
