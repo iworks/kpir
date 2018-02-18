@@ -399,10 +399,13 @@ class iworks_kpir_jpk_vat_3 {
 </SprzedazCtrl>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
-
 		$integer = $this->sum['vat_expense']['integer'];
 		$fractional = $this->sum['vat_expense']['fractional'];
-
+		/**
+		 * recalculate fractional over 100
+		 */
+		$integer += ( $fractional - $fractional % 100 ) / 100;
+		$fractional = $fractional % 100;
 		$data = sprintf(
 			$data,
 			$counter,
@@ -413,16 +416,20 @@ class iworks_kpir_jpk_vat_3 {
 	}
 
 	private function template_summary_incomes( $counter ) {
-		$data = '<SprzedazCtrl>
-    <LiczbaWierszySprzedazy>%d</LiczbaWierszySprzedazy>
-    <PodatekNalezny>%d.%d</PodatekNalezny>
-</SprzedazCtrl>';
+		$data = '<ZakupCtrl>
+    <LiczbaWierszyZakupow>%d</LiczbaWierszyZakupow>
+    <PodatekNaliczony>%d.%d</PodatekNaliczony>
+</ZakupCtrl>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
 
 		$integer = $this->sum['vat_income']['integer'];
 		$fractional = $this->sum['vat_income']['fractional'];
-
+		/**
+		 * recalculate fractional over 100
+		 */
+		$integer += ( $fractional - $fractional % 100 ) / 100;
+		$fractional = $fractional % 100;
 		$data = sprintf(
 			$data,
 			$counter,
