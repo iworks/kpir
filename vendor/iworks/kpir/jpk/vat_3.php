@@ -191,34 +191,34 @@ class iworks_kpir_jpk_vat_3 {
 	private function template_header() {
 		$data = '<?xml version="1.0" encoding="UTF-8"?>';
 		$data .= PHP_EOL;
-		$data .= '<JPK xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/" xmlns="http://jpk.mf.gov.pl/wzor/2017/10/12/1012/">';
+        $data = '<tns:JPK xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/" xmlns:tns="http://jpk.mf.gov.pl/wzor/2017/11/13/1113/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
 		$data .= PHP_EOL;
 		return $data;
 	}
 
 	private function template_footer() {
-		$data = '</JPK>';
+		$data = '</tns:JPK>';
 		return $data;
 	}
 
 	/**
-	 * CelZlozenia - 1- złożenie pliku JPK_VAT
+	 * tns:CelZlozenia - 1- złożenie pliku JPK_VAT
 	 *               2- korekta pliku JPK_VAT
 	 *               3... kolejny numer korekty
-	 * DataOd - Miesiąc, za który składany jest JPK_VAT
-	 * DataOd - Miesiąc, za który składany jest JPK_VAT
+	 * tns:DataOd - Miesiąc, za który składany jest JPK_VAT
+	 * tns:DataOd - Miesiąc, za który składany jest JPK_VAT
 	 */
 	private function template_section_head( $purpose, $month ) {
 		$date = strtotime( $month );
-		$data = '   <Naglowek>
-        <KodFormularza wersjaSchemy="1-0">JPK_VAT</KodFormularza>
-        <WariantFormularza>3</WariantFormularza>
-        <CelZlozenia>%d</CelZlozenia>
-        <DataWytworzeniaJPK>%s</DataWytworzeniaJPK>
-        <DataOd>%s</DataOd>
-        <DataDo>%s</DataDo>
-        <NazwaSystemu>KPiR Base PLUGIN_VERSION</NazwaSystemu>
-    </Naglowek>';
+		$data = '   <tns:Naglowek>
+        <tns:KodFormularza wersjaSchemy="1-1" kodSystemowy="JPK_VAT (3)">JPK_VAT</tns:KodFormularza>
+        <tns:WariantFormularza>3</tns:WariantFormularza>
+        <tns:CelZlozenia>%d</tns:CelZlozenia>
+        <tns:DataWytworzeniaJPK>%s</tns:DataWytworzeniaJPK>
+        <tns:DataOd>%s</tns:DataOd>
+        <tns:DataDo>%s</tns:DataDo>
+        <tns:NazwaSystemu>KPiR Base PLUGIN_VERSION</tns:NazwaSystemu>
+    </tns:Naglowek>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
 		$data = sprintf(
@@ -233,11 +233,11 @@ class iworks_kpir_jpk_vat_3 {
 	}
 
 	private function template_section_company() {
-		$data = '   <Podmiot1>
-            <NIP>%s</NIP>
-            <PelnaNazwa>%s</PelnaNazwa>
-            <Email>%s</Email>
-    </Podmiot1>';
+		$data = '   <tns:Podmiot1>
+            <tns:NIP>%s</tns:NIP>
+            <tns:PelnaNazwa>%s</tns:PelnaNazwa>
+            <tns:Email>%s</tns:Email>
+    </tns:Podmiot1>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
 		$data = sprintf(
@@ -250,24 +250,24 @@ class iworks_kpir_jpk_vat_3 {
 	}
 
 	/**
-	 * K_43 Kwota netto – Nabycie towarów i usług zaliczanych u podatnika do środków trwałych (pole opcjonalne)
-	 * K_44 Kwota podatku naliczonego – Nabycie towarów i usług zaliczanych u podatnika do środków trwałych (pole opcjonalne) * K_45 Kwota netto – Nabycie towarów i usług pozostałych (pole opcjonalne)
-	 * K_46 Kwota podatku naliczonego – Nabycie towarów i usług pozostałych (pole opcjonalne)
-	 * K_47 Korekta podatku naliczonego od nabycia środków trwałych (pole opcjonalne)
-	 * K_48 Korekta podatku naliczonego od pozostałych nabyć (pole opcjonalne)
-	 * K_49 Korekta podatku naliczonego, o której mowa w art. 89b ust. 1 ustawy (pole opcjonalne)
-	 * K_50 Korekta podatku naliczonego, o której mowa w art. 89b ust. 4 ustawy (pole opcjonalne)
+	 * tns:K_43 Kwota netto – Nabycie towarów i usług zaliczanych u podatnika do środków trwałych (pole opcjonalne)
+	 * tns:K_44 Kwota podatku naliczonego – Nabycie towarów i usług zaliczanych u podatnika do środków trwałych (pole opcjonalne) * tns:K_45 Kwota netto – Nabycie towarów i usług pozostałych (pole opcjonalne)
+	 * tns:K_46 Kwota podatku naliczonego – Nabycie towarów i usług pozostałych (pole opcjonalne)
+	 * tns:K_47 Korekta podatku naliczonego od nabycia środków trwałych (pole opcjonalne)
+	 * tns:K_48 Korekta podatku naliczonego od pozostałych nabyć (pole opcjonalne)
+	 * tns:K_49 Korekta podatku naliczonego, o której mowa w art. 89b ust. 1 ustawy (pole opcjonalne)
+	 * tns:K_50 Korekta podatku naliczonego, o której mowa w art. 89b ust. 4 ustawy (pole opcjonalne)
 	 *
 	 */
 	private function template_row_expense( $counter, $ID, $contractor_id ) {
-		$data = '<ZakupWiersz>
-    <LpZakupu>%d</LpZakupu>
-    <NrDostawcy>%s</NrDostawcy>
-    <NazwaDostawcy>%s</NazwaDostawcy>
-    <AdresDostawcy>%s</AdresDostawcy>
-    <DowodZakupu>%s</DowodZakupu>
-    <DataZakupu>%s</DataZakupu>
-%s</ZakupWiersz>';
+		$data = '<tns:ZakupWiersz>
+    <tns:LpZakupu>%d</tns:LpZakupu>
+    <tns:NrDostawcy>%s</tns:NrDostawcy>
+    <tns:NazwaDostawcy>%s</tns:NazwaDostawcy>
+    <tns:AdresDostawcy>%s</tns:AdresDostawcy>
+    <tns:DowodZakupu>%s</tns:DowodZakupu>
+    <tns:DataZakupu>%s</tns:DataZakupu>
+%s</tns:ZakupWiersz>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
 		$contractor = $this->get_contractor( $contractor_id );
@@ -279,7 +279,7 @@ class iworks_kpir_jpk_vat_3 {
 
 		$money = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
 		$k .= sprintf(
-			'   <K_45>%d.%d</K_45>%s',
+			'   <tns:K_45>%d.%d</tns:K_45>%s',
 			$money['integer'],
 			$money['fractional'],
 			PHP_EOL
@@ -297,7 +297,7 @@ class iworks_kpir_jpk_vat_3 {
 			$money['integer'] = round( ($v - $money['fractional']) / 100 );
 		}
 		$k .= sprintf(
-			'   <K_46>%d.%d</K_46>%s',
+			'   <tns:K_46>%d.%d</tns:K_46>%s',
 			$money['integer'],
 			$money['fractional'],
 			PHP_EOL
@@ -321,14 +321,14 @@ class iworks_kpir_jpk_vat_3 {
 	}
 
 	private function template_row_income( $counter, $ID, $contractor_id ) {
-		$data = '<SprzedazWiersz>
-    <LpSprzedazy>%d</LpSprzedazy>
-    <NrKontrahenta>%s</NrKontrahenta>
-    <NazwaKontrahenta>%s</NazwaKontrahenta>
-    <AdresKontrahenta>%s</AdresKontrahenta>
-    <DowodSprzedazy>%s</DowodSprzedazy>
-    <DataWystawienia>%s</DataWystawienia>
-%s</SprzedazWiersz>';
+		$data = '<tns:SprzedazWiersz>
+    <tns:LpSprzedazy>%d</tns:LpSprzedazy>
+    <tns:NrKontrahenta>%s</tns:NrKontrahenta>
+    <tns:NazwaKontrahenta>%s</tns:NazwaKontrahenta>
+    <tns:AdresKontrahenta>%s</tns:AdresKontrahenta>
+    <tns:DowodSprzedazy>%s</tns:DowodSprzedazy>
+    <tns:DataWystawienia>%s</tns:DataWystawienia>
+%s</tns:SprzedazWiersz>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
 		$contractor = $this->get_contractor( $contractor_id );
@@ -342,7 +342,7 @@ class iworks_kpir_jpk_vat_3 {
 			case 'c01':
 				$money = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
 				$k .= sprintf(
-					'   <K_11>%d.%d</K_11>%s',
+					'   <tns:K_11>%d.%d</tns:K_11>%s',
 					$money['integer'],
 					$money['fractional'],
 					PHP_EOL
@@ -353,7 +353,7 @@ class iworks_kpir_jpk_vat_3 {
 			case 'c06':
 				$money = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
 				$k .= sprintf(
-					'   <K_19>%d.%d</K_19>%s',
+					'   <tns:K_19>%d.%d</tns:K_19>%s',
 					$money['integer'],
 					$money['fractional'],
 					PHP_EOL
@@ -365,7 +365,7 @@ class iworks_kpir_jpk_vat_3 {
 			 */
 				$money = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
 				$k .= sprintf(
-					'   <K_20>%d.%d</K_20>%s',
+					'   <tns:K_20>%d.%d</tns:K_20>%s',
 					$money['integer'],
 					$money['fractional'],
 					PHP_EOL
@@ -390,10 +390,10 @@ class iworks_kpir_jpk_vat_3 {
 	}
 
 	private function template_summary_incomes( $counter ) {
-		$data = '<SprzedazCtrl>
-    <LiczbaWierszySprzedazy>%d</LiczbaWierszySprzedazy>
-    <PodatekNalezny>%d.%d</PodatekNalezny>
-</SprzedazCtrl>';
+		$data = '<tns:SprzedazCtrl>
+    <tns:LiczbaWierszySprzedazy>%d</tns:LiczbaWierszySprzedazy>
+    <tns:PodatekNalezny>%d.%d</tns:PodatekNalezny>
+</tns:SprzedazCtrl>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
 		$integer = $this->sum['vat_expense']['integer'];
@@ -413,10 +413,10 @@ class iworks_kpir_jpk_vat_3 {
 	}
 
 	private function template_summary_expenses( $counter ) {
-		$data = '<ZakupCtrl>
-    <LiczbaWierszyZakupow>%d</LiczbaWierszyZakupow>
-    <PodatekNaliczony>%d.%d</PodatekNaliczony>
-</ZakupCtrl>';
+		$data = '<tns:ZakupCtrl>
+    <tns:LiczbaWierszyZakupow>%d</tns:LiczbaWierszyZakupow>
+    <tns:PodatekNaliczony>%d.%d</tns:PodatekNaliczony>
+</tns:ZakupCtrl>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
 
@@ -435,7 +435,6 @@ class iworks_kpir_jpk_vat_3 {
 		);
 		return $data;
 	}
-
 
 	private function get_contractor( $contractor_id ) {
 		if ( ! isset( $this->contractors[ $contractor_id ] ) ) {
