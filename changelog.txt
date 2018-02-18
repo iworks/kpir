@@ -3,3 +3,8 @@ Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==
 
+= 0.0.2 =
+* Fixed fractional part of money with leading zero for JPK VAT (3).
+
+= 0.0.1 =
+* init version
