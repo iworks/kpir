@@ -25,6 +25,29 @@ if ( ! defined( 'WPINC' ) ) {
 class iworks_kpir_jpk_vat_3 {
 
 	private $options;
+	private $contractors = array();
+	private $sum = array(
+		'income' => array(
+			'integer' => 0,
+			'fractional' => 0,
+		),
+		'expense' => array(
+			'integer' => 0,
+			'fractional' => 0,
+		),
+		'expense_netto' => array(
+			'integer' => 0,
+			'fractional' => 0,
+		),
+		'vat_income' => array(
+			'integer' => 0,
+			'fractional' => 0,
+		),
+		'vat_expense' => array(
+			'integer' => 0,
+			'fractional' => 0,
+		),
+	);
 
 	public function __construct() {
 		global $iworks_kpir_options;
@@ -46,6 +69,7 @@ class iworks_kpir_jpk_vat_3 {
 
 		$data .= $this->template_header();
 		$data .= $this->template_section_head( $_REQUEST['purpose'], $_REQUEST['m'] );
+		$data .= $this->template_section_company();
 
 		$post_type_object = $kpir->get_post_type_invoice();
 
@@ -56,41 +80,30 @@ class iworks_kpir_jpk_vat_3 {
 		$query = $kpir->get_month_query( $_REQUEST['m'] );
 
 		if ( $query->have_posts() ) {
-			$sum = array(
-				'income' => array(
-					'integer' => 0,
-					'fractional' => 0,
-				),
-				'expense' => array(
-					'integer' => 0,
-					'fractional' => 0,
-				),
-				'expense_netto' => array(
-					'integer' => 0,
-					'fractional' => 0,
-				),
-				'vat_income' => array(
-					'integer' => 0,
-					'fractional' => 0,
-				),
-				'vat_expense' => array(
-					'integer' => 0,
-					'fractional' => 0,
-				),
-			);
-
-			$i = 1;
+			$incomes_counter = $expenses_counter = 0;
+			$expenses = $incomes = '';
 			while ( $query->have_posts() ) {
 				$query->the_post();
 				$ID = get_the_ID();
-
-				l( $ID );
-
+				$type = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
 				$contractor_id = get_post_meta( $ID, $cf_contractor_name, true );
-				$data .= $this->template_row_sale( $i, $ID, $contractor_id );
-				$i++;
+				switch ( $type ) {
+					case 'expense':
+						$expenses_counter++;
+						$expenses .= $this->template_row_expense( $expenses_counter, $ID, $contractor_id );
+					break;
+					case 'income':
+						$incomes_counter++;
+						$incomes .= $this->template_row_income( $incomes_counter, $ID, $contractor_id );
+					break;
+				}
 			}
 		}
+		$data .= $expenses;
+		$data .= $this->template_summary_expenses( $expenses_counter );
+
+		$data .= $incomes;
+		$data .= $this->template_summary_incomes( $incomes_counter );
 
 		$data .= $this->template_footer();
 
@@ -177,7 +190,9 @@ class iworks_kpir_jpk_vat_3 {
 
 	private function template_header() {
 		$data = '<?xml version="1.0" encoding="UTF-8"?>';
+		$data .= PHP_EOL;
 		$data .= '<JPK xmlns="http://jpk.mf.gov.pl/wzor/2016/10/26/10261/" xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+		$data .= PHP_EOL;
 		return $data;
 	}
 
@@ -195,15 +210,17 @@ class iworks_kpir_jpk_vat_3 {
 	 */
 	private function template_section_head( $purpose, $month ) {
 		$date = strtotime( $month );
-		$data = '<Naglowek>
-            <KodFormularza wersjaSchemy="1-1" kodSystemowy="JPK_VAT (3)">JPK_VAT</KodFormularza>
-            <WariantFormularza>3</WariantFormularza>
-            <CelZlozenia>%d</CelZlozenia>
-            <DataWytworzeniaJPK>%s</DataWytworzeniaJPK>
-            <DataOd>%s</DataOd>
-            <DataDo>%s</DataDo>
-            <NazwaSystemu>KPiR Base PLUGIN_VERSION</NazwaSystemu>
-            </Naglowek>';
+		$data = '   <Naglowek>
+        <KodFormularza wersjaSchemy="1-1" kodSystemowy="JPK_VAT (3)">JPK_VAT</KodFormularza>
+        <WariantFormularza>3</WariantFormularza>
+        <CelZlozenia>%d</CelZlozenia>
+        <DataWytworzeniaJPK>%s</DataWytworzeniaJPK>
+        <DataOd>%s</DataOd>
+        <DataDo>%s</DataDo>
+        <NazwaSystemu>KPiR Base PLUGIN_VERSION</NazwaSystemu>
+    </Naglowek>';
+		$data .= PHP_EOL;
+		$data .= PHP_EOL;
 		$data = sprintf(
 			$data,
 			$purpose,
@@ -216,78 +233,225 @@ class iworks_kpir_jpk_vat_3 {
 	}
 
 	private function template_section_company() {
-		$data = '
-    <Podmiot1>
+		$data = '   <Podmiot1>
         <IdentyfikatorPodmiotu>
-            <etd:NIP>%NIP%</etd:NIP>
-            <etd:PelnaNazwa>%PelnaNazwa%</etd:PelnaNazwa>
+            <etd:NIP>%s</etd:NIP>
+            <etd:PelnaNazwa>%s</etd:PelnaNazwa>
+            <etd:EMAIL>%s</etd:EMAIL>
         </IdentyfikatorPodmiotu>
     </Podmiot1>';
+		$data .= PHP_EOL;
+		$data .= PHP_EOL;
+		$data = sprintf(
+			$data,
+			preg_replace( '/[^\d]+/', '', get_option( 'iworks_kpir_nip' ) ),
+			get_option( 'iworks_kpir_name' ),
+			get_option( 'iworks_kpir_email' )
+		);
 		return $data;
 	}
 
-	private function template_row_sale( $counter, $ID, $contractor_id ) {
-		$data = '<SprzedazWiersz>
-            <LpSprzedazy>%d</LpSprzedazy>
-            <NrKontrahenta>%s</NrKontrahenta>
-            <NazwaKontrahenta>%s</NazwaKontrahenta>
-            <AdresKontrahenta>%s</AdresKontrahenta>
-            <DowodSprzedazy>%s</DowodSprzedazy>
-            <DataWystawienia>%s</DataWystawienia>
-            <DataSprzedazy>%s</DataSprzedazy>
-            </SprzedazWiersz>';
-
-		$nip = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_nip', true );
-		if ( empty( $nip ) ) {
-			$nip = 'brak';
-		} else {
-			$nip = preg_replace( '/\-/', '', $nip );
-		}
-		$name = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_full_name', true );
-
-		$address = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_street1', true );
-		$address .= ', '.get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_zip', true );
-		$address .= ' '.get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_city', true );
-		$address .= ', '.get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_country', true );
-
-		$sale_date = $create_date = date( 'Y-m-d', get_post_meta( $ID, $cf_date_name, true ) );
-
+	/**
+	 * K_43 Kwota netto – Nabycie towarów i usług zaliczanych u podatnika do środków trwałych (pole opcjonalne)
+	 * K_44 Kwota podatku naliczonego – Nabycie towarów i usług zaliczanych u podatnika do środków trwałych (pole opcjonalne) * K_45 Kwota netto – Nabycie towarów i usług pozostałych (pole opcjonalne)
+	 * K_46 Kwota podatku naliczonego – Nabycie towarów i usług pozostałych (pole opcjonalne)
+	 * K_47 Korekta podatku naliczonego od nabycia środków trwałych (pole opcjonalne)
+	 * K_48 Korekta podatku naliczonego od pozostałych nabyć (pole opcjonalne)
+	 * K_49 Korekta podatku naliczonego, o której mowa w art. 89b ust. 1 ustawy (pole opcjonalne)
+	 * K_50 Korekta podatku naliczonego, o której mowa w art. 89b ust. 4 ustawy (pole opcjonalne)
+	 *
+	 */
+	private function template_row_expense( $counter, $ID, $contractor_id ) {
+		$data = '<ZakupWiersz>
+    <LpZakupu>%d</LpZakupu>
+    <NrDostawcy>%s</NrDostawcy>
+    <NazwaWystawcy>%s</NazwaWystawcy>
+    <AdresWystawcy>%s</AdresWystawcy>
+    <DowodZakupu>%s</DowodZakupu>
+    <DataZakupu>%s</DataZakupu>
+%s</ZakupWiersz>';
+		$data .= PHP_EOL;
+		$data .= PHP_EOL;
+		$contractor = $this->get_contractor( $contractor_id );
+		$sale_date = $create_date = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
 		$number = get_the_title();
+		$k = '';
+
+		$is_car_related = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
+
+		$money = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
+		$k .= sprintf(
+			'   <K_45>%d.%d</K_45>%s',
+			$money['integer'],
+			$money['fractional'],
+			PHP_EOL
+		);
+		$this->sum['expense_netto']['integer'] += $money['integer'];
+		$this->sum['expense_netto']['fractional'] += $money['fractional'];
+
+		/**
+		 * VAT
+		 */
+		$money = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
+		if ( 'yes' == $is_car_related ) {
+			$v = round( ($money['integer'] / 2) * 100 + $money['fractional'] / 2 );
+			$money['fractional'] = $v % 100;
+			$money['integer'] = round( ($v - $money['fractional']) / 100 );
+		}
+		$k .= sprintf(
+			'   <K_46>%d.%d</K_46>%s',
+			$money['integer'],
+			$money['fractional'],
+			PHP_EOL
+		);
+		$this->sum['vat_expense']['integer'] += $money['integer'];
+		$this->sum['vat_expense']['fractional'] += $money['fractional'];
 
 		$data = sprintf(
 			$data,
-			$counter, $nip, $name, $address, $number, $create_date, $sale_date
+			$counter,
+			$contractor['nip'],
+			$contractor['name'],
+			$contractor['address'],
+			$number,
+			$create_date,
+			$k
+		);
+
+		return $data;
+
+	}
+
+	private function template_row_income( $counter, $ID, $contractor_id ) {
+		$data = '<SprzedazWiersz>
+    <LpSprzedazy>%d</LpSprzedazy>
+    <NrKontrahenta>%s</NrKontrahenta>
+    <NazwaKontrahenta>%s</NazwaKontrahenta>
+    <AdresKontrahenta>%s</AdresKontrahenta>
+    <DowodSprzedazy>%s</DowodSprzedazy>
+    <DataWystawienia>%s</DataWystawienia>
+    <DataSprzedazy></DataSprzedazy>
+%s</SprzedazWiersz>';
+		$data .= PHP_EOL;
+		$data .= PHP_EOL;
+		$contractor = $this->get_contractor( $contractor_id );
+		$sale_date = $create_date = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
+		$number = get_the_title();
+		$k = '';
+
+		$type = get_post_meta( $ID, 'iworks_kpir_income_vat_type', true );
+
+		switch ( $type ) {
+			case 'c01':
+				$money = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
+				$k .= sprintf(
+					'   <K_11>%d.%d</K_11>%s',
+					$money['integer'],
+					$money['fractional'],
+					PHP_EOL
+				);
+				$this->sum['income']['integer'] += $money['integer'];
+				$this->sum['income']['fractional'] += $money['fractional'];
+			break;
+			case 'c06':
+				$money = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
+				$k .= sprintf(
+					'   <K_19>%d.%d</K_19>%s',
+					$money['integer'],
+					$money['fractional'],
+					PHP_EOL
+				);
+				$this->sum['income']['integer'] += $money['integer'];
+				$this->sum['income']['fractional'] += $money['fractional'];
+				/**
+			 * VAT
+			 */
+				$money = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
+				$k .= sprintf(
+					'   <K_20>%d.%d</K_20>%s',
+					$money['integer'],
+					$money['fractional'],
+					PHP_EOL
+				);
+				$this->sum['vat_income']['integer'] += $money['integer'];
+				$this->sum['vat_income']['fractional'] += $money['fractional'];
+			break;
+		}
+
+		$data = sprintf(
+			$data,
+			$counter,
+			$contractor['nip'],
+			$contractor['name'],
+			$contractor['address'],
+			$number,
+			$create_date,
+			$k
 		);
 
 		return $data;
 	}
 
-	private function template_summary_sale() {
+	private function template_summary_expenses( $counter ) {
 		$data = '<SprzedazCtrl>
-<LiczbaWierszySprzedazy>2</LiczbaWierszySprzedazy>
-<PodatekNalezny>12.36</PodatekNalezny>
+    <LiczbaWierszySprzedazy>%d</LiczbaWierszySprzedazy>
+    <PodatekNalezny>%d.%d</PodatekNalezny>
 </SprzedazCtrl>';
+		$data .= PHP_EOL;
+		$data .= PHP_EOL;
+
+		$integer = $this->sum['vat_expense']['integer'];
+		$fractional = $this->sum['vat_expense']['fractional'];
+
+		$data = sprintf(
+			$data,
+			$counter,
+			$integer,
+			$fractional
+		);
 		return $data;
 	}
 
-	/**
-	 * K_43 – kwota netto nabycie środków trwałych
-	 * K_44 – kwota podatku naliczonego nabycie środków trwałych
-	 * K_45 – kwota netto nabycie towarów i usług pozostałych
-	 * K_46 – kwota podatku naliczonego nabycie towarów i usług pozostałych
-	 */
-	private function template_row_purchase() {
-		$data = '<SprzedazWiersz>
-            <LpSprzedazy>1</LpSprzedazy>
-            <NrKontrahenta>96121309455</NrKontrahenta>
-            <NazwaKontrahenta>Mieczysława ZĄBKOWSKA</NazwaKontrahenta>
-            <AdresKontrahenta>43-430 SKOCZÓW, ul. Szkolna 21 C</AdresKontrahenta>
-            <DowodSprzedazy>R/20/18</DowodSprzedazy>
-            <DataWystawienia>2018-01-04</DataWystawienia>
-            <DataSprzedazy>2018-01-04</DataSprzedazy>
-            <K_17>140.27</K_17>
-            <K_18>11.22</K_18>
-            </SprzedazWiersz>';
+	private function template_summary_incomes( $counter ) {
+		$data = '<SprzedazCtrl>
+    <LiczbaWierszySprzedazy>%d</LiczbaWierszySprzedazy>
+    <PodatekNalezny>%d.%d</PodatekNalezny>
+</SprzedazCtrl>';
+		$data .= PHP_EOL;
+		$data .= PHP_EOL;
+
+		$integer = $this->sum['vat_income']['integer'];
+		$fractional = $this->sum['vat_income']['fractional'];
+
+		$data = sprintf(
+			$data,
+			$counter,
+			$integer,
+			$fractional
+		);
 		return $data;
+	}
+
+
+	private function get_contractor( $contractor_id ) {
+		if ( ! isset( $this->contractors[ $contractor_id ] ) ) {
+			$nip = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_nip', true );
+			if ( empty( $nip ) ) {
+				$nip = 'brak';
+			} else {
+				$nip = preg_replace( '/\-/', '', $nip );
+			}
+			$name = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_full_name', true );
+			$address = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_street1', true );
+			$address .= ', '.get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_zip', true );
+			$address .= ' '.get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_city', true );
+			$address .= ', '.get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_country', true );
+			$this->contractors[ $contractor_id ] = array(
+				'nip' => $nip,
+				'name' => $name,
+				'address' => preg_replace( '/ {2,}/', ' ', $address ),
+			);
+		}
+		return $this->contractors[ $contractor_id ];
 	}
 }
