@@ -66,19 +66,14 @@ class iworks_kpir_jpk_vat_3 {
 			return;
 		}
 		$data = '';
-
 		$data .= $this->template_header();
 		$data .= $this->template_section_head( $_REQUEST['purpose'], $_REQUEST['m'] );
 		$data .= $this->template_section_company();
-
 		$post_type_object = $kpir->get_post_type_invoice();
-
 		$cf_date_name = $post_type_object->get_custom_field_basic_date_name();
 		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
 		$date_format = get_option( 'date_format' );
-
 		$query = $kpir->get_month_query( $_REQUEST['m'] );
-
 		if ( $query->have_posts() ) {
 			$incomes_counter = $expenses_counter = 0;
 			$expenses = $incomes = '';
@@ -101,14 +96,10 @@ class iworks_kpir_jpk_vat_3 {
 		}
 		$data .= $incomes;
 		$data .= $this->template_summary_incomes( $incomes_counter );
-
 		$data .= $expenses;
 		$data .= $this->template_summary_expenses( $expenses_counter );
-
 		$data .= $this->template_footer();
-
 		$filename = sprintf( 'jpk-vat-%s.xml', $_REQUEST['m'] );
-
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: application/xml' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
@@ -118,17 +109,13 @@ class iworks_kpir_jpk_vat_3 {
 
 	public function show( $kpir ) {
 		global $wpdb;
-
 		$post_type_object = $kpir->get_post_type_invoice();
 		$sql = "select distinct meta_value from {$wpdb->postmeta} where meta_key = '{$post_type_object->get_custom_field_year_month_name()}'order by meta_value desc";
-
 		$values = $wpdb->get_col( $sql );
-
 		if ( empty( $values ) ) {
 			_e( 'There is no entries to create JPK VAT file.', 'kpir' );
 			return;
 		}
-
 		echo '<form id="kpir-jpk-vat-3" action="edit.php">';
 		echo $this->options->get_field_by_type( 'hidden', 'action', 'iworks_kpir_jpk_vat_3' );
 		echo $this->options->get_field_by_type( 'hidden', 'post_type', 'iworks_kpir_invoice' );
@@ -163,7 +150,6 @@ class iworks_kpir_jpk_vat_3 {
 			esc_html__( 'Month', 'kpir' )
 		);
 		echo '<td>';
-
 		$args = array(
 			'options' => array(
 				'-' => __( 'Select month', 'kpir' ),
@@ -191,7 +177,7 @@ class iworks_kpir_jpk_vat_3 {
 	private function template_header() {
 		$data = '<?xml version="1.0" encoding="UTF-8"?>';
 		$data .= PHP_EOL;
-        $data = '<tns:JPK xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/" xmlns:tns="http://jpk.mf.gov.pl/wzor/2017/11/13/1113/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
+		$data = '<tns:JPK xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2016/01/25/eD/DefinicjeTypy/" xmlns:tns="http://jpk.mf.gov.pl/wzor/2017/11/13/1113/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">';
 		$data .= PHP_EOL;
 		return $data;
 	}
@@ -228,7 +214,6 @@ class iworks_kpir_jpk_vat_3 {
 			date( 'Y-m-01', $date ),
 			date( 'Y-m-t', $date )
 		);
-
 		return $data;
 	}
 
@@ -274,19 +259,16 @@ class iworks_kpir_jpk_vat_3 {
 		$sale_date = $create_date = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
 		$number = get_the_title();
 		$k = '';
-
 		$is_car_related = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
-
 		$money = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
 		$k .= sprintf(
-			'   <tns:K_45>%d.%d</tns:K_45>%s',
+			'   <tns:K_45>%d.%02d</tns:K_45>%s',
 			$money['integer'],
 			$money['fractional'],
 			PHP_EOL
 		);
 		$this->sum['expense_netto']['integer'] += $money['integer'];
 		$this->sum['expense_netto']['fractional'] += $money['fractional'];
-
 		/**
 		 * VAT
 		 */
@@ -297,14 +279,14 @@ class iworks_kpir_jpk_vat_3 {
 			$money['integer'] = round( ($v - $money['fractional']) / 100 );
 		}
 		$k .= sprintf(
-			'   <tns:K_46>%d.%d</tns:K_46>%s',
+			'   <tns:K_46>%d.%02d</tns:K_46>%s',
 			$money['integer'],
 			$money['fractional'],
 			PHP_EOL
 		);
 		$this->sum['vat_expense']['integer'] += $money['integer'];
 		$this->sum['vat_expense']['fractional'] += $money['fractional'];
-
+		$money[] = $this->convert( $this->sum['vat_expense'] );
 		$data = sprintf(
 			$data,
 			$counter,
@@ -315,9 +297,18 @@ class iworks_kpir_jpk_vat_3 {
 			$create_date,
 			$k
 		);
-
 		return $data;
+	}
 
+	private function convert( $value ) {
+		$integer = $value['integer'];
+		$fractional = $value['fractional'];
+		/**
+		 * recalculate fractional over 100
+		 */
+		$integer += ( $fractional - $fractional % 100 ) / 100;
+		$fractional = $fractional % 100;
+		return array( 'integer' => $integer, 'fractional' => $fractional );
 	}
 
 	private function template_row_income( $counter, $ID, $contractor_id ) {
@@ -335,14 +326,12 @@ class iworks_kpir_jpk_vat_3 {
 		$sale_date = $create_date = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
 		$number = get_the_title();
 		$k = '';
-
 		$type = get_post_meta( $ID, 'iworks_kpir_income_vat_type', true );
-
 		switch ( $type ) {
 			case 'c01':
 				$money = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
 				$k .= sprintf(
-					'   <tns:K_11>%d.%d</tns:K_11>%s',
+					'   <tns:K_11>%d.%02d</tns:K_11>%s',
 					$money['integer'],
 					$money['fractional'],
 					PHP_EOL
@@ -353,7 +342,7 @@ class iworks_kpir_jpk_vat_3 {
 			case 'c06':
 				$money = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
 				$k .= sprintf(
-					'   <tns:K_19>%d.%d</tns:K_19>%s',
+					'   <tns:K_19>%d.%02d</tns:K_19>%s',
 					$money['integer'],
 					$money['fractional'],
 					PHP_EOL
@@ -365,7 +354,7 @@ class iworks_kpir_jpk_vat_3 {
 			 */
 				$money = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
 				$k .= sprintf(
-					'   <tns:K_20>%d.%d</tns:K_20>%s',
+					'   <tns:K_20>%d.%02d</tns:K_20>%s',
 					$money['integer'],
 					$money['fractional'],
 					PHP_EOL
@@ -374,7 +363,6 @@ class iworks_kpir_jpk_vat_3 {
 				$this->sum['vat_income']['fractional'] += $money['fractional'];
 			break;
 		}
-
 		$data = sprintf(
 			$data,
 			$counter,
@@ -385,7 +373,6 @@ class iworks_kpir_jpk_vat_3 {
 			$create_date,
 			$k
 		);
-
 		return $data;
 	}
 
@@ -396,8 +383,11 @@ class iworks_kpir_jpk_vat_3 {
 </tns:SprzedazCtrl>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
-		$integer = $this->sum['vat_expense']['integer'];
-		$fractional = $this->sum['vat_expense']['fractional'];
+		/**
+		 * get
+		 */
+		$integer = $this->sum['vat_income']['integer'];
+		$fractional = $this->sum['vat_income']['fractional'];
 		/**
 		 * recalculate fractional over 100
 		 */
@@ -419,9 +409,11 @@ class iworks_kpir_jpk_vat_3 {
 </tns:ZakupCtrl>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
-
-		$integer = $this->sum['vat_income']['integer'];
-		$fractional = $this->sum['vat_income']['fractional'];
+		/**
+		 * get
+		 */
+		$integer = $this->sum['vat_expense']['integer'];
+		$fractional = $this->sum['vat_expense']['fractional'];
 		/**
 		 * recalculate fractional over 100
 		 */
@@ -442,7 +434,7 @@ class iworks_kpir_jpk_vat_3 {
 			if ( empty( $nip ) ) {
 				$nip = 'brak';
 			} else {
-				$nip = preg_replace( '/\-/', '', $nip );
+				$nip = preg_replace( '/[^\d]+/', '', $nip );
 			}
 			$name = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_full_name', true );
 			$address = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_street1', true );
