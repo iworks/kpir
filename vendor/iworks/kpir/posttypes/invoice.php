@@ -99,7 +99,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'type' => 'description',
 					'args' => array(
 						'value' => __( 'Please first choose invoice type.', 'kpir' ),
-						'class' => 'description',
+						'class' => array( 'description' ),
 					),
 				),
 				'sale' => array(
@@ -134,7 +134,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'type' => 'description',
 					'args' => array(
 						'value' => __( 'Please first choose invoice type.', 'kpir' ),
-						'class' => 'description',
+						'class' => array( 'description' ),
 					),
 				),
 				'purchase' => array(
