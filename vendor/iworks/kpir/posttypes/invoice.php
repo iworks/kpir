@@ -198,7 +198,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				),
 			),
 		);
-
 		/**
 		 * add class to metaboxes
 		 */
@@ -209,13 +208,11 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
 		}
-
 		/**
 		 * save extra field
 		 */
 		$this->post_type_objects[ $this->get_name() ] = $this;
 		add_action( 'iworks_kpir_posttype_update_post_meta', array( $this, 'save_year_month_to_extra_field' ), 10, 5 );
-
 		/**
 		 * Meta Boxes to close by default
 		 */
@@ -224,13 +221,11 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			$filter = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $meta_box );
 			add_filter( $filter, array( $this, 'close_meta_boxes' ) );
 		}
-
 		/**
 		 * change default columns
 		 */
 		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
 		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
-
 		/**
 		 * apply default sort order
 		 */
@@ -246,14 +241,13 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	public function register() {
-
 		$labels = array(
 			'name'                  => _x( 'Invoices', 'Invoice General Name', 'kpir' ),
 			'singular_name'         => _x( 'Invoice', 'Invoice Singular Name', 'kpir' ),
 			'menu_name'             => __( 'KPiR', 'kpir' ),
 			'name_admin_bar'        => __( 'Invoice', 'kpir' ),
-			'archives'              => __( 'Item Archives', 'kpir' ),
-			'attributes'            => __( 'Item Attributes', 'kpir' ),
+			'archives'              => __( 'Invoice Archives', 'kpir' ),
+			'attributes'            => __( 'Invoice Attributes', 'kpir' ),
 			'parent_item_colon'     => __( 'Parent Invoice:', 'kpir' ),
 			'all_items'             => __( 'All Invoices', 'kpir' ),
 			'add_new_item'          => __( 'Add New Invoice', 'kpir' ),
@@ -270,11 +264,11 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			'set_featured_image'    => __( 'Set featured image', 'kpir' ),
 			'remove_featured_image' => __( 'Remove featured image', 'kpir' ),
 			'use_featured_image'    => __( 'Use as featured image', 'kpir' ),
-			'insert_into_item'      => __( 'Insert into item', 'kpir' ),
-			'uploaded_to_this_item' => __( 'Uploaded to this item', 'kpir' ),
-			'items_list'            => __( 'Items list', 'kpir' ),
-			'items_list_navigation' => __( 'Items list navigation', 'kpir' ),
-			'filter_items_list'     => __( 'Filter items list', 'kpir' ),
+			'insert_into_item'      => __( 'Insert into invoice', 'kpir' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this invoice', 'kpir' ),
+			'items_list'            => __( 'Invoices list', 'kpir' ),
+			'items_list_navigation' => __( 'Invoices list navigation', 'kpir' ),
+			'filter_items_list'     => __( 'Filter invoices list', 'kpir' ),
 		);
 		$args = array(
 			'label'                 => __( 'Invoice', 'kpir' ),
@@ -374,7 +368,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			'post_status' => array( 'published' ),
 		);
 		$the_query = new WP_Query( $args );
-
 		$data = array(
 			'income' => 0,
 			'expense' => 0,
@@ -385,34 +378,28 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			'salary' => 0,
 			'asset' => 0,
 		);
-
 		foreach ( $the_query->posts as $post_id ) {
 			/**
 		 * check is car related cost
 		 */
 			$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
 			$is_car_related = 'yes' == $is_car_related;
-
 			$data['income'] += $this->add_value( $post_id, 'income_sale' );
 			$data['income'] += $this->add_value( $post_id, 'income_other' );
 			$data['vat_income'] += $this->add_value( $post_id, 'income_vat' );
-
 			$expense = 0;
 			$expense += $this->add_value( $post_id, 'expense_purchase' );
 			$expense += $this->add_value( $post_id, 'expense_cost_of_purchase' );
 			$expense += $this->add_value( $post_id, 'expense_other' );
 			$data['expense'] += $expense;
-
 			$salary = 0;
 			$salary += $this->add_value( $post_id, 'salary_salary' );
 			$data['salary'] += $salary;
 			$data['expense'] += $salary;
-
 			$asset = 0;
 			$asset += $this->add_value( $post_id, 'asset_depreciation' );
 			$data['asset'] += $asset;
 			$data['expense'] += $asset;
-
 			$vat_expense = $this->add_value( $post_id, 'expense_vat' );
 			if ( $vat_expense ) {
 				if ( $is_car_related ) {
@@ -428,7 +415,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				$data['vat_zero'] += $expense;
 			}
 		}
-
 		$labels = array(
 			'income' => __( 'Incomes', 'kpir' ),
 			'expense' => __( 'Expenses', 'kpir' ),
@@ -494,7 +480,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					);
 				}
 			break;
-
 			case 'expense':
 				$expense = 0;
 				$expense += $this->add_value( $post_id, 'expense_purchase' );
@@ -508,7 +493,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					printf( '%0.2f', $expense / 100 );
 				}
 			break;
-
 			case 'income':
 				$income = 0;
 				$income += $this->add_value( $post_id, 'income_sale' );
@@ -520,7 +504,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					printf( '%0.2f', $income / 100 );
 				}
 			break;
-
 			case 'date_of_invoice':
 				$timestamp = get_post_meta( $post_id, $this->get_custom_field_basic_date_name(), true );
 				if ( empty( $timestamp ) ) {
@@ -529,11 +512,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					echo date_i18n( get_option( 'date_format' ), $timestamp );
 				}
 			break;
-
 			case 'description':
 				echo get_post_meta( $post_id, $this->options->get_option_name( 'basic_description' ), true );
 			break;
-
 			case 'symbol':
 				$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
 				$is_car_related = 'yes' == $is_car_related;

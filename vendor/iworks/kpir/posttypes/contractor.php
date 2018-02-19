@@ -80,20 +80,16 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 			),
 		);
 		$this->post_type_objects[ $this->get_name() ] = $this;
-
 		add_action( 'wp_ajax_iworks_get_contractors', array( $this, 'get_contractors_json' ) );
-
 		/**
 		 * change default columns
 		 */
 		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
 		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
-
 		/**
 		 * apply default sort order
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
-
 		/**
 		 * add Contractors to invoices as a filter
 		 */
@@ -101,14 +97,13 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 	}
 
 	public function register() {
-
 		$labels = array(
 			'name'                  => _x( 'Contractors', 'Contractor General Name', 'kpir' ),
 			'singular_name'         => _x( 'Contractor', 'Contractor Singular Name', 'kpir' ),
 			'menu_name'             => __( 'Contractors', 'kpir' ),
 			'name_admin_bar'        => __( 'Contractor', 'kpir' ),
-			'archives'              => __( 'Item Archives', 'kpir' ),
-			'attributes'            => __( 'Item Attributes', 'kpir' ),
+			'archives'              => __( 'Contractor Archives', 'kpir' ),
+			'attributes'            => __( 'Contractor Attributes', 'kpir' ),
 			'parent_item_colon'     => __( 'Parent Contractor:', 'kpir' ),
 			'all_items'             => __( 'Contractors', 'kpir' ),
 			'add_new_item'          => __( 'Add New Contractor', 'kpir' ),
@@ -125,11 +120,11 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 			'set_featured_image'    => __( 'Set featured image', 'kpir' ),
 			'remove_featured_image' => __( 'Remove featured image', 'kpir' ),
 			'use_featured_image'    => __( 'Use as featured image', 'kpir' ),
-			'insert_into_item'      => __( 'Insert into item', 'kpir' ),
-			'uploaded_to_this_item' => __( 'Uploaded to this item', 'kpir' ),
-			'items_list'            => __( 'Items list', 'kpir' ),
-			'items_list_navigation' => __( 'Items list navigation', 'kpir' ),
-			'filter_items_list'     => __( 'Filter items list', 'kpir' ),
+			'insert_into_item'      => __( 'Insert into contractor', 'kpir' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this contractor', 'kpir' ),
+			'items_list'            => __( 'Contractors list', 'kpir' ),
+			'items_list_navigation' => __( 'Contractors list navigation', 'kpir' ),
+			'filter_items_list'     => __( 'Filter contractors list', 'kpir' ),
 		);
 		$args = array(
 			'label'                 => __( 'Contractor', 'kpir' ),
@@ -151,7 +146,6 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 			'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
 		);
 		register_post_type( $this->post_type_name, $args );
-
 	}
 
 	public function register_meta_boxes( $post ) {
