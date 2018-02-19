@@ -568,7 +568,7 @@ module.exports = function( grunt ) {
 
 	// Default task.
 
-	grunt.registerTask( 'default', ['clean:temp', 'jshint', 'concat_css', 'uglify', 'sass', 'autoprefixer', 'cssmin', 'concat' ] );
+	grunt.registerTask( 'default', ['clean:temp', 'jshint', 'concat_css', 'uglify', 'sass', 'autoprefixer', 'cssmin', 'concat', 'makepot' ] );
 	//grunt.registerTask( 'test', ['phpunit', 'jshint'] );
 
 	grunt.task.run( 'clear' );
