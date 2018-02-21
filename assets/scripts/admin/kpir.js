@@ -1,4 +1,4 @@
-/*! Księga Przychodi i Rozchodu - v0.0.3
+/*! Księga Przychodi i Rozchodu - v0.0.4
  * https://iworks.pl/
  * Copyright (c) 2018; * Licensed GPLv2+
  */
@@ -57,10 +57,15 @@ var iWorksKPiR = {};
         });
     }
 
+    iWorksKPiR.CopyDateOfIssueToEventDate = function() {
+        jQuery( '#iworks_kpir_basic_date' ).val( jQuery( '#iworks_kpir_basic_date_of_issue' ).val() );
+    }
+
     $(document)
         .ready( iWorksKPiR.ShowMetaBoxes )
         .ready( iWorksKPiR.BindDuplicate )
-        .on( "change", "#basic .iworks-kpir-row-type input[type=radio]", iWorksKPiR.ShowMetaBoxes );
+        .on( "change", "#basic .iworks-kpir-row-type input[type=radio]", iWorksKPiR.ShowMetaBoxes )
+        .on( "click", "#basic #kpir-copy-date-button", iWorksKPiR.CopyDateOfIssueToEventDate );
 
 })(jQuery);
 

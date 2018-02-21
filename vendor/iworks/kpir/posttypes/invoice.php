@@ -48,6 +48,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'args' => array(
 						'class' => array( 'medium-text' ),
 						'default' => date_i18n( 'Y-m-d', time() ),
+						'after' => sprintf( ' <a class="button" id="kpir-copy-date-button">%s</a>', esc_html__( 'Copy to event date', 'kpir' ) ),
 					),
 				),
 				'date' => array(

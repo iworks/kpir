@@ -54,6 +54,11 @@ class iworks_kpir_jpk_vat_3 {
 		$this->options = $iworks_kpir_options;
 	}
 
+	/**
+	 * Get JPK VAT(3) xml
+	 *
+	 * @since 1.0.0
+	 */
 	public function get_xml( $kpir ) {
 		if (
 			! isset( $_REQUEST['nonce'] )
@@ -65,15 +70,23 @@ class iworks_kpir_jpk_vat_3 {
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'kpir-jpk-vat-3' ) ) {
 			return;
 		}
+		/**
+		 * validate input
+		 */
+		$year_month = validate_title( $_REQUEST['m'] );
+		$purpose = intval( $_REQUEST['purpose'] );
+		/**
+		 * produce
+		 */
 		$data = '';
 		$data .= $this->template_header();
-		$data .= $this->template_section_head( $_REQUEST['purpose'], $_REQUEST['m'] );
+		$data .= $this->template_section_head( $purpose, $year_month );
 		$data .= $this->template_section_company();
 		$post_type_object = $kpir->get_post_type_invoice();
 		$cf_date_name = $post_type_object->get_custom_field_basic_date_name();
 		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
 		$date_format = get_option( 'date_format' );
-		$query = $kpir->get_month_query( $_REQUEST['m'] );
+		$query = $kpir->get_month_query( $year_month );
 		if ( $query->have_posts() ) {
 			$incomes_counter = $expenses_counter = 0;
 			$expenses = $incomes = '';
@@ -99,7 +112,7 @@ class iworks_kpir_jpk_vat_3 {
 		$data .= $expenses;
 		$data .= $this->template_summary_expenses( $expenses_counter );
 		$data .= $this->template_footer();
-		$filename = sprintf( 'jpk-vat-%s.xml', $_REQUEST['m'] );
+		$filename = sprintf( 'jpk-vat-%s.xml', $year_month );
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: application/xml' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
