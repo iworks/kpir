@@ -57,11 +57,6 @@ if ( ! class_exists( 'iworks_options' ) ) {
 }
 
 /**
- * i18n
- */
-load_plugin_textdomain( 'kpir', false, plugin_basename( __FILE__ ).'/languages' );
-
-/**
  * load options
  */
 $iworks_kpir_options = new iworks_options();

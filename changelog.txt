@@ -5,6 +5,7 @@ Author: Marcin Pietrzak ( iworks.pl )
 
 = 0.0.5 =
 * Added input mont in JPK VAT sanitization.
+* Handle translation.
 
 = 0.0.4 =
 * Added input sanitization.

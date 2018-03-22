@@ -52,9 +52,18 @@ class iworks_kpir extends iworks {
 		 * admin init
 		 */
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
-
 		add_action( 'wp_loaded', array( $this, 'plugins_loaded' ), 1 );
+		/**
+		 * Load plugin textdomain.
+		 *
+		 * @since 1.0.0
+		 */
+		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+	}
 
+	public function load_textdomain() {
+		$dir = basename( dirname( dirname( dirname( __FILE__ ) ) ) ).'/languages';
+		load_plugin_textdomain( 'kpir', false, $dir.'/languages' );
 	}
 
 	public function plugins_loaded() {
@@ -164,7 +173,7 @@ class iworks_kpir extends iworks {
 				true
 			);
 			wp_enqueue_script( $handle );
-        }
+		}
 		/**
 		 * JavaScript messages
 		 *

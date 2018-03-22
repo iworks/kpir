@@ -44,6 +44,7 @@ There are 3 ways to install this plugin:
 
 = 0.0.5 =
 * Added input month in JPK VAT sanitization.
+* Handle translation.
 
 = 0.0.4 =
 * Added input sanitization.
