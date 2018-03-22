@@ -73,7 +73,10 @@ class iworks_kpir_jpk_vat_3 {
 		/**
 		 * validate input
 		 */
-		$year_month = validate_title( $_REQUEST['m'] );
+		$year_month = $this->validate_year_month( $_REQUEST['m'] );
+		if ( is_wp_error( $year_month ) ) {
+			die( $year_month->get_error_message() );
+		}
 		$purpose = intval( $_REQUEST['purpose'] );
 		/**
 		 * produce
@@ -461,5 +464,12 @@ class iworks_kpir_jpk_vat_3 {
 			);
 		}
 		return $this->contractors[ $contractor_id ];
+	}
+
+	private function validate_year_month( $data ) {
+		if ( is_string( $data ) && preg_match( '/^\d{4}\-\d{2}$/', $data ) ) {
+			return $data;
+		}
+		return new WP_Error( 'wrong-input', __( 'Wrong date, please try again!', 'kpir' ) );
 	}
 }

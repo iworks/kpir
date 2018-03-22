@@ -3,8 +3,11 @@ Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==
 
+= 0.0.5 =
+* Added input mont in JPK VAT sanitization.
+
 = 0.0.4 =
-* Added inout sanityzation.
+* Added input sanitization.
 * Added button to copy "Date of issue" value into "Event date" field.
 
 = 0.0.3 =

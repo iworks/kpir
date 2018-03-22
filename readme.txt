@@ -42,5 +42,21 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 0.0.5 =
+* Added input month in JPK VAT sanitization.
+
+= 0.0.4 =
+* Added input sanitization.
+* Added button to copy "Date of issue" value into "Event date" field.
+
+= 0.0.3 =
+* Improve post types labels.
+
+= 0.0.2 =
+* Fixed fractional part of money with leading zero for JPK VAT (3).
+
+= 0.0.1 =
+* init version
+
 == Upgrade Notice ==
 
