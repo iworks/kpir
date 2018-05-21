@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KPiR Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kpir\n"
-"POT-Creation-Date: 2018-05-21 05:12:26+00:00\n"
+"POT-Creation-Date: 2018-05-21 05:34:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -66,7 +66,7 @@ msgid "Month"
 msgstr ""
 
 #: vendor/iworks/kpir/jpk/vat_3.php:171
-#: vendor/iworks/kpir/reports/monthly.php:519
+#: vendor/iworks/kpir/reports/monthly.php:536
 msgid "Select month"
 msgstr ""
 
@@ -528,15 +528,15 @@ msgstr ""
 msgid "(car related)"
 msgstr ""
 
-#: vendor/iworks/kpir/reports/monthly.php:379
+#: vendor/iworks/kpir/reports/monthly.php:396
 msgid "There is no invoices in this month."
 msgstr ""
 
-#: vendor/iworks/kpir/reports/monthly.php:517
+#: vendor/iworks/kpir/reports/monthly.php:534
 msgid "Filter by date"
 msgstr ""
 
-#: vendor/iworks/kpir/reports/monthly.php:529
+#: vendor/iworks/kpir/reports/monthly.php:546
 msgid "Filter"
 msgstr ""
 

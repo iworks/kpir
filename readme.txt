@@ -4,7 +4,7 @@ Donate link: http://iworks.pl/donate/kpir.php
 Tags: kpir, faktura, księgowość, vat, jpk
 Requires at least: 4.0
 Tested up to: 4.9.6
-Stable tag: 0.0.6
+Stable tag: 0.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,13 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 0.0.7 =
+* Added ability to sum two values.
+* Added few checks to avoid PHP warnings.
+
+= 0.0.6 =
+* Improved "Asset" type, "Expense" is visible too.
+
 = 0.0.5 =
 * Added input month in JPK VAT sanitization.
 * Handle translation.
@@ -51,7 +58,7 @@ There are 3 ways to install this plugin:
 * Added button to copy "Date of issue" value into "Event date" field.
 
 = 0.0.3 =
-* Improve post types labels.
+* Improved post types labels.
 
 = 0.0.2 =
 * Fixed fractional part of money with leading zero for JPK VAT (3).

@@ -197,12 +197,21 @@ class iworks_kpir_reports_monthly {
 								echo $this->html_helper_money( $value );
 							break;
 							case 'salary':
-								$netto = $value = get_post_meta( $ID, 'iworks_kpir_salary_salary', true );
+								$netto = get_post_meta( $ID, 'iworks_kpir_salary_salary', true );
+
+								l( $netto );
+
+								echo $this->html_helper_money( $netto );
+								$value = get_post_meta( $ID, 'iworks_kpir_expense_other', true );
+
+								l( $value );
+
 								echo $this->html_helper_money( $value );
-								echo $this->html_table_td( '&nbsp;' );
 								if ( $this->show_fractional_separetly ) {
 									echo $this->html_table_td( '&nbsp;' );
 								}
+								$value = $this->sum( $netto, $value );
+								l( $value );
 							break;
 						}
 						echo $this->html_helper_money( $value );
@@ -293,8 +302,8 @@ class iworks_kpir_reports_monthly {
 						}
 						$vat = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
 						/**
-					 * car related
-					 */
+						 * car related
+						 */
 						if ( 'yes' == $is_car_related ) {
 							$v = round( ($vat['integer'] * 100 + $vat['fractional']) / 2 );
 							$vat_car = array(
@@ -307,11 +316,19 @@ class iworks_kpir_reports_monthly {
 							if ( $this->show_fractional_separetly ) {
 								echo $this->html_table_td( '&nbsp;' );
 							}
-							$sum['vat_expense']['integer'] += intval( $vat_car['integer'] );
-							$sum['vat_expense']['fractional'] += intval( $vat_car['fractional'] );
+							if ( isset( $vat_car['integer'] ) ) {
+								$sum['vat_expense']['integer'] += intval( $vat_car['integer'] );
+							}
+							if ( isset( $vat_car['fractional'] ) ) {
+								$sum['vat_expense']['fractional'] += intval( $vat_car['fractional'] );
+							}
 						} else {
-							$sum['vat_expense']['integer'] += intval( $vat['integer'] );
-							$sum['vat_expense']['fractional'] += intval( $vat['fractional'] );
+							if ( isset( $vat['integer'] ) ) {
+								$sum['vat_expense']['integer'] += intval( $vat['integer'] );
+							}
+							if ( isset( $vat['fractional'] ) ) {
+								$sum['vat_expense']['fractional'] += intval( $vat['fractional'] );
+							}
 						}
 						echo $this->html_helper_money( $vat );
 						if ( $this->show_fractional_separetly ) {
@@ -553,6 +570,21 @@ class iworks_kpir_reports_monthly {
 			$content .= $this->html_table_td( $val, 'money' );
 		}
 		return $content;
+	}
+
+	/**
+	 * Sum ttwo values
+	 *
+	 * @since 0.0.7
+	 */
+	private function sum( $value1, $value2 ) {
+		$value['integer'] = $value1['integer'] + $value2['integer'];
+		$value['fractional'] = $value1['fractional'] + $value2['fractional'];
+		if ( 100 > $value['fractional'] ) {
+			$value['integer'] += intval( $value['fractional'] / 100 );
+			$value['fractional'] = $value['fractional'] % 100;
+		}
+		return $value;
 	}
 }
 

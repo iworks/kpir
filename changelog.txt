@@ -3,6 +3,10 @@ Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==
 
+= 0.0.7 =
+* Added ability to sum two values.
+* Added few checks to avoid PHP warnings.
+
 = 0.0.6 =
 * Imporve "Asset" type, "Expense" is visible too.
 
