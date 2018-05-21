@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KPiR Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kpir\n"
-"POT-Creation-Date: 2018-05-21 05:34:30+00:00\n"
+"POT-Creation-Date: 2018-05-21 06:23:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -53,28 +53,28 @@ msgstr ""
 msgid "JPK VAT(3)"
 msgstr ""
 
-#: vendor/iworks/kpir/jpk/vat_3.php:132
+#: vendor/iworks/kpir/jpk/vat_3.php:133
 msgid "There is no entries to create JPK VAT file."
 msgstr ""
 
-#: vendor/iworks/kpir/jpk/vat_3.php:149
+#: vendor/iworks/kpir/jpk/vat_3.php:150
 msgid "Purpose"
 msgstr ""
 
-#: vendor/iworks/kpir/jpk/vat_3.php:166
+#: vendor/iworks/kpir/jpk/vat_3.php:167
 msgid "Month"
 msgstr ""
 
-#: vendor/iworks/kpir/jpk/vat_3.php:171
-#: vendor/iworks/kpir/reports/monthly.php:536
+#: vendor/iworks/kpir/jpk/vat_3.php:172
+#: vendor/iworks/kpir/reports/monthly.php:576
 msgid "Select month"
 msgstr ""
 
-#: vendor/iworks/kpir/jpk/vat_3.php:188
+#: vendor/iworks/kpir/jpk/vat_3.php:189
 msgid "Get XML"
 msgstr ""
 
-#: vendor/iworks/kpir/jpk/vat_3.php:473
+#: vendor/iworks/kpir/jpk/vat_3.php:478
 msgid "Wrong date, please try again!"
 msgstr ""
 
@@ -528,15 +528,15 @@ msgstr ""
 msgid "(car related)"
 msgstr ""
 
-#: vendor/iworks/kpir/reports/monthly.php:396
+#: vendor/iworks/kpir/reports/monthly.php:436
 msgid "There is no invoices in this month."
 msgstr ""
 
-#: vendor/iworks/kpir/reports/monthly.php:534
+#: vendor/iworks/kpir/reports/monthly.php:574
 msgid "Filter by date"
 msgstr ""
 
-#: vendor/iworks/kpir/reports/monthly.php:546
+#: vendor/iworks/kpir/reports/monthly.php:586
 msgid "Filter"
 msgstr ""
 

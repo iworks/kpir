@@ -73,11 +73,12 @@ class iworks_kpir_jpk_vat_3 {
 		/**
 		 * validate input
 		 */
-		$year_month = $this->validate_year_month( $_REQUEST['m'] );
+		$year_month = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_STRING );
+		$year_month = $this->validate_year_month( $year_month );
 		if ( is_wp_error( $year_month ) ) {
 			die( $year_month->get_error_message() );
 		}
-		$purpose = intval( $_REQUEST['purpose'] );
+		$purpose = filter_input( INPUT_GET, 'purpose', FILTER_VALIDATE_INT );
 		/**
 		 * produce
 		 */
@@ -296,12 +297,16 @@ class iworks_kpir_jpk_vat_3 {
 		}
 		$k .= sprintf(
 			'   <tns:K_46>%d.%02d</tns:K_46>%s',
-			$money['integer'],
-			$money['fractional'],
+			isset( $money['integer'] )? $money['integer']:0,
+			isset( $money['fractional'] )? $money['fractional']:0,
 			PHP_EOL
 		);
-		$this->sum['vat_expense']['integer'] += $money['integer'];
-		$this->sum['vat_expense']['fractional'] += $money['fractional'];
+		if ( isset( $money['integer'] ) ) {
+			$this->sum['vat_expense']['integer'] += $money['integer'];
+		}
+		if ( isset( $money['fractional'] ) ) {
+			$this->sum['vat_expense']['fractional'] += $money['fractional'];
+		}
 		$money[] = $this->convert( $this->sum['vat_expense'] );
 		$data = sprintf(
 			$data,

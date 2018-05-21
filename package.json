@@ -2,7 +2,7 @@
     "name": "kpir",
     "title": "Księga Przychodi i Rozchodu",
     "homepage": "https://iworks.pl/",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "kpir!",
     "repository": {
         "type": "git",
