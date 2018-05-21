@@ -2,9 +2,9 @@
 Contributors: iworks
 Donate link: http://iworks.pl/donate/kpir.php
 Tags: kpir, faktura, księgowość, vat, jpk
-Requires at least: 3.9
-Tested up to: 4.9.4
-Stable tag: 0.0.5
+Requires at least: 4.0
+Tested up to: 4.9.6
+Stable tag: 0.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
