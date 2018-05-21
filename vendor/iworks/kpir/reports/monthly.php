@@ -184,10 +184,37 @@ class iworks_kpir_reports_monthly {
 								}
 								$vat = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
 								/**
-						 * car related
-						 */
+								 * car related
+								 */
 								if ( 'yes' == $is_car_related ) {
-									$v = round( ($value['integer'] + $vat['integer'] / 2) * 100 + $value['fractional'] + $vat['fractional'] / 2 );
+									$v = 0;
+									/**
+									 * integer
+									 */
+									if ( isset( $value['integer'] ) ) {
+										$v += $value['integer'];
+									}
+									if ( isset( $vat['integer'] ) ) {
+										$v += $vat['integer'] / 2;
+									}
+									$v *= 100;
+
+									/**
+									 * fractional
+									 */
+									if ( isset( $value['fractional'] ) ) {
+										$v += $value['fractional'];
+									}
+									if ( isset( $vat['fractional'] ) ) {
+										$v += $vat['fractional'] / 2;
+									}
+									/**
+									 * round
+									 */
+									$v = round( $v );
+									/**
+									 * split to integer and fractional
+									 */
 									$value['fractional'] = $v % 100;
 									$value['integer'] = round( ($v - $value['fractional']) / 100 );
 								}
@@ -198,32 +225,29 @@ class iworks_kpir_reports_monthly {
 							break;
 							case 'salary':
 								$netto = get_post_meta( $ID, 'iworks_kpir_salary_salary', true );
-
-								l( $netto );
-
 								echo $this->html_helper_money( $netto );
 								$value = get_post_meta( $ID, 'iworks_kpir_expense_other', true );
-
-								l( $value );
-
 								echo $this->html_helper_money( $value );
 								if ( $this->show_fractional_separetly ) {
 									echo $this->html_table_td( '&nbsp;' );
 								}
 								$value = $this->sum( $netto, $value );
-								l( $value );
 							break;
 						}
 						echo $this->html_helper_money( $value );
 						if ( isset( $value['integer'] ) ) {
 							$sum['expense']['integer'] += intval( $value['integer'] );
-							$sum['expense_netto']['integer'] += intval( $netto['integer'] );
+							if ( isset( $netto['integer'] ) ) {
+								$sum['expense_netto']['integer'] += intval( $netto['integer'] );
+							}
 						} else if ( $this->debug ) {
 							error_log( sprintf( 'Missing $value[\'integer\'] for invoice %d.', $ID ) );
 						}
 						if ( isset( $value['fractional'] ) ) {
 							$sum['expense']['fractional'] += intval( $value['fractional'] );
-							$sum['expense_netto']['fractional'] += intval( $netto['fractional'] );
+							if ( isset( $netto['fractional'] ) ) {
+								$sum['expense_netto']['fractional'] += intval( $netto['fractional'] );
+							}
 						} else if ( $this->debug ) {
 							error_log( sprintf( 'Missing $value[\'fractional\'] for invoice %d.', $ID ) );
 						}
@@ -305,7 +329,23 @@ class iworks_kpir_reports_monthly {
 						 * car related
 						 */
 						if ( 'yes' == $is_car_related ) {
-							$v = round( ($vat['integer'] * 100 + $vat['fractional']) / 2 );
+							$v = 0;
+							/**
+							 * integer
+							 */
+							if ( isset( $vat['integer'] ) ) {
+								$v += $vat['integer'] * 100;
+							}
+							/**
+							 * fractional
+							 */
+							if ( isset( $vat['fractional'] ) ) {
+								$v += $vat['fractional'];
+							}
+							/**
+							 * recalculate
+							 */
+							$v = round( $v / 2 );
 							$vat_car = array(
 							'integer' => 0,
 							'fractional' => 0,
