@@ -3,6 +3,9 @@ Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==
 
+= 0.0.6 =
+* Imporve "Asset" type, "Expense" is visible too.
+
 = 0.0.5 =
 * Added input mont in JPK VAT sanitization.
 * Handle translation.

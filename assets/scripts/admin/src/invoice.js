@@ -4,7 +4,7 @@ var iWorksKPiR = {};
 
     iWorksKPiR.ShowMetaBoxes = function() {
         var value = $( "#basic .iworks-kpir-row-type input[type=radio]:checked" ).val();
-        $('.iworks-type').addClass( "closed" );
+        $('.iworks-type').addClass( "closed" ).hide();
         $("body").removeClass( "kpir-not-set" );
         $(".iworks-type").each( function() {
             $("body").removeClass( $(this).attr("id") );
@@ -12,8 +12,13 @@ var iWorksKPiR = {};
         if ( "undefined" == typeof( value ) ) {
             $("body").addClass( "kpir-not-set" );
         } else {
-            $("#"+value).removeClass( "closed" );
+            $("#"+value).removeClass( "closed" ).show();
             $("body").addClass( value );
+            $('#asset-'+value).prop('checked', true );
+            if ( 'salary' === value ) {
+                $('#asset-expense').prop('checked', true );
+                $('#expense').removeClass( "closed" ).show();
+            }
         }
     }
 
