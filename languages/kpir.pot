@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KPiR Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kpir\n"
-"POT-Creation-Date: 2018-03-22 06:45:36+00:00\n"
+"POT-Creation-Date: 2018-05-21 05:12:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Monthly"
 msgstr ""
 
-#: etc/options.php:56 vendor/iworks/kpir.php:230
+#: etc/options.php:56 vendor/iworks/kpir.php:239
 msgid "JPK VAT(3)"
 msgstr ""
 
@@ -540,51 +540,51 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: vendor/iworks/kpir.php:89
+#: vendor/iworks/kpir.php:98
 msgid "Current month: %s"
 msgstr ""
 
-#: vendor/iworks/kpir.php:90
+#: vendor/iworks/kpir.php:99
 msgid "Past month: %s"
 msgstr ""
 
-#: vendor/iworks/kpir.php:178
+#: vendor/iworks/kpir.php:187
 msgid "Are you sure you want to create a duplicate copy of this invoice?"
 msgstr ""
 
-#: vendor/iworks/kpir.php:179
+#: vendor/iworks/kpir.php:188
 msgid "An error occurred duplicating invoice. Please try again."
 msgstr ""
 
-#: vendor/iworks/kpir.php:182
+#: vendor/iworks/kpir.php:191
 msgid "Please select month first!"
 msgstr ""
 
-#: vendor/iworks/kpir.php:211
+#: vendor/iworks/kpir.php:220
 msgid "Monthly report"
 msgstr ""
 
-#: vendor/iworks/kpir.php:216
+#: vendor/iworks/kpir.php:225
 msgid "Reports"
 msgstr ""
 
-#: vendor/iworks/kpir.php:234
+#: vendor/iworks/kpir.php:243
 msgid "Something went wrong!"
 msgstr ""
 
-#: vendor/iworks/kpir.php:245
+#: vendor/iworks/kpir.php:254
 msgid "Settings"
 msgstr ""
 
-#: vendor/iworks/kpir.php:248
+#: vendor/iworks/kpir.php:257
 msgid "Donate"
 msgstr ""
 
-#: vendor/iworks/kpir.php:280
+#: vendor/iworks/kpir.php:289
 msgid "Duplicate"
 msgstr ""
 
-#: vendor/iworks/kpir.php:331
+#: vendor/iworks/kpir.php:340
 msgid "Copy of %s"
 msgstr ""
 
@@ -652,7 +652,7 @@ msgctxt "Invoice Singular Name"
 msgid "Invoice"
 msgstr ""
 
-#: vendor/iworks/kpir.php:85 vendor/iworks/kpir.php:87
+#: vendor/iworks/kpir.php:94 vendor/iworks/kpir.php:96
 msgctxt "date admin dashbord widget"
 msgid "Y F"
 msgstr ""
