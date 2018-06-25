@@ -4,7 +4,7 @@ Donate link: http://iworks.pl/donate/kpir.php
 Tags: kpir, faktura, księgowość, vat, jpk
 Requires at least: 4.0
 Tested up to: 4.9.6
-Stable tag: 0.0.7
+Stable tag: 0.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,13 @@ There are 3 ways to install this plugin:
 == Screenshots ==
 
 == Changelog ==
+
+= 0.0.9 =
+* Convert '&' char to entity in outpup JPK VAT fields.
+
+= 0.0.8 =
+* Added few checks to avoid PHP warnings.
+* Added input sanityzation and validation for JPK VAT(3) inputs.
 
 = 0.0.7 =
 * Added ability to sum two values.

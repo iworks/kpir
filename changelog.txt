@@ -3,6 +3,9 @@ Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==
 
+= 0.0.9 =
+* Convert '&' char to entity in outpup JPK VAT fields.
+
 = 0.0.8 =
 * Added few checks to avoid PHP warnings.
 * Added input sanityzation and validation for JPK VAT(3) inputs.

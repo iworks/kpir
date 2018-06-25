@@ -245,7 +245,7 @@ class iworks_kpir_jpk_vat_3 {
 		$data = sprintf(
 			$data,
 			preg_replace( '/[^\d]+/', '', get_option( 'iworks_kpir_nip' ) ),
-			get_option( 'iworks_kpir_name' ),
+			$this->convert_chars( get_option( 'iworks_kpir_name' ) ),
 			get_option( 'iworks_kpir_email' )
 		);
 		return $data;
@@ -312,8 +312,8 @@ class iworks_kpir_jpk_vat_3 {
 			$data,
 			$counter,
 			$contractor['nip'],
-			$contractor['name'],
-			$contractor['address'],
+			$this->convert_chars( $contractor['name'] ),
+			$this->convert_chars( $contractor['address'] ),
 			$number,
 			$create_date,
 			$k
@@ -388,8 +388,8 @@ class iworks_kpir_jpk_vat_3 {
 			$data,
 			$counter,
 			$contractor['nip'],
-			$contractor['name'],
-			$contractor['address'],
+			$this->convert_chars( $contractor['name'] ),
+			$this->convert_chars( $contractor['address'] ),
 			$number,
 			$create_date,
 			$k
@@ -476,5 +476,13 @@ class iworks_kpir_jpk_vat_3 {
 			return $data;
 		}
 		return new WP_Error( 'wrong-input', __( 'Wrong date, please try again!', 'kpir' ) );
-	}
+    }
+
+    /**
+     * convert special chars
+     */
+    private function convert_chars( $text ) {
+        $text = preg_replace( '/\&/', '&amp;', $text );
+        return $text;
+    }
 }
