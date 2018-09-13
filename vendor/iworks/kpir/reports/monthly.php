@@ -235,21 +235,23 @@ class iworks_kpir_reports_monthly {
 							break;
 						}
 						echo $this->html_helper_money( $value );
-						if ( isset( $value['integer'] ) ) {
-							$sum['expense']['integer'] += intval( $value['integer'] );
-							if ( isset( $netto['integer'] ) ) {
-								$sum['expense_netto']['integer'] += intval( $netto['integer'] );
+						if ( 'expense' === $type ) {
+							if ( isset( $value['integer'] ) ) {
+								$sum['expense']['integer'] += intval( $value['integer'] );
+								if ( isset( $netto['integer'] ) ) {
+									$sum['expense_netto']['integer'] += intval( $netto['integer'] );
+								}
+							} else if ( $this->debug ) {
+								error_log( sprintf( 'Missing $value[\'integer\'] for invoice %d.', $ID ) );
 							}
-						} else if ( $this->debug ) {
-							error_log( sprintf( 'Missing $value[\'integer\'] for invoice %d.', $ID ) );
-						}
-						if ( isset( $value['fractional'] ) ) {
-							$sum['expense']['fractional'] += intval( $value['fractional'] );
-							if ( isset( $netto['fractional'] ) ) {
-								$sum['expense_netto']['fractional'] += intval( $netto['fractional'] );
+							if ( isset( $value['fractional'] ) ) {
+								$sum['expense']['fractional'] += intval( $value['fractional'] );
+								if ( isset( $netto['fractional'] ) ) {
+									$sum['expense_netto']['fractional'] += intval( $netto['fractional'] );
+								}
+							} else if ( $this->debug ) {
+								error_log( sprintf( 'Missing $value[\'fractional\'] for invoice %d.', $ID ) );
 							}
-						} else if ( $this->debug ) {
-							error_log( sprintf( 'Missing $value[\'fractional\'] for invoice %d.', $ID ) );
 						}
 					break;
 					case 'income':

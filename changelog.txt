@@ -3,6 +3,9 @@ Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==
 
+= 0.1.0 =
+* Netto expenses count only from expenses.
+
 = 0.0.9 =
 * Convert '&' char to entity in outpup JPK VAT fields.
 
