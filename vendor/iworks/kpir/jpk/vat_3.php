@@ -290,7 +290,7 @@ class iworks_kpir_jpk_vat_3 {
 		 * VAT
 		 */
 		$money = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
-		if ( 'yes' == $is_car_related ) {
+		if ( 'no' !== $is_car_related ) {
 			$v = round( ($money['integer'] / 2) * 100 + $money['fractional'] / 2 );
 			$money['fractional'] = $v % 100;
 			$money['integer'] = round( ($v - $money['fractional']) / 100 );
@@ -476,13 +476,13 @@ class iworks_kpir_jpk_vat_3 {
 			return $data;
 		}
 		return new WP_Error( 'wrong-input', __( 'Wrong date, please try again!', 'kpir' ) );
-    }
+	}
 
-    /**
-     * convert special chars
-     */
-    private function convert_chars( $text ) {
-        $text = preg_replace( '/\&/', '&amp;', $text );
-        return $text;
-    }
+	/**
+	 * convert special chars
+	 */
+	private function convert_chars( $text ) {
+		$text = preg_replace( '/\&/', '&amp;', $text );
+		return $text;
+	}
 }

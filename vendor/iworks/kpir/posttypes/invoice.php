@@ -161,8 +161,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'type' => 'radio',
 					'args' => array(
 						'options' => array(
+							'100' => array(
+								'label' => __( '100%', 'kpir' ),
+							),
+							'75' => array(
+								'label' => __( '75%', 'kpir' ),
+							),
+							'20' => array(
+								'label' => __( '20%', 'kpir' ),
+							),
 							'yes' => array(
-								'label' => __( 'Yes', 'kpir' ),
+								'label' => __( 'Yes (before 2019)', 'kpir' ),
 							),
 							'no' => array(
 								'label' => __( 'No', 'kpir' ),
@@ -384,7 +393,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 * check is car related cost
 		 */
 			$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
-			$is_car_related = 'yes' == $is_car_related;
+			// $is_car_related = 'yes' == $is_car_related;
 			$data['income'] += $this->add_value( $post_id, 'income_sale' );
 			$data['income'] += $this->add_value( $post_id, 'income_other' );
 			$data['vat_income'] += $this->add_value( $post_id, 'income_vat' );
@@ -403,11 +412,11 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			$data['expense'] += $asset;
 			$vat_expense = $this->add_value( $post_id, 'expense_vat' );
 			if ( $vat_expense ) {
-				if ( $is_car_related ) {
+				if ( 'no' !== $is_car_related ) {
 					$vat_expense /= 2;
 					$data['vat_expense'] += $vat_expense;
-					$data['expense_vat'] += $expense + $vat_expense;
-					$data['expense'] += $vat_expense;
+					$data['expense_vat'] += ( $expense + $vat_expense ) * intval( $is_car_related ) / 100;
+					$data['expense'] += $vat_expense * intval( $is_car_related ) / 100;
 				} else {
 					$data['vat_expense'] += $vat_expense;
 					$data['expense_vat'] += $expense;
@@ -518,7 +527,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			break;
 			case 'symbol':
 				$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
-				$is_car_related = 'yes' == $is_car_related;
+				$is_car_related = 'no' !== $is_car_related;
 				if ( $is_car_related ) {
 					echo '<span class="dashicons dashicons-admin-generic"></span>';
 				} else {

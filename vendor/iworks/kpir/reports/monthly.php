@@ -138,7 +138,7 @@ class iworks_kpir_reports_monthly {
 				 */
 				$is_car_related = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
 				$description = get_post_meta( $ID, 'iworks_kpir_basic_description', true );
-				if ( 'yes' === $is_car_related ) {
+				if ( 'no' !== $is_car_related ) {
 					$description .= sprintf( ' <small class="car">%s</small>', esc_html__( '(car related)', 'kpir' ) );
 				}
 				echo $this->html_table_td( $description );
@@ -186,7 +186,7 @@ class iworks_kpir_reports_monthly {
 								/**
 								 * car related
 								 */
-								if ( 'yes' == $is_car_related ) {
+								if ( 'no' != $is_car_related ) {
 									$v = 0;
 									/**
 									 * integer
@@ -198,7 +198,9 @@ class iworks_kpir_reports_monthly {
 										$v += $vat['integer'] / 2;
 									}
 									$v *= 100;
-
+									if ( 'yes' !== $is_car_related ) {
+										$v *= $is_car_related / 100;
+									}
 									/**
 									 * fractional
 									 */
@@ -219,8 +221,8 @@ class iworks_kpir_reports_monthly {
 									$value['integer'] = round( ($v - $value['fractional']) / 100 );
 								}
 								/**
-						 * echo
-						 */
+								 * echo
+								 */
 								echo $this->html_helper_money( $value );
 							break;
 							case 'salary':
@@ -285,7 +287,7 @@ class iworks_kpir_reports_monthly {
 				 */
 				switch ( $type ) {
 					case 'expense':
-						if ( 'yes' === $is_car_related ) {
+						if ( 'no' !== $is_car_related ) {
 							echo $this->html_helper_money( $netto );
 						} else {
 							echo $this->html_table_td( '&nbsp;' );
@@ -330,7 +332,7 @@ class iworks_kpir_reports_monthly {
 						/**
 						 * car related
 						 */
-						if ( 'yes' == $is_car_related ) {
+						if ( 'no' !== $is_car_related ) {
 							$v = 0;
 							/**
 							 * integer
@@ -376,7 +378,7 @@ class iworks_kpir_reports_monthly {
 						if ( $this->show_fractional_separetly ) {
 							echo $this->html_table_td( '&nbsp;' );
 						}
-						if ( 'yes' != $is_car_related ) {
+						if ( 'no' === $is_car_related ) {
 							echo $this->html_table_td( '&nbsp;' );
 							if ( $this->show_fractional_separetly ) {
 								echo $this->html_table_td( '&nbsp;' );
