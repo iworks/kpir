@@ -3,6 +3,9 @@ Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==
 
+= 0.1.1 =
+* Added annualy report.
+
 = 0.1.0 =
 * Netto expenses count only from expenses.
 
@@ -21,7 +24,7 @@ Author: Marcin Pietrzak ( iworks.pl )
 * Imporve "Asset" type, "Expense" is visible too.
 
 = 0.0.5 =
-* Added input mont in JPK VAT sanitization.
+* Added input month in JPK VAT sanitization.
 * Handle translation.
 
 = 0.0.4 =
