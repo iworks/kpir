@@ -356,7 +356,8 @@ module.exports = function( grunt ) {
 
 			scripts: {
 				files: ['assets/scripts/src/**/*.js', 'assets/scripts/admin/src/**/*.js'],
-				tasks: ['jshint', 'concat', 'uglify'],
+				//tasks: ['jshint', 'concat', 'uglify'],
+				tasks: ['concat', 'uglify'],
 				options: {
 					debounceDelay: 500
 				}
@@ -571,7 +572,7 @@ module.exports = function( grunt ) {
 
 	// Default task.
 
-	grunt.registerTask( 'default', ['clean:temp', 'jshint', 'concat_css', 'uglify', 'sass', 'autoprefixer', 'cssmin', 'concat', 'makepot' ] );
+	grunt.registerTask( 'default', ['clean:temp', 'concat_css', 'uglify', 'sass', 'autoprefixer', 'cssmin', 'concat', 'makepot' ] );
 	//grunt.registerTask( 'test', ['phpunit', 'jshint'] );
 
 	grunt.task.run( 'clear' );
