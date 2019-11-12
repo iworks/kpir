@@ -1,7 +1,6 @@
 <?php
 /*
-
-Copyright 2017-2018 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2017-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -29,8 +28,8 @@ if ( class_exists( 'iworks_kpir_reports_monthly' ) ) {
 class iworks_kpir_reports_monthly {
 
 	private $show_fractional_separetly = false;
-	private $contractors = array();
-	private $debug = false;
+	private $contractors               = array();
+	private $debug                     = false;
 
 	public function __construct() {
 		$this->debug = defined( 'WP_DEBUG' ) && WP_DEBUG;
@@ -42,7 +41,7 @@ class iworks_kpir_reports_monthly {
 		/**
 		 * get current month
 		 */
-		$current = isset( $_GET['m'] )? $_GET['m']:'';
+		$current = isset( $_GET['m'] ) ? $_GET['m'] : '';
 		if ( ! preg_match( '/^\d{4}\-\d{2}$/', $current ) ) {
 			$current = date( 'Y-m' );
 		}
@@ -51,42 +50,42 @@ class iworks_kpir_reports_monthly {
 		 */
 		$this->show_filter( $post_type_object, $current );
 
-		$cf_date_name = $post_type_object->get_custom_field_basic_date_name();
+		$cf_date_name       = $post_type_object->get_custom_field_basic_date_name();
 		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
-		$date_format = get_option( 'date_format' );
+		$date_format        = get_option( 'date_format' );
 
 		$query = $kpir->get_month_query( $current );
 
 		if ( $query->have_posts() ) {
 			$sum = array(
-				'income' => array(
-					'integer' => 0,
+				'income'        => array(
+					'integer'    => 0,
 					'fractional' => 0,
 				),
-				'expense' => array(
-					'integer' => 0,
+				'expense'       => array(
+					'integer'    => 0,
 					'fractional' => 0,
 				),
 				'expense_netto' => array(
-					'integer' => 0,
+					'integer'    => 0,
 					'fractional' => 0,
 				),
-				'vat_income' => array(
-					'integer' => 0,
+				'vat_income'    => array(
+					'integer'    => 0,
 					'fractional' => 0,
 				),
-				'vat_expense' => array(
-					'integer' => 0,
+				'vat_expense'   => array(
+					'integer'    => 0,
 					'fractional' => 0,
 				),
 			);
-			$i = 1;
+			$i   = 1;
 			echo '<table class="kpir-report kpir-report-monthly">';
 			echo $this->html_table_thead();
 			echo '<tbody>';
 			while ( $query->have_posts() ) {
 				$query->the_post();
-				$ID = get_the_ID();
+				$ID            = get_the_ID();
 				$contractor_id = get_post_meta( $ID, $cf_contractor_name, true );
 
 				echo '<tr>';
@@ -115,7 +114,7 @@ class iworks_kpir_reports_monthly {
 					add_query_arg(
 						array(
 							'contractor' => $contractor_id,
-							'post_type' => 'iworks_kpir_invoice',
+							'post_type'  => 'iworks_kpir_invoice',
 						),
 						admin_url( 'edit.php' )
 					),
@@ -137,7 +136,7 @@ class iworks_kpir_reports_monthly {
 				 * Opis zdarzenia gospodarczego
 				 */
 				$is_car_related = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
-				$description = get_post_meta( $ID, 'iworks_kpir_basic_description', true );
+				$description    = get_post_meta( $ID, 'iworks_kpir_basic_description', true );
 				if ( 'no' !== $is_car_related ) {
 					$description .= sprintf( ' <small class="car">%s</small>', esc_html__( '(car related)', 'kpir' ) );
 				}
@@ -146,8 +145,11 @@ class iworks_kpir_reports_monthly {
 				/**
 				 * type
 				 */
-				$type = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
-				$netto = $value = array( 'integer' => 0, 'fractional' => 0 );
+				$type  = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
+				$netto = $value = array(
+					'integer'    => 0,
+					'fractional' => 0,
+				);
 
 				switch ( $type ) {
 					case 'expense':
@@ -169,7 +171,7 @@ class iworks_kpir_reports_monthly {
 								}
 								$netto = $value = get_post_meta( $ID, 'iworks_kpir_asset_depreciation', true );
 								echo $this->html_helper_money( $value );
-							break;
+								break;
 							case 'expense':
 								echo $this->html_table_td( '&nbsp;' );
 								if ( $this->show_fractional_separetly ) {
@@ -218,13 +220,13 @@ class iworks_kpir_reports_monthly {
 									 * split to integer and fractional
 									 */
 									$value['fractional'] = $v % 100;
-									$value['integer'] = round( ($v - $value['fractional']) / 100 );
+									$value['integer']    = round( ( $v - $value['fractional'] ) / 100 );
 								}
 								/**
 								 * echo
 								 */
 								echo $this->html_helper_money( $value );
-							break;
+								break;
 							case 'salary':
 								$netto = get_post_meta( $ID, 'iworks_kpir_salary_salary', true );
 								echo $this->html_helper_money( $netto );
@@ -234,7 +236,7 @@ class iworks_kpir_reports_monthly {
 									echo $this->html_table_td( '&nbsp;' );
 								}
 								$value = $this->sum( $netto, $value );
-							break;
+								break;
 						}
 						echo $this->html_helper_money( $value );
 						if ( 'expense' === $type ) {
@@ -243,7 +245,7 @@ class iworks_kpir_reports_monthly {
 								if ( isset( $netto['integer'] ) ) {
 									$sum['expense_netto']['integer'] += intval( $netto['integer'] );
 								}
-							} else if ( $this->debug ) {
+							} elseif ( $this->debug ) {
 								error_log( sprintf( 'Missing $value[\'integer\'] for invoice %d.', $ID ) );
 							}
 							if ( isset( $value['fractional'] ) ) {
@@ -251,11 +253,11 @@ class iworks_kpir_reports_monthly {
 								if ( isset( $netto['fractional'] ) ) {
 									$sum['expense_netto']['fractional'] += intval( $netto['fractional'] );
 								}
-							} else if ( $this->debug ) {
+							} elseif ( $this->debug ) {
 								error_log( sprintf( 'Missing $value[\'fractional\'] for invoice %d.', $ID ) );
 							}
 						}
-					break;
+						break;
 					case 'income':
 						switch ( $type ) {
 							case 'income':
@@ -274,11 +276,11 @@ class iworks_kpir_reports_monthly {
 									echo $this->html_table_td( '&nbsp;' );
 									echo $this->html_table_td( '&nbsp;' );
 								}
-								$sum['income']['integer'] += intval( $value['integer'] );
+								$sum['income']['integer']    += intval( $value['integer'] );
 								$sum['income']['fractional'] += intval( $value['fractional'] );
-							break;
+								break;
 						}
-					break;
+						break;
 					default:
 						error_log( $ID );
 				}
@@ -295,13 +297,13 @@ class iworks_kpir_reports_monthly {
 								echo $this->html_table_td( '&nbsp;' );
 							}
 						}
-					break;
+						break;
 					default:
 						echo $this->html_table_td( '&nbsp;' );
 						if ( $this->show_fractional_separetly ) {
 							echo $this->html_table_td( '&nbsp;' );
 						}
-					break;
+						break;
 				}
 
 				/**
@@ -322,7 +324,7 @@ class iworks_kpir_reports_monthly {
 						if ( $this->show_fractional_separetly ) {
 							echo $this->html_table_td( '&nbsp;' );
 						}
-					break;
+						break;
 					case 'expense':
 						echo $this->html_table_td( '&nbsp;' );
 						if ( $this->show_fractional_separetly ) {
@@ -349,13 +351,13 @@ class iworks_kpir_reports_monthly {
 							/**
 							 * recalculate
 							 */
-							$v = round( $v / 2 );
-							$vat_car = array(
-							'integer' => 0,
-							'fractional' => 0,
+							$v                     = round( $v / 2 );
+							$vat_car               = array(
+								'integer'    => 0,
+								'fractional' => 0,
 							);
 							$vat_car['fractional'] = $v % 100;
-							$vat_car['integer'] = ($v - $vat_car['fractional']) / 100;
+							$vat_car['integer']    = ( $v - $vat_car['fractional'] ) / 100;
 							echo $this->html_helper_money( $vat_car );
 							if ( $this->show_fractional_separetly ) {
 								echo $this->html_table_td( '&nbsp;' );
@@ -384,11 +386,11 @@ class iworks_kpir_reports_monthly {
 								echo $this->html_table_td( '&nbsp;' );
 							}
 						}
-					break;
+						break;
 					case 'income':
 						$vat = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
 						if ( is_array( $vat ) ) {
-							$sum['vat_income']['integer'] += intval( $vat['integer'] );
+							$sum['vat_income']['integer']    += intval( $vat['integer'] );
 							$sum['vat_income']['fractional'] += intval( $vat['fractional'] );
 						}
 						echo $this->html_helper_money( $vat );
@@ -403,7 +405,7 @@ class iworks_kpir_reports_monthly {
 						if ( $this->show_fractional_separetly ) {
 							echo $this->html_table_td( '&nbsp;' );
 						}
-					break;
+						break;
 				}
 
 				echo '</tr>';
@@ -415,9 +417,9 @@ class iworks_kpir_reports_monthly {
 			echo '<tbody class="sum">';
 			echo '<tr>';
 			echo $this->html_table_td( '&nbsp;', null, 1, 6 );
-			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly? 4:2 );
+			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 4 : 2 );
 			echo $this->html_helper_money( $sum['income'] );
-			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly? 4:2 );
+			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 4 : 2 );
 			echo $this->html_helper_money( $sum['expense'] );
 			echo $this->html_helper_money( $sum['expense_netto'] );
 			echo $this->html_helper_money( $sum['vat_income'] );
@@ -428,7 +430,7 @@ class iworks_kpir_reports_monthly {
 			if ( $this->show_fractional_separetly ) {
 				echo $this->html_table_td( '&nbsp;' );
 			}
-			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly? 2:1 );
+			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 2 : 1 );
 			echo '</tr>';
 			echo '</tbody>';
 
@@ -446,19 +448,19 @@ class iworks_kpir_reports_monthly {
 
 		$show_currency_symbol = false;
 
-		$fix_row = $show_currency_symbol? 0: -1;
-		$fix_col = $this->show_fractional_separetly? 0: -1;
+		$fix_row = $show_currency_symbol ? 0 : -1;
+		$fix_col = $this->show_fractional_separetly ? 0 : -1;
 
-		$content = '<thead>';
+		$content  = '<thead>';
 		$content .= '<tr>';
 		$content .= $this->html_table_th( 'Lp.', null, 3 + $fix_row );
 		$content .= $this->html_table_th( 'Data zdarzenia gospodarczego', null, 3 + $fix_row );
 		$content .= $this->html_table_th( 'Nr dowodu księgowego', null, 3 + $fix_row );
 		$content .= $this->html_table_th( 'Kontrahent', null, null, 2 );
 		$content .= $this->html_table_th( 'Opis zdarzenia gospodarczego', null, 3 + $fix_row );
-		$content .= $this->html_table_th( 'Przychód', null, null, $this->show_fractional_separetly? 6:3 );
-		$content .= $this->html_table_th( 'Wydatki', null, null, $this->show_fractional_separetly? 8:4 );
-		$content .= $this->html_table_th( 'VAT', null, null, $this->show_fractional_separetly? 6:3 );
+		$content .= $this->html_table_th( 'Przychód', null, null, $this->show_fractional_separetly ? 6 : 3 );
+		$content .= $this->html_table_th( 'Wydatki', null, null, $this->show_fractional_separetly ? 8 : 4 );
+		$content .= $this->html_table_th( 'VAT', null, null, $this->show_fractional_separetly ? 6 : 3 );
 		$content .= '</tr>';
 		$content .= '<tr>';
 		$content .= $this->html_table_th( 'imię i nazwisko (firma)', null, 2 + $fix_row );
@@ -514,9 +516,9 @@ class iworks_kpir_reports_monthly {
 
 	private function html_table_td( $value, $class = '', $rowspan = '', $colspan = '' ) {
 		$args = array(
-			'tag' => 'td',
-			'value' => $value,
-			'class' => $class,
+			'tag'     => 'td',
+			'value'   => $value,
+			'class'   => $class,
 			'rowspan' => $rowspan,
 			'colspan' => $colspan,
 		);
@@ -525,9 +527,9 @@ class iworks_kpir_reports_monthly {
 
 	private function html_table_th( $value, $class = '', $rowspan = '', $colspan = '' ) {
 		$args = array(
-			'tag' => 'th',
-			'value' => $value,
-			'class' => $class,
+			'tag'     => 'th',
+			'value'   => $value,
+			'class'   => $class,
 			'rowspan' => $rowspan,
 			'colspan' => $colspan,
 		);
@@ -548,7 +550,11 @@ class iworks_kpir_reports_monthly {
 			$tag = $args['tag'];
 		}
 		return sprintf(
-			'<%s%s>%s</%s>', $tag, $attributes, $args['value'], $tag
+			'<%s%s>%s</%s>',
+			$tag,
+			$attributes,
+			$args['value'],
+			$tag
 		);
 	}
 
@@ -603,14 +609,14 @@ class iworks_kpir_reports_monthly {
 			return $this->html_table_td( '0,00', 'money' );
 		}
 		if ( $value['fractional'] > 99 ) {
-			$value['integer'] += intval( $value['fractional'] / 100 );
+			$value['integer']   += intval( $value['fractional'] / 100 );
 			$value['fractional'] = $value['fractional'] % 100;
 		}
 		if ( $this->show_fractional_separetly ) {
 			$content .= $this->html_table_td( $value['integer'], 'money' );
 			$content .= $this->html_table_td( $value['fractional'], 'money' );
 		} else {
-			$val = sprintf( '%d,%02d', $value['integer'], $value['fractional'] );
+			$val      = sprintf( '%d,%02d', $value['integer'], $value['fractional'] );
 			$content .= $this->html_table_td( $val, 'money' );
 		}
 		return $content;
@@ -622,10 +628,10 @@ class iworks_kpir_reports_monthly {
 	 * @since 0.0.7
 	 */
 	private function sum( $value1, $value2 ) {
-		$value['integer'] = $value1['integer'] + $value2['integer'];
+		$value['integer']    = $value1['integer'] + $value2['integer'];
 		$value['fractional'] = $value1['fractional'] + $value2['fractional'];
 		if ( 100 > $value['fractional'] ) {
-			$value['integer'] += intval( $value['fractional'] / 100 );
+			$value['integer']   += intval( $value['fractional'] / 100 );
 			$value['fractional'] = $value['fractional'] % 100;
 		}
 		return $value;

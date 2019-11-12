@@ -1,7 +1,6 @@
 <?php
 /*
-
-Copyright 2017-2018 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2017-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -26,12 +25,12 @@ if ( class_exists( 'iworks_kpir_posttypes_invoice' ) ) {
 	return;
 }
 
-require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
+require_once dirname( dirname( __FILE__ ) ) . '/posttypes.php';
 
 class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
-	protected $post_type_name = 'iworks_kpir_invoice';
-	private $custom_field_year = 'year';
+	protected $post_type_name            = 'iworks_kpir_invoice';
+	private $custom_field_year           = 'year';
 	private $contractor_post_type_object = null;
 
 	public function __construct() {
@@ -41,49 +40,49 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 * fields
 		 */
 		$this->fields = array(
-			'basic' => array(
+			'basic'     => array(
 				'date_of_issue' => array(
-					'type' => 'date',
+					'type'  => 'date',
 					'label' => __( 'Date of issue', 'kpir' ),
-					'args' => array(
-						'class' => array( 'medium-text' ),
+					'args'  => array(
+						'class'   => array( 'medium-text' ),
 						'default' => date_i18n( 'Y-m-d', time() ),
-						'after' => sprintf( ' <a class="button" id="kpir-copy-date-button">%s</a>', esc_html__( 'Copy to event date', 'kpir' ) ),
+						'after'   => sprintf( ' <a class="button" id="kpir-copy-date-button">%s</a>', esc_html__( 'Copy to event date', 'kpir' ) ),
 					),
 				),
-				'date' => array(
-					'type' => 'date',
+				'date'          => array(
+					'type'  => 'date',
 					'label' => __( 'Event date', 'kpir' ),
-					'args' => array(
-						'class' => array( 'medium-text' ),
+					'args'  => array(
+						'class'   => array( 'medium-text' ),
 						'default' => date_i18n( 'Y-m-d', time() ),
 					),
 				),
-				'contractor' => array(
-					'type' => 'select2',
+				'contractor'    => array(
+					'type'  => 'select2',
 					'label' => __( 'Contractor', 'kpir' ),
-					'args' => array(
-						'data-source' => 'contractor',
+					'args'  => array(
+						'data-source'       => 'contractor',
 						'data-nonce-action' => 'get-contractors-list',
 					),
 				),
-				'description' => array(
+				'description'   => array(
 					'label' => __( 'Invoice description', 'kpir' ),
 				),
-				'type' => array(
-					'type' => 'radio',
-					'args' => array(
+				'type'          => array(
+					'type'  => 'radio',
+					'args'  => array(
 						'options' => array(
-							'income' => array(
+							'income'    => array(
 								'label' => __( 'Income', 'kpir' ),
 							),
-							'expense' => array(
+							'expense'   => array(
 								'label' => __( 'Expense', 'kpir' ),
 							),
-							'salary' => array(
+							'salary'    => array(
 								'label' => __( 'Salary', 'kpir' ),
 							),
-							'asset' => array(
+							'asset'     => array(
 								'label' => __( 'Asset', 'kpir' ),
 							),
 							'insurance' => array(
@@ -95,7 +94,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'label' => __( 'Type', 'kpir' ),
 				),
 			),
-			'income' => array(
+			'income'    => array(
 				'description' => array(
 					'type' => 'description',
 					'args' => array(
@@ -103,19 +102,19 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 						'class' => array( 'description' ),
 					),
 				),
-				'sale' => array(
-					'type' => 'money',
+				'sale'        => array(
+					'type'  => 'money',
 					'label' => __( 'Value of goods and services sold', 'kpir' ),
 				),
-				'other' => array(
-					'type' => 'money',
+				'other'       => array(
+					'type'  => 'money',
 					'label' => __( 'Other income', 'kpir' ),
 				),
-				'vat' => array(
-					'type' => 'money',
+				'vat'         => array(
+					'type'  => 'money',
 					'label' => __( 'VAT', 'kpir' ),
 				),
-				'vat_type' => array(
+				'vat_type'    => array(
 					'type' => 'radio',
 					'args' => array(
 						'options' => array(
@@ -130,50 +129,50 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 				),
 			),
-			'expense' => array(
-				'description' => array(
+			'expense'   => array(
+				'description'      => array(
 					'type' => 'description',
 					'args' => array(
 						'value' => __( 'Please first choose invoice type.', 'kpir' ),
 						'class' => array( 'description' ),
 					),
 				),
-				'purchase' => array(
-					'type' => 'money',
+				'purchase'         => array(
+					'type'  => 'money',
 					'label' => __( 'The purchase of commercial goods and materials, according to the purchase price', 'kpir' ),
 				),
 				'cost_of_purchase' => array(
-					'type' => 'money',
+					'type'  => 'money',
 					'label' => __( 'Incidental costs of purchase', 'kpir' ),
 				),
-				'other' => array(
-					'type' => 'money',
+				'other'            => array(
+					'type'  => 'money',
 					'label' => __( 'Other expenses', 'kpir' ),
 				),
-				'vat' => array(
-					'type' => 'money',
+				'vat'              => array(
+					'type'  => 'money',
 					'label' => __( 'VAT', 'kpir' ),
 				),
-				'car' => array(
-					'type' => 'checkbox',
-					'label' => __( 'Car related', 'kpir' ),
+				'car'              => array(
+					'type'        => 'checkbox',
+					'label'       => __( 'Car related', 'kpir' ),
 					'description' => __( 'It will be calculated as half VAT return.', 'kpir' ),
-					'type' => 'radio',
-					'args' => array(
+					'type'        => 'radio',
+					'args'        => array(
 						'options' => array(
 							'100' => array(
 								'label' => __( '100%', 'kpir' ),
 							),
-							'75' => array(
+							'75'  => array(
 								'label' => __( '75%', 'kpir' ),
 							),
-							'20' => array(
+							'20'  => array(
 								'label' => __( '20%', 'kpir' ),
 							),
 							'yes' => array(
 								'label' => __( 'Yes (before 2019)', 'kpir' ),
 							),
-							'no' => array(
+							'no'  => array(
 								'label' => __( 'No', 'kpir' ),
 							),
 						),
@@ -181,29 +180,29 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 				),
 			),
-			'salary' => array(
+			'salary'    => array(
 				'salary' => array(
-					'type' => 'money',
+					'type'  => 'money',
 					'label' => __( 'Salary in cash and in kind', 'kpir' ),
 				),
 			),
-			'asset' => array(
+			'asset'     => array(
 				'depreciation' => array(
-					'type' => 'money',
+					'type'  => 'money',
 					'label' => __( 'Depreciation of asset', 'kpir' ),
 				),
 			),
 			'insurance' => array(
 				'zus51' => array(
-					'type' => 'money',
+					'type'  => 'money',
 					'label' => __( 'ZUS 51', 'kpir' ),
 				),
 				'zus52' => array(
-					'type' => 'money',
+					'type'  => 'money',
 					'label' => __( 'ZUS 52', 'kpir' ),
 				),
 				'zus53' => array(
-					'type' => 'money',
+					'type'  => 'money',
 					'label' => __( 'ZUS 53', 'kpir' ),
 				),
 			),
@@ -235,7 +234,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 * change default columns
 		 */
 		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
-		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
+		add_action( 'manage_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 		/**
 		 * apply default sort order
 		 */
@@ -280,25 +279,25 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			'items_list_navigation' => __( 'Invoices list navigation', 'kpir' ),
 			'filter_items_list'     => __( 'Filter invoices list', 'kpir' ),
 		);
-		$args = array(
-			'label'                 => __( 'Invoice', 'kpir' ),
-			'description'           => __( 'Invoice Description', 'kpir' ),
-			'labels'                => $labels,
-			'supports'              => array( 'title' ),
-			'taxonomies'            => array(),
-			'hierarchical'          => false,
-			'public'                => false,
-			'show_ui'               => true,
-			'show_in_menu'          => true,
-			'show_in_admin_bar'     => true,
-			'show_in_nav_menus'     => false,
-			'can_export'            => true,
-			'has_archive'           => true,
-			'exclude_from_search'   => true,
-			'publicly_queryable'    => false,
-			'capability_type'       => 'page',
-			'menu_icon'             => 'dashicons-book',
-			'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
+		$args   = array(
+			'label'                => __( 'Invoice', 'kpir' ),
+			'description'          => __( 'Invoice Description', 'kpir' ),
+			'labels'               => $labels,
+			'supports'             => array( 'title' ),
+			'taxonomies'           => array(),
+			'hierarchical'         => false,
+			'public'               => false,
+			'show_ui'              => true,
+			'show_in_menu'         => true,
+			'show_in_admin_bar'    => true,
+			'show_in_nav_menus'    => false,
+			'can_export'           => true,
+			'has_archive'          => true,
+			'exclude_from_search'  => true,
+			'publicly_queryable'   => false,
+			'capability_type'      => 'page',
+			'menu_icon'            => 'dashicons-book',
+			'register_meta_box_cb' => array( $this, 'register_meta_boxes' ),
 		);
 		register_post_type( $this->post_type_name, $args );
 	}
@@ -354,8 +353,8 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 	public function save_year_month_to_extra_field( $post_id, $option_name, $value, $key, $data ) {
 		if ( 'date' == $key ) {
-			$name = $this->get_custom_field_year_month_name();
-			$value = date( 'Y-m', $value );
+			$name   = $this->get_custom_field_year_month_name();
+			$value  = date( 'Y-m', $value );
 			$result = add_post_meta( $post_id, $name, $value, true );
 			if ( ! $result ) {
 				update_post_meta( $post_id, $name, $value );
@@ -369,24 +368,24 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	public function month_table( $month ) {
-		$args = array(
-			'post_type' => $this->get_name(),
-			'meta_value' => $month,
-			'meta_key' => $this->get_custom_field_year_month_name(),
-			'nopaging' => true,
-			'fields' => 'ids',
+		$args      = array(
+			'post_type'   => $this->get_name(),
+			'meta_value'  => $month,
+			'meta_key'    => $this->get_custom_field_year_month_name(),
+			'nopaging'    => true,
+			'fields'      => 'ids',
 			'post_status' => array( 'published' ),
 		);
 		$the_query = new WP_Query( $args );
-		$data = array(
-			'income' => 0,
-			'expense' => 0,
+		$data      = array(
+			'income'      => 0,
+			'expense'     => 0,
 			'expense_vat' => 0,
-			'vat_income' => 0,
+			'vat_income'  => 0,
 			'vat_expense' => 0,
-			'vat_zero' => 0,
-			'salary' => 0,
-			'asset' => 0,
+			'vat_zero'    => 0,
+			'salary'      => 0,
+			'asset'       => 0,
 		);
 		foreach ( $the_query->posts as $post_id ) {
 			/**
@@ -394,29 +393,29 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 */
 			$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
 			// $is_car_related = 'yes' == $is_car_related;
-			$data['income'] += $this->add_value( $post_id, 'income_sale' );
-			$data['income'] += $this->add_value( $post_id, 'income_other' );
+			$data['income']     += $this->add_value( $post_id, 'income_sale' );
+			$data['income']     += $this->add_value( $post_id, 'income_other' );
 			$data['vat_income'] += $this->add_value( $post_id, 'income_vat' );
-			$expense = 0;
-			$expense += $this->add_value( $post_id, 'expense_purchase' );
-			$expense += $this->add_value( $post_id, 'expense_cost_of_purchase' );
-			$expense += $this->add_value( $post_id, 'expense_other' );
-			$data['expense'] += $expense;
-			$salary = 0;
-			$salary += $this->add_value( $post_id, 'salary_salary' );
-			$data['salary'] += $salary;
-			$data['expense'] += $salary;
-			$asset = 0;
-			$asset += $this->add_value( $post_id, 'asset_depreciation' );
-			$data['asset'] += $asset;
-			$data['expense'] += $asset;
-			$vat_expense = $this->add_value( $post_id, 'expense_vat' );
+			$expense             = 0;
+			$expense            += $this->add_value( $post_id, 'expense_purchase' );
+			$expense            += $this->add_value( $post_id, 'expense_cost_of_purchase' );
+			$expense            += $this->add_value( $post_id, 'expense_other' );
+			$data['expense']    += $expense;
+			$salary              = 0;
+			$salary             += $this->add_value( $post_id, 'salary_salary' );
+			$data['salary']     += $salary;
+			$data['expense']    += $salary;
+			$asset               = 0;
+			$asset              += $this->add_value( $post_id, 'asset_depreciation' );
+			$data['asset']      += $asset;
+			$data['expense']    += $asset;
+			$vat_expense         = $this->add_value( $post_id, 'expense_vat' );
 			if ( $vat_expense ) {
 				if ( 'no' !== $is_car_related ) {
-					$vat_expense /= 2;
+					$vat_expense         /= 2;
 					$data['vat_expense'] += $vat_expense;
 					$data['expense_vat'] += ( $expense + $vat_expense ) * intval( $is_car_related ) / 100;
-					$data['expense'] += $vat_expense * intval( $is_car_related ) / 100;
+					$data['expense']     += $vat_expense * intval( $is_car_related ) / 100;
 				} else {
 					$data['vat_expense'] += $vat_expense;
 					$data['expense_vat'] += $expense;
@@ -426,14 +425,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			}
 		}
 		$labels = array(
-			'income' => __( 'Incomes', 'kpir' ),
-			'expense' => __( 'Expenses', 'kpir' ),
+			'income'      => __( 'Incomes', 'kpir' ),
+			'expense'     => __( 'Expenses', 'kpir' ),
 			'expense_vat' => __( 'Expenses (VAT)', 'kpir' ),
-			'vat_income' => __( 'VAT (Income) ', 'kpir' ),
+			'vat_income'  => __( 'VAT (Income) ', 'kpir' ),
 			'vat_expense' => __( 'VAT (Expense)', 'kpir' ),
-			'vat_zero' => __( 'VAT (zero)', 'kpir' ),
-			'salary' => __( 'Salaries', 'kpir' ),
-			'asset' => __( 'Depreciation of assets', 'kpir' ),
+			'vat_zero'    => __( 'VAT (zero)', 'kpir' ),
+			'salary'      => __( 'Salaries', 'kpir' ),
+			'asset'       => __( 'Depreciation of assets', 'kpir' ),
 		);
 		echo '<table class="striped">';
 		echo '<tbody>';
@@ -449,7 +448,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
 	private function add_value( $post_id, $meta_name ) {
 		$value = 0;
-		$v = get_post_meta( $post_id, $this->options->get_option_name( $meta_name ), true );
+		$v     = get_post_meta( $post_id, $this->options->get_option_name( $meta_name ), true );
 		if ( is_array( $v ) ) {
 			if ( isset( $v['integer'] ) ) {
 				$value += 100 * $v['integer'];
@@ -466,14 +465,13 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $column Column name,
+	 * @param string  $column Column name,
 	 * @param integer $post_id Current post id (Invoice),
-	 *
 	 */
 	public function custom_columns( $column, $post_id ) {
 		switch ( $column ) {
 			case 'contractor':
-				$id = get_post_meta( $post_id, $this->get_custom_field_basic_contractor_name() , true );
+				$id = get_post_meta( $post_id, $this->get_custom_field_basic_contractor_name(), true );
 				if ( empty( $id ) ) {
 					echo '-';
 				} else {
@@ -482,16 +480,16 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 						add_query_arg(
 							array(
 								'contractor' => $id,
-								'post_type' => 'iworks_kpir_invoice',
+								'post_type'  => 'iworks_kpir_invoice',
 							),
 							admin_url( 'edit.php' )
 						),
 						get_post_meta( $id, 'iworks_kpir_contractor_data_full_name', true )
 					);
 				}
-			break;
+				break;
 			case 'expense':
-				$expense = 0;
+				$expense  = 0;
 				$expense += $this->add_value( $post_id, 'expense_purchase' );
 				$expense += $this->add_value( $post_id, 'expense_cost_of_purchase' );
 				$expense += $this->add_value( $post_id, 'expense_other' );
@@ -502,9 +500,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				} else {
 					printf( '%0.2f', $expense / 100 );
 				}
-			break;
+				break;
 			case 'income':
-				$income = 0;
+				$income  = 0;
 				$income += $this->add_value( $post_id, 'income_sale' );
 				$income += $this->add_value( $post_id, 'income_other' );
 				$income += $this->add_value( $post_id, 'income_vat' );
@@ -513,7 +511,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				} else {
 					printf( '%0.2f', $income / 100 );
 				}
-			break;
+				break;
 			case 'date_of_invoice':
 				$timestamp = get_post_meta( $post_id, $this->get_custom_field_basic_date_name(), true );
 				if ( empty( $timestamp ) ) {
@@ -521,10 +519,10 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				} else {
 					echo date_i18n( get_option( 'date_format' ), $timestamp );
 				}
-			break;
+				break;
 			case 'description':
 				echo get_post_meta( $post_id, $this->options->get_option_name( 'basic_description' ), true );
-			break;
+				break;
 			case 'symbol':
 				$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
 				$is_car_related = 'no' !== $is_car_related;
@@ -546,13 +544,13 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	 */
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
-		$columns['contractor'] = __( 'Contractor', 'kpir' );
+		$columns['contractor']      = __( 'Contractor', 'kpir' );
 		$columns['date_of_invoice'] = __( 'Date', 'kpir' );
-		$columns['symbol'] = '<span class="dashicons dashicons-admin-generic"></span>';
-		$columns['description'] = __( 'Description', 'kpir' );
-		$columns['expense'] = __( 'Expense', 'kpir' );
-		$columns['income'] = __( 'Income', 'kpir' );
-		$columns['title'] = __( 'Invoice Number', 'kpir' );
+		$columns['symbol']          = '<span class="dashicons dashicons-admin-generic"></span>';
+		$columns['description']     = __( 'Description', 'kpir' );
+		$columns['expense']         = __( 'Expense', 'kpir' );
+		$columns['income']          = __( 'Income', 'kpir' );
+		$columns['title']           = __( 'Invoice Number', 'kpir' );
 		return $columns;
 	}
 
@@ -606,11 +604,11 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					array(
 						'relation' => 'AND',
 						array(
-							'key' => $this->get_custom_field_basic_date_name(),
+							'key'     => $this->get_custom_field_basic_date_name(),
 							'compare' => 'EXISTS',
 						),
 						array(
-							'key' => $this->options->get_option_name( 'basic_contractor' ),
+							'key'   => $this->options->get_option_name( 'basic_contractor' ),
 							'value' => intval( $_REQUEST['contractor'] ),
 						),
 					)

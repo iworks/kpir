@@ -82,6 +82,7 @@ module.exports = function( grunt ) {
 				'!release/**',
 				'!**/Gruntfile.js',
 				'!**/package.json',
+				'!**/package-lock.json',
 				'!**/build/**',
 				'!.sass-cache/**',
 				'!.git/**',
@@ -97,6 +98,7 @@ module.exports = function( grunt ) {
 		plugin_patterns: {
 			pro: [
 				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
+				{ match: /PLUGIN_TILL_YEAR/g, replace: '<%= grunt.template.today("yyyy") %>' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /KPiR Base/g, replace: 'KPiR Pro' },
 				{ match: /\/\* start:pro \*\//g, replace: '' },
@@ -105,6 +107,7 @@ module.exports = function( grunt ) {
 			],
 			free: [
 				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
+				{ match: /PLUGIN_TILL_YEAR/g, replace: '<%= grunt.template.today("yyyy") %>' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /KPiR Base/g, replace: 'KPiR' },
 				{ match: /\/\* start:free \*\//g, replace: '' },

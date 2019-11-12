@@ -1,7 +1,6 @@
 <?php
 /*
-
-Copyright 2017-2018 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2017-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -47,14 +46,14 @@ class iworks_kpir_posttypes {
 	}
 
 	protected function get_meta_box_content( $post, $fields, $group ) {
-		$content = '';
+		$content  = '';
 		$basename = $this->options->get_option_name( $group );
 		foreach ( $fields[ $group ] as $key => $data ) {
-			$args = isset( $data['args'] )? $data['args']:array();
+			$args = isset( $data['args'] ) ? $data['args'] : array();
 			/**
 			 * ID
 			 */
-			$args['id'] = $this->options->get_option_name( $group.'_'.$key );
+			$args['id'] = $this->options->get_option_name( $group . '_' . $key );
 			/**
 			 * name
 			 */
@@ -101,16 +100,16 @@ class iworks_kpir_posttypes {
 	/**
 	 * Save post metadata when a post is saved.
 	 *
-	 * @param int $post_id The post ID.
+	 * @param int  $post_id The post ID.
 	 * @param post $post The post object.
 	 * @param bool $update Whether this is an existing post being updated or not.
 	 */
 	public function save_post_meta_fields( $post_id, $post, $update, $fields ) {
 
 		/*
-         * In production code, $slug should be set only once in the plugin,
-         * preferably as a class property, rather than in each function that needs it.
-         */
+		 * In production code, $slug should be set only once in the plugin,
+		 * preferably as a class property, rather than in each function that needs it.
+		 */
 		$post_type = get_post_type( $post_id );
 
 		// If this isn't a Copyricorrect post, don't update it.
@@ -122,10 +121,10 @@ class iworks_kpir_posttypes {
 			$post_key = $this->options->get_option_name( $group );
 			if ( isset( $_POST[ $post_key ] ) ) {
 				foreach ( $group_data as $key => $data ) {
-					$value = isset( $_POST[ $post_key ][ $key ] )? $_POST[ $post_key ][ $key ]:null;
+					$value = isset( $_POST[ $post_key ][ $key ] ) ? $_POST[ $post_key ][ $key ] : null;
 					if ( is_string( $value ) ) {
 						$value = trim( $value );
-					} else if ( is_array( $value ) ) {
+					} elseif ( is_array( $value ) ) {
 						if (
 							isset( $value['integer'] ) && 0 == $value['integer']
 							&& isset( $value['fractional'] ) && 0 == $value['fractional']
@@ -133,7 +132,7 @@ class iworks_kpir_posttypes {
 							$value = null;
 						}
 					}
-					$option_name = $this->options->get_option_name( $group.'_'.$key );
+					$option_name = $this->options->get_option_name( $group . '_' . $key );
 					if ( empty( $value ) ) {
 						delete_post_meta( $post->ID, $option_name );
 					} else {

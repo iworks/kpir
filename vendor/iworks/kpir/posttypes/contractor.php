@@ -1,7 +1,6 @@
 <?php
 /*
-
-Copyright 2017-2018 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2017-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -26,7 +25,7 @@ if ( class_exists( 'iworks_kpir_posttypes_contractor' ) ) {
 	return;
 }
 
-require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
+require_once dirname( dirname( __FILE__ ) ) . '/posttypes.php';
 
 class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 
@@ -34,47 +33,47 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 
 	public function __construct() {
 		parent::__construct();
-		$this->fields = array(
+		$this->fields                                 = array(
 			'contractor_data' => array(
-				'full_name' => array(
+				'full_name'    => array(
 					'label' => __( 'Full Name:', 'kpir' ),
 				),
-				'street1' => array(
+				'street1'      => array(
 					'label' => __( 'Street Address 1:', 'kpir' ),
 				),
-				'street2' => array(
+				'street2'      => array(
 					'label' => __( 'Street Address 2:', 'kpir' ),
 				),
-				'zip' => array(
+				'zip'          => array(
 					'label' => __( 'ZIP Code:', 'kpir' ),
 				),
-				'city' => array(
+				'city'         => array(
 					'label' => __( 'City', 'kpir' ),
 				),
-				'country' => array(
+				'country'      => array(
 					'label' => __( 'Country', 'kpir' ),
 				),
-				'nip' => array(
+				'nip'          => array(
 					'label' => __( 'NIP', 'kpir' ),
 				),
-				'regon' => array(
+				'regon'        => array(
 					'label' => __( 'REGON', 'kpir' ),
 				),
-				'krs' => array(
+				'krs'          => array(
 					'label' => __( 'KRS', 'kpir' ),
 				),
-				'bank' => array(
+				'bank'         => array(
 					'label' => __( 'Bank', 'kpir' ),
 				),
 				'bank_account' => array(
 					'label' => __( 'Bank account', 'kpir' ),
 				),
 			),
-			'contact' => array(
+			'contact'         => array(
 				'website' => array( 'label' => __( 'Website', 'kpir' ) ),
-				'email' => array( 'label' => __( 'email', 'kpir' ) ),
-				'mobile' => array( 'label' => __( 'mobile', 'kpir' ) ),
-				'phone' => array( 'label' => __( 'phone', 'kpir' ) ),
+				'email'   => array( 'label' => __( 'email', 'kpir' ) ),
+				'mobile'  => array( 'label' => __( 'mobile', 'kpir' ) ),
+				'phone'   => array( 'label' => __( 'phone', 'kpir' ) ),
 				'website' => array( 'label' => __( 'Website', 'kpir' ) ),
 				'website' => array( 'label' => __( 'Website', 'kpir' ) ),
 			),
@@ -85,7 +84,7 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		 * change default columns
 		 */
 		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
-		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
+		add_action( 'manage_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 		/**
 		 * apply default sort order
 		 */
@@ -126,24 +125,24 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 			'items_list_navigation' => __( 'Contractors list navigation', 'kpir' ),
 			'filter_items_list'     => __( 'Filter contractors list', 'kpir' ),
 		);
-		$args = array(
-			'label'                 => __( 'Contractor', 'kpir' ),
-			'description'           => __( 'Contractor Description', 'kpir' ),
-			'labels'                => $labels,
-			'supports'              => array( 'title', 'thumbnail' ),
-			'taxonomies'            => array(),
-			'hierarchical'          => false,
-			'public'                => false,
-			'show_ui'               => true,
-			'show_in_menu'          => add_query_arg( array( 'post_type' => 'iworks_kpir_invoice' ), 'edit.php' ),
-			'show_in_admin_bar'     => false,
-			'show_in_nav_menus'     => false,
-			'can_export'            => true,
-			'has_archive'           => true,
-			'exclude_from_search'   => true,
-			'publicly_queryable'    => false,
-			'capability_type'       => 'page',
-			'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
+		$args   = array(
+			'label'                => __( 'Contractor', 'kpir' ),
+			'description'          => __( 'Contractor Description', 'kpir' ),
+			'labels'               => $labels,
+			'supports'             => array( 'title', 'thumbnail' ),
+			'taxonomies'           => array(),
+			'hierarchical'         => false,
+			'public'               => false,
+			'show_ui'              => true,
+			'show_in_menu'         => add_query_arg( array( 'post_type' => 'iworks_kpir_invoice' ), 'edit.php' ),
+			'show_in_admin_bar'    => false,
+			'show_in_nav_menus'    => false,
+			'can_export'           => true,
+			'has_archive'          => true,
+			'exclude_from_search'  => true,
+			'publicly_queryable'   => false,
+			'capability_type'      => 'page',
+			'register_meta_box_cb' => array( $this, 'register_meta_boxes' ),
 		);
 		register_post_type( $this->post_type_name, $args );
 	}
@@ -167,15 +166,15 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 
 	public function get_contractors( $get_nip = true ) {
 		$data = array(
-			'total_count' => 0,
+			'total_count'        => 0,
 			'incomplete_results' => false,
-			'items' => array(),
+			'items'              => array(),
 		);
 		$args = array(
-			'post_type' => $this->get_name(),
-			'nopaging' => true,
-			'orderby' => 'title',
-			'order' => 'ASC',
+			'post_type'        => $this->get_name(),
+			'nopaging'         => true,
+			'orderby'          => 'title',
+			'order'            => 'ASC',
 			'suppress_filters' => true,
 		);
 		if ( isset( $_REQUEST['q'] ) ) {
@@ -186,7 +185,7 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
 				$one = array(
-					'id' => get_the_ID(),
+					'id'        => get_the_ID(),
 					'full_name' => get_the_title(),
 				);
 				if ( $get_nip ) {
@@ -210,18 +209,17 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $column Column name,
+	 * @param string  $column Column name,
 	 * @param integer $post_id Current post id (contractor),
-	 *
 	 */
 	public function custom_columns( $column, $post_id ) {
 		switch ( $column ) {
 			case 'full_name':
-				echo  get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_full_name' ), true );
-			break;
+				echo get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_full_name' ), true );
+				break;
 			case 'nip':
-				echo  get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_nip' ), true );
-			break;
+				echo get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_nip' ), true );
+				break;
 		}
 	}
 
@@ -236,7 +234,7 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
 		$columns['full_name'] = __( 'Full Name', 'kpir' );
-		$columns['nip'] = __( 'NIP', 'kpir' );
+		$columns['nip']       = __( 'NIP', 'kpir' );
 		return $columns;
 	}
 
@@ -291,7 +289,7 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		if ( empty( $data['items'] ) ) {
 			return;
 		}
-		$id = isset( $_REQUEST['contractor'] )? $_REQUEST['contractor']:0;
+		$id = isset( $_REQUEST['contractor'] ) ? $_REQUEST['contractor'] : 0;
 		echo '<select name="contractor">';
 		printf( '<option value="">%s</option>', esc_html__( 'All contractors', 'kpir' ) );
 		foreach ( $data['items'] as $one ) {

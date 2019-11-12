@@ -3,8 +3,8 @@ Contributors: iworks
 Donate link: http://iworks.pl/donate/kpir.php
 Tags: kpir, faktura, księgowość, vat, jpk
 Requires at least: 4.4
-Tested up to: 5.0.3
-Stable tag: 0.1.0
+Tested up to: 5.3.0
+Stable tag: PLUGIN_VERSION
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,9 @@ There are 3 ways to install this plugin:
 == Screenshots ==
 
 == Changelog ==
+
+= 0.1.2 - 2019-11-12 =
+* Updated [WordPress Options Class](https://github.com/iworks/wordpress-options-class) to version 2.6.8
 
 = 0.1.1 =
 * Added new car related count: 20%, 75% and 100% for expenses.
