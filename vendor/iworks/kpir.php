@@ -37,6 +37,8 @@ class iworks_kpir extends iworks {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
 		$this->capability = apply_filters( 'iworks_kpir_capability', 'manage_options' );
+		$this->base = dirname( dirname( __FILE__ ) );
+		$this->dir  = basename( dirname( $this->base ) );
 		/**
 		 * post_types
 		 */

@@ -3,6 +3,8 @@ Author: Marcin Pietrzak ( iworks.pl )
 
 == Changelog ==
 
+* Fixed conflict with other `iworks` family plugins.
+
 = 0.1.1 =
 * Added annualy report.
 

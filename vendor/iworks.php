@@ -36,11 +36,10 @@ class iworks {
 	protected $version;
 
 	public function __construct() {
-
 		/**
 		 * static settings
 		 */
-		$this->dev  = ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE )? '':'.min';
+		$this->dev  = ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) ? '' : '.min';
 		$this->base = dirname( __FILE__ );
 		$this->dir  = basename( dirname( $this->base ) );
 	}
@@ -48,7 +47,7 @@ class iworks {
 	public function get_version( $file = null ) {
 		if ( defined( 'IWORKS_DEV_MODE' ) && IWORKS_DEV_MODE ) {
 			if ( null != $file ) {
-				$file = dirname( $this->base ). $file;
+				$file = dirname( $this->base ) . $file;
 				if ( is_file( $file ) ) {
 					return md5_file( $file );
 				}
@@ -62,41 +61,31 @@ class iworks {
 		return sprintf( '%s_%s', $this->meta_prefix, sanitize_title( $name ) );
 	}
 
-	public function get_this_post_type() {
-
+	public function get_post_type() {
 		return $this->post_type;
 	}
 
 	public function get_this_capability() {
-
 		return $this->capability;
 	}
 
 	private function slug_name( $name ) {
-
 		return preg_replace( '/[_ ]+/', '-', strtolower( __CLASS__ . '_' . $name ) );
 	}
 
 	public function get_post_meta( $post_id, $meta_key ) {
-
 		return get_post_meta( $post_id, $this->get_meta_name( $meta_key ), true );
-	}
-
-	public function get_post_type() {
-
-		return $this->post_type;
 	}
 
 	protected function print_table_body( $post_id, $fields ) {
 		echo '<table class="widefat striped"><tbody>';
 		foreach ( $fields as $name => $data ) {
-			$key = $this->get_meta_name( $name );
+			$key   = $this->get_meta_name( $name );
 			$value = $this->get_post_meta( $post_id, $name );
-
 			/**
 			 * extra
 			 */
-			$extra = isset( $data['placeholder'] )? sprintf( ' placeholder="%s" ', esc_attr( $data['placeholder'] ) ) : '';
+			$extra = isset( $data['placeholder'] ) ? sprintf( ' placeholder="%s" ', esc_attr( $data['placeholder'] ) ) : '';
 			foreach ( array( 'placeholder', 'style', 'class', 'id' ) as $extra_key ) {
 				if ( isset( $data[ $extra_key ] ) ) {
 					$extra .= sprintf( ' min="%d" ', esc_attr( $data[ $extra_key ] ) );
@@ -121,7 +110,7 @@ class iworks {
 						intval( $value ),
 						$extra
 					);
-				break;
+					break;
 				case 'date':
 					$date = intval( $this->get_post_meta( $post_id, $name ) );
 					if ( empty( $date ) ) {
@@ -132,7 +121,7 @@ class iworks {
 						$this->get_meta_name( $name ),
 						$date
 					);
-			break;
+					break;
 			}
 			echo '</td>';
 			echo '</tr>';
@@ -155,4 +144,13 @@ class iworks {
 	protected function html_title( $text ) {
 		printf( '<h1 class="wp-heading-inline">%s</h1>', esc_html( $text ) );
 	}
+
+	public function get_base() {
+		return $this->base;
+	}
+
+	public function get_dir() {
+		return $this->dir;
+	}
+
 }
