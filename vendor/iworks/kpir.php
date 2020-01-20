@@ -37,8 +37,8 @@ class iworks_kpir extends iworks {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
 		$this->capability = apply_filters( 'iworks_kpir_capability', 'manage_options' );
-		$this->base = dirname( dirname( __FILE__ ) );
-		$this->dir  = basename( dirname( $this->base ) );
+		$this->base       = dirname( dirname( __FILE__ ) );
+		$this->dir        = basename( dirname( $this->base ) );
 		/**
 		 * post_types
 		 */
@@ -385,5 +385,72 @@ class iworks_kpir extends iworks {
 		);
 		$query        = new WP_Query( $args );
 		return $query;
+	}
+
+	/**
+	 * Get annual query
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $annual annual to prepre, format Y-m
+	 *
+	 * @return WP_Query $query WordPress Post Query Object
+	 */
+	public function get_annual_query( $annual ) {
+		$cf_date_name = $this->post_type_invoice->get_custom_field_basic_date_name();
+		$args         = array(
+			'post_type'        => $this->post_type_invoice->get_name(),
+			'nopaging'         => true,
+			'suppress_filters' => true,
+			'orderby'          => $cf_date_name,
+			'order'            => 'ASC',
+			'meta_query'       => array(
+				'relation' => 'AND',
+				array(
+					'key'     => $this->post_type_invoice->get_custom_field_year_month_name(),
+					'value'   => '^' . $annual,
+					'compare' => 'REGEXP',
+				),
+				array(
+					'key'     => $this->post_type_invoice->get_custom_field_basic_date_name(),
+					'compare' => 'EXISTS',
+				),
+			),
+		);
+		$query        = new WP_Query( $args );
+		return $query;
+	}
+
+	public function zero_sum_table() {
+		return array(
+			'income'         => array(
+				'integer'    => 0,
+				'fractional' => 0,
+			),
+			'expense'        => array(
+				'integer'    => 0,
+				'fractional' => 0,
+			),
+			'expense_other'  => array(
+				'integer'    => 0,
+				'fractional' => 0,
+			),
+			'expense_salary' => array(
+				'integer'    => 0,
+				'fractional' => 0,
+			),
+			'expense_netto'  => array(
+				'integer'    => 0,
+				'fractional' => 0,
+			),
+			'vat_income'     => array(
+				'integer'    => 0,
+				'fractional' => 0,
+			),
+			'vat_expense'    => array(
+				'integer'    => 0,
+				'fractional' => 0,
+			),
+		);
 	}
 }

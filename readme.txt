@@ -42,6 +42,9 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 0.1.3 - 2020-01-20 =
+* Added annually report.
+
 = 0.1.2 - 2019-11-12 =
 * Updated [WordPress Options Class](https://github.com/iworks/wordpress-options-class) to version 2.6.8
 
