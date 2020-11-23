@@ -1,0 +1,227 @@
+<?php
+/*
+Copyright 2020-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
+
+this program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License, version 2, as
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+ */
+
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+require_once dirname( dirname( __FILE__ ) ) . '/jpk.php';
+
+class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
+
+	protected $name = 'kpir-jpk-v7m';
+
+	public function __construct() {
+		parent::__construct();
+		add_action( 'send_headers', array( $this, 'get_xml' ) );
+	}
+
+	public function show( $kpir ) {
+		global $wpdb;
+		$post_type_object = $kpir->get_post_type_invoice();
+		$sql              = "select distinct meta_value from {$wpdb->postmeta} where meta_key = '{$post_type_object->get_custom_field_year_month_name()}'order by meta_value desc";
+		$values           = $wpdb->get_col( $sql );
+		if ( empty( $values ) ) {
+			$this->get_template( 'jpk', 'no-entries' );
+			return;
+		}
+		$data = array(
+			'this'   => $this,
+			'name'   => $this->name,
+			'page'   => 'iworks_kpir_jpk_v7m',
+			'months' => $values,
+		);
+		$this->get_template( 'jpk/v7m', 'show', $data );
+	}
+
+	/**
+	 *
+	 */
+	public function get_xml( $kpir ) {
+		if (
+			! isset( $_REQUEST['nonce'] )
+			|| ! isset( $_REQUEST['purpose'] )
+			|| ! isset( $_REQUEST['m'] )
+		) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], $this->name ) ) {
+			return;
+		}
+		/**
+		 * validate input
+		 */
+		$year_month = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_STRING );
+		$year_month = $this->validate_year_month( $year_month );
+		if ( is_wp_error( $year_month ) ) {
+			die( $year_month->get_error_message() );
+		}
+		$purpose = filter_input( INPUT_GET, 'purpose', FILTER_VALIDATE_INT );
+
+		$date = explode( '-', $year_month );
+		$args = array(
+			'purpose'    => $purpose,
+			'year_month' => $year_month,
+			'year'       => $date[0],
+			'month'      => $date[1],
+			'created'    => preg_replace( '/\+00:00$/', '.000Z', date( 'c' ) ),
+			'taxpayer'   => array(
+				'department_of_revenue' => get_option( $this->options->get_option_name( 'department_of_revenue' ) ),
+				'nip'                   => preg_replace( '/[^\d]+/', '', get_option( $this->options->get_option_name( 'nip' ) ) ),
+				'name'                  => $this->convert_chars( get_option( $this->options->get_option_name( 'name' ) ) ),
+				'email'                 => get_option( $this->options->get_option_name( 'email' ) ),
+				'phone'                 => get_option( $this->options->get_option_name( 'phone' ) ),
+			),
+			'incomes'    => array(),
+			'expenses'   => array(),
+		);
+
+		$post_type_object   = $kpir->get_post_type_invoice();
+		$cf_date_name       = $post_type_object->get_custom_field_basic_date_name();
+		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
+		$date_format        = get_option( 'date_format' );
+		$query              = $kpir->get_month_query( $year_month );
+		if ( $query->have_posts() ) {
+			$incomes_counter = $expenses_counter = 0;
+			$expenses        = $incomes = '';
+			while ( $query->have_posts() ) {
+				$query->the_post();
+				$contractor_id    = get_post_meta( get_the_ID(), $cf_contractor_name, true );
+				$transaction_data = array(
+					'ID'            => get_the_ID(),
+					'contractor_id' => $contractor_id,
+					'contractor'    => $this->get_contractor( $contractor_id ),
+
+				);
+				switch ( get_post_meta( get_the_ID(), 'iworks_kpir_basic_type', true ) ) {
+					case 'expense':
+						$transaction_data['counter'] = ++$expenses_counter;
+						$args['expenses'][]          = $this->expense_row( $transaction_data );
+						break;
+					case 'income':
+						$transaction_data['counter'] = ++$incomes_counter;
+						$args['incomes'][]           = $this->income_row( $transaction_data );
+						break;
+				}
+			}
+		}
+		// $data    .= $incomes;
+		// $data    .= $this->template_summary_incomes( $incomes_counter );
+		// $data    .= $expenses;
+
+		ob_start();
+
+		$this->get_template( 'jpk/v7m/xml', 'header', $args );
+		$this->get_template( 'jpk/v7m/xml', 'head', $args );
+		if ( $this->is_person() ) {
+			$this->get_template( 'jpk/v7m/xml', 'person', $args );
+		} else {
+			$this->get_template( 'jpk/v7m/xml', 'company', $args );
+		}
+		$this->get_template( 'jpk/v7m/xml', 'summary', $args );
+		echo '<tns:Ewidencja>';
+		/**
+		 * income
+		 */
+		foreach ( $args['incomes'] as $one ) {
+			$this->get_template( 'jpk/v7m/xml', 'income', $one );
+		}
+		if ( 0 < count( $args['incomes'] ) ) {
+			$integer    = $this->sum['vat_income']['integer'];
+			$fractional = $this->sum['vat_income']['fractional'];
+			$integer   += ( $fractional - $fractional % 100 ) / 100;
+			$fractional = $fractional % 100;
+			$atts       = array(
+				'sum'  => sprintf( '%d.%02d', $integer, $fractional ),
+				'rows' => count( $args['incomes'] ),
+			);
+			$this->get_template( 'jpk/v7m/xml', 'incomes-summary', $atts );
+		}
+		/**
+		 * expense
+		 */
+		foreach ( $args['expenses'] as $one ) {
+			$this->get_template( 'jpk/v7m/xml', 'expense', $one );
+		}
+		if ( 0 < count( $args['expenses'] ) ) {
+			$integer    = $this->sum['vat_expense']['integer'];
+			$fractional = $this->sum['vat_expense']['fractional'];
+			$integer   += ( $fractional - $fractional % 100 ) / 100;
+			$fractional = $fractional % 100;
+			$atts       = array(
+				'sum'  => sprintf( '%d.%02d', $integer, $fractional ),
+				'rows' => count( $args['expenses'] ),
+			);
+			$this->get_template( 'jpk/v7m/xml', 'expenses-summary', $atts );
+		}
+
+		echo '</tns:Ewidencja>';
+
+		$this->get_template( 'jpk/v7m/xml', 'footer', $args );
+		header( 'Content-Type: application/xml' );
+		ob_get_contents();
+
+		exit;
+
+		/**
+		 * produce
+		 */
+		$data               = '';
+		$data              .= $this->template_header();
+		$data              .= $this->template_section_head( $purpose, $year_month );
+		$data              .= $this->template_section_company();
+		$post_type_object   = $kpir->get_post_type_invoice();
+		$cf_date_name       = $post_type_object->get_custom_field_basic_date_name();
+		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
+		$date_format        = get_option( 'date_format' );
+		$query              = $kpir->get_month_query( $year_month );
+		if ( $query->have_posts() ) {
+			$incomes_counter = $expenses_counter = 0;
+			$expenses        = $incomes = '';
+			while ( $query->have_posts() ) {
+				$query->the_post();
+				$ID            = get_the_ID();
+				$type          = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
+				$contractor_id = get_post_meta( $ID, $cf_contractor_name, true );
+				switch ( $type ) {
+					case 'expense':
+						$expenses_counter++;
+						$expenses .= $this->template_row_expense( $expenses_counter, $ID, $contractor_id );
+						break;
+					case 'income':
+						$incomes_counter++;
+						$incomes .= $this->template_row_income( $incomes_counter, $ID, $contractor_id );
+						break;
+				}
+			}
+		}
+		$data    .= $incomes;
+		$data    .= $this->template_summary_incomes( $incomes_counter );
+		$data    .= $expenses;
+		$data    .= $this->template_summary_expenses( $expenses_counter );
+		$data    .= $this->template_footer();
+		$filename = sprintf( 'jpk-v7m-%s.xml', $year_month );
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Type: application/xml' );
+		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		echo $data;
+		exit;
+	}
+}
+

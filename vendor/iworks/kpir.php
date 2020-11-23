@@ -69,13 +69,24 @@ class iworks_kpir extends iworks {
 
 	public function plugins_loaded() {
 		if ( isset( $_REQUEST['action'] ) ) {
-			if ( 'iworks_kpir_jpk_vat_3' == $_REQUEST['action'] ) {
-				$file = $this->get_module_file( 'jpk/vat_3' );
-				if ( is_readable( $file ) ) {
-					include_once $file;
-					$page = new iworks_kpir_jpk_vat_3();
-					$page->get_xml( $this );
-				}
+			l( $_REQUEST );
+			switch ( $_REQUEST['action'] ) {
+				case 'iworks_kpir_jpk_vat_3';
+					$file = $this->get_module_file( 'jpk/vat_3' );
+					if ( is_readable( $file ) ) {
+						include_once $file;
+						$page = new iworks_kpir_jpk_vat_3();
+						$page->get_xml( $this );
+					}
+				return;
+				case 'iworks_kpir_jpk_v7m';
+					$file = $this->get_module_file( 'jpk/v7m' );
+					if ( is_readable( $file ) ) {
+						include_once $file;
+						$page = new iworks_kpir_jpk_v7m();
+						$page->get_xml( $this );
+					}
+				return;
 			}
 		}
 	}
@@ -246,6 +257,25 @@ class iworks_kpir extends iworks {
 			include_once $file;
 			$this->html_title( esc_html__( 'JPK VAT(3)', 'kpir' ) );
 			$page = new iworks_kpir_jpk_vat_3();
+			$page->show( $this );
+		} else {
+			_e( 'Something went wrong!', 'kpir' );
+		}
+		echo '</div>';
+	}
+
+	/**
+	 * Show JPK v7m page
+	 *
+	 * @since 0.1.4
+	 */
+	public function show_page_jpk_v7m() {
+		echo '<div class="wrap">';
+		$file = $this->get_module_file( 'jpk/v7m' );
+		if ( is_readable( $file ) ) {
+			include_once $file;
+			$this->html_title( esc_html__( 'JPK V7M', 'kpir' ) );
+			$page = new iworks_kpir_jpk_v7m();
 			$page->show( $this );
 		} else {
 			_e( 'Something went wrong!', 'kpir' );
