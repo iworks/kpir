@@ -120,30 +120,41 @@ abstract class iworks_kpir_jpk {
 	}
 
 	protected function expense_row( $data ) {
-		$ID                                        = $data['ID'];
-		$data['sale_date']                         = $data['create_date'] = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
-		$data['invoice_number']                    = get_the_title();
-		$is_car_related                            = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
-		$money                                     = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
-		$data['K_45']                              = sprintf( '%d.%02d', $money['integer'], $money['fractional'] );
+		$ID                     = $data['ID'];
+		$data['sale_date']      = $data['create_date'] = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
+		$data['invoice_number'] = get_the_title();
+		$is_car_related         = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
+		/**
+		 * money & VAT
+		 */
+		$money = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
+		$vat   = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
+		switch ( $is_car_related ) {
+			case '20':
+			case '75':
+				$factor              = intval( $is_car_related );
+				$v                   = round( $factor * $money['integer'] + $factor * $money['fractional'] / 100 );
+				$money['fractional'] = $v % 100;
+				$money['integer']    = round( ( $v - $money['fractional'] ) / 100 );
+				$v                   = round( $factor * $vat['integer'] + $factor * $vat['fractional'] / 100 );
+				$vat['fractional']   = $v % 100;
+				$vat['integer']      = round( ( $v - $vat['fractional'] ) / 100 );
+				break;
+			case 'yes':
+				$v                 = round( ( $vat['integer'] / 2 ) * 100 + $vat['fractional'] / 2 );
+				$vat['fractional'] = $v % 100;
+				$vat['integer']    = round( ( $v - $vat['fractional'] ) / 100 );
+				break;
+		}
+		$data['K_42'] = sprintf( '%d.%02d', $money['integer'], $money['fractional'] );
+		$data['K_43'] = sprintf( '%d.%02d', isset( $vat['integer'] ) ? $vat['integer'] : 0, isset( $vat['fractional'] ) ? $vat['fractional'] : 0 );
+		/**
+		 * Sum
+		 */
 		$this->sum['expense_netto']['integer']    += $money['integer'];
 		$this->sum['expense_netto']['fractional'] += $money['fractional'];
-		/**
-		 * VAT
-		 */
-		$money = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
-		if ( 'no' !== $is_car_related ) {
-			$v                   = round( ( $money['integer'] / 2 ) * 100 + $money['fractional'] / 2 );
-			$money['fractional'] = $v % 100;
-			$money['integer']    = round( ( $v - $money['fractional'] ) / 100 );
-		}
-		$data['K_46'] = sprintf( '%d.%02d', isset( $money['integer'] ) ? $money['integer'] : 0, isset( $money['fractional'] ) ? $money['fractional'] : 0 );
-		if ( isset( $money['integer'] ) ) {
-			$this->sum['vat_expense']['integer'] += $money['integer'];
-		}
-		if ( isset( $money['fractional'] ) ) {
-			$this->sum['vat_expense']['fractional'] += $money['fractional'];
-		}
+		$this->sum['vat_expense']['integer']      += intval( $vat['integer'] );
+		$this->sum['vat_expense']['fractional']   += intval( $vat['fractional'] );
 		return $data;
 	}
 
@@ -174,6 +185,13 @@ abstract class iworks_kpir_jpk {
 				break;
 		}
 		return $data;
+	}
+
+	protected function normalize_money( $money ) {
+		$money['integer']   += ( $money['fractional'] - $money['fractional'] % 100 ) / 100;
+		$money['fractional'] = $money['fractional'] % 100;
+		$money['intval']     = round( $money['integer'] + $money['fractional'] / 100 );
+		return $money;
 	}
 }
 

@@ -67,6 +67,7 @@ function iworks_kpir_options() {
 				),
 				'show_page_callback' => 'iworks_kpir_report_monthly',
 			),
+			/*
 			'jpk_vat_3'       => array(
 				'page_title'         => __( 'JPK VAT(3)', 'kpir' ),
 				'menu'               => 'submenu',
@@ -78,6 +79,7 @@ function iworks_kpir_options() {
 				),
 				'show_page_callback' => 'iworks_kpir_jpk_vat_3',
 			),
+			 */
 			'jpk_v7m'         => array(
 				'page_title'         => __( 'JPK V7M', 'kpir' ),
 				'menu'               => 'submenu',

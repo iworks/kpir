@@ -1,24 +1,19 @@
 <tns:Deklaracja>
-    <tns:Naglowek>
-        <tns:KodFormularzaDekl kodSystemowy="VAT-7 (21)" kodPodatku="VAT" rodzajZobowiazania="Z" wersjaSchemy="1-2E">VAT-7</tns:KodFormularzaDekl>
-        <tns:WariantFormularzaDekl>21</tns:WariantFormularzaDekl>
-    </tns:Naglowek>
-    <tns:PozycjeSzczegolowe>
-        <tns:P_17>2000</tns:P_17>
-        <tns:P_18>160</tns:P_18>
-        <tns:P_19>97583.02</tns:P_19>
-        <tns:P_20>22444.09</tns:P_20>
-        <tns:P_21>30000</tns:P_21>
-        <tns:P_23>100000</tns:P_23>
-        <tns:P_24>23000</tns:P_24>
-        <tns:P_25>300000</tns:P_25>
-        <tns:P_26>69000</tns:P_26>
-        <tns:P_37>529583.02</tns:P_37>
-        <tns:P_38>114604.09</tns:P_38>
-        <tns:P_40>446101.97</tns:P_40>
-        <tns:P_41>102603.46</tns:P_41>
-        <tns:P_48>102603.46</tns:P_48>
-        <tns:P_51>12001</tns:P_51>
-    </tns:PozycjeSzczegolowe>
-    <tns:Pouczenia>1</tns:Pouczenia>
+	<tns:Naglowek>
+		<tns:KodFormularzaDekl kodSystemowy="VAT-7 (21)" kodPodatku="VAT" rodzajZobowiazania="Z" wersjaSchemy="1-2E">VAT-7</tns:KodFormularzaDekl>
+		<tns:WariantFormularzaDekl>21</tns:WariantFormularzaDekl>
+	</tns:Naglowek>
+	<tns:PozycjeSzczegolowe>
+<?php
+for ( $i = 10; $i < 70; $i++ ) {
+	$key = sprintf( 'P_%d', $i );
+	if ( isset( $args[ $key ] ) ) {
+?>
+		<tns:<?php echo $key; ?>><?php echo $args[ $key ]; ?></tns:<?php echo $key; ?>>
+<?php
+	}
+}
+?>
+	</tns:PozycjeSzczegolowe>
+	<tns:Pouczenia>1</tns:Pouczenia>
 </tns:Deklaracja>

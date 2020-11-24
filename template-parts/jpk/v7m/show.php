@@ -7,6 +7,22 @@ wp_nonce_field( $args['name'], 'nonce', false );
 ?>
 	<table class="form-table">
 		<tbody>
+		<tr>
+			<th scope="row"><label for="<?php echo esc_attr( 'excess' ); ?>"><?php esc_html_e( 'Excess tax', 'kpir' ); ?></label></th>
+			<td>
+			<?php
+			$args['this']->options_get_field_by_type(
+				'number',
+				'excess',
+				0,
+				array(
+					'min-val' => 0,
+					'class'   => array( 'small-text' ),
+				)
+			);
+			?>
+			</td>
+		</tr>
 <?php
 /**
  * the purpose of the declaration
