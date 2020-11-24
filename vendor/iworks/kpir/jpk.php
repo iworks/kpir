@@ -132,13 +132,32 @@ abstract class iworks_kpir_jpk {
 		switch ( $is_car_related ) {
 			case '20':
 			case '75':
+				/**
+				 * Cut vat to half at first and add it into base
+				 * we can return only half of VAT
+				 */
+				$vat_half_rest        = intval( 50 * ( $vat['integer'] % 2 ) );
+				$money['integer']    += intval( $vat['integer'] / 2 );
+				$money['fractional'] += intval( $vat['fractional'] / 2 ) + $vat_half_rest;
+				/**
+				 * VAT
+				 */
+				$vat['integer']    = intval( $vat['integer'] / 2 );
+				$vat['fractional'] = intval( $vat['fractional'] / 2 ) + $vat_half_rest;
+				/**
+				 * recalculate if rest > 100
+				 */
+				if ( 100 < $vat['fractional'] ) {
+					$vat['fractional'] = $v % 100;
+					$vat['integer']    = round( ( $v - $vat['fractional'] ) / 100 );
+				}
+				/**
+				 * Cut costs by factor
+				 */
 				$factor              = intval( $is_car_related );
 				$v                   = round( $factor * $money['integer'] + $factor * $money['fractional'] / 100 );
 				$money['fractional'] = $v % 100;
 				$money['integer']    = round( ( $v - $money['fractional'] ) / 100 );
-				$v                   = round( $factor * $vat['integer'] + $factor * $vat['fractional'] / 100 );
-				$vat['fractional']   = $v % 100;
-				$vat['integer']      = round( ( $v - $vat['fractional'] ) / 100 );
 				break;
 			case 'yes':
 				$v                 = round( ( $vat['integer'] / 2 ) * 100 + $vat['fractional'] / 2 );

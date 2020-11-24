@@ -69,7 +69,6 @@ class iworks_kpir extends iworks {
 
 	public function plugins_loaded() {
 		if ( isset( $_REQUEST['action'] ) ) {
-			l( $_REQUEST );
 			switch ( $_REQUEST['action'] ) {
 				case 'iworks_kpir_jpk_vat_3';
 					$file = $this->get_module_file( 'jpk/vat_3' );

@@ -42,6 +42,13 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 0.1.5 - 2020-11-24 =
+* Fixed VAT calculation for a car.
+
+= 0.1.4 - 2020-11-24 =
+* Added JPK V7M report.
+* Removed JPK VAT(3) report.
+
 = 0.1.3 - 2020-01-20 =
 * Added annually report.
 
