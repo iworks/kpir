@@ -94,7 +94,7 @@ abstract class iworks_kpir_jpk {
 	}
 
 	protected function is_person() {
-		return true;
+		return false;
 	}
 
 	protected function get_contractor( $contractor_id ) {
