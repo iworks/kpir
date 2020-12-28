@@ -256,19 +256,23 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		/**
 		 * income
 		 */
-		foreach ( $args['incomes'] as $one ) {
-			$this->get_template( 'jpk/v7m/xml', 'income', $one );
-		}
-		if ( 0 < count( $args['incomes'] ) ) {
-			$integer    = $this->sum['vat_income']['integer'];
-			$fractional = $this->sum['vat_income']['fractional'];
-			$integer   += ( $fractional - $fractional % 100 ) / 100;
-			$fractional = $fractional % 100;
-			$atts       = array(
-				'sum'  => sprintf( '%d.%02d', $integer, $fractional ),
-				'rows' => count( $args['incomes'] ),
-			);
-			$this->get_template( 'jpk/v7m/xml', 'incomes-summary', $atts );
+		if ( empty( $args['incomes'] ) ) {
+				$this->get_template( 'jpk/v7m/xml', 'incomes-empty', $atts );
+		} else {
+			foreach ( $args['incomes'] as $one ) {
+				$this->get_template( 'jpk/v7m/xml', 'income', $one );
+			}
+			if ( 0 < count( $args['incomes'] ) ) {
+				$integer    = $this->sum['vat_income']['integer'];
+				$fractional = $this->sum['vat_income']['fractional'];
+				$integer   += ( $fractional - $fractional % 100 ) / 100;
+				$fractional = $fractional % 100;
+				$atts       = array(
+					'sum'  => sprintf( '%d.%02d', $integer, $fractional ),
+					'rows' => count( $args['incomes'] ),
+				);
+				$this->get_template( 'jpk/v7m/xml', 'incomes-summary', $atts );
+			}
 		}
 		/**
 		 * expense
