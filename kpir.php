@@ -28,32 +28,32 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 if ( ! defined( 'WPINC' ) ) {
-    die;
+	die;
 }
 
 /**
  * static options
  */
 define( 'IWORKS_KPIR_VERSION', 'PLUGIN_VERSION' );
-define( 'IWORKS_KPIR_PREFIX',  'iworks_kpir_' );
-$base = dirname( __FILE__ );
-$vendor = $base.'/vendor';
+define( 'IWORKS_KPIR_PREFIX', 'iworks_kpir_' );
+$base     = dirname( __FILE__ );
+$includes = $base . '/includes';
 
 /**
  * require: IworksKPiR Class
  */
 if ( ! class_exists( 'iworks_kpir' ) ) {
-    require_once $vendor.'/iworks/kpir.php';
+	require_once $includes . '/iworks/kpir.php';
 }
 /**
  * configuration
  */
-require_once $base.'/etc/options.php';
+require_once $base . '/etc/options.php';
 /**
  * require: IworksOptions Class
  */
 if ( ! class_exists( 'iworks_options' ) ) {
-    require_once $vendor.'/iworks/options/options.php';
+	require_once $includes . '/iworks/options/options.php';
 }
 
 /**
@@ -64,24 +64,21 @@ $iworks_kpir_options = new iworks_options();
 $iworks_kpir_options->set_option_function_name( 'iworks_kpir_options' );
 $iworks_kpir_options->set_option_prefix( IWORKS_KPIR_PREFIX );
 
-function iworks_kpir_options_init()
-{
-    global $iworks_kpir_options;
-    $iworks_kpir_options->options_init();
+function iworks_kpir_options_init() {
+	global $iworks_kpir_options;
+	$iworks_kpir_options->options_init();
 }
 
-function iworks_kpir_activate()
-{
-    $iworks_kpir_options = new iworks_options();
-    $iworks_kpir_options->set_option_function_name( 'iworks_kpir_options' );
-    $iworks_kpir_options->set_option_prefix( IWORKS_KPIR_PREFIX );
-    $iworks_kpir_options->activate();
+function iworks_kpir_activate() {
+	$iworks_kpir_options = new iworks_options();
+	$iworks_kpir_options->set_option_function_name( 'iworks_kpir_options' );
+	$iworks_kpir_options->set_option_prefix( IWORKS_KPIR_PREFIX );
+	$iworks_kpir_options->activate();
 }
 
-function iworks_kpir_deactivate()
-{
-    global $iworks_kpir_options;
-    $iworks_kpir_options->deactivate();
+function iworks_kpir_deactivate() {
+	 global $iworks_kpir_options;
+	$iworks_kpir_options->deactivate();
 }
 
 $iworks_kpir = new iworks_kpir();

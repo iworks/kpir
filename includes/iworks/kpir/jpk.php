@@ -125,10 +125,20 @@ abstract class iworks_kpir_jpk {
 		$data['invoice_number'] = get_the_title();
 		$is_car_related         = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
 		/**
+		 * vat rate
+		 */
+		$data['vat_rate'] = get_post_meta( $ID, 'iworks_kpir_expense_vat_rate', true );
+		if (
+			empty( $data['vat_rate'] )
+			|| ! preg_match( '/^r(23|08|05|00|zw)$/', $data['vat_rate'] )
+		) {
+			$data['vat_rate'] = 'r23';
+		}
+		/**
 		 * money & VAT
 		 */
-		$money = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
-		$vat   = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
+		$data['money'] = $money = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
+		$data['vat']   = $vat   = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
 		switch ( $is_car_related ) {
 			case '20':
 			case '75':
@@ -170,10 +180,18 @@ abstract class iworks_kpir_jpk {
 		/**
 		 * Sum
 		 */
-		$this->sum['expense_netto']['integer']    += $money['integer'];
-		$this->sum['expense_netto']['fractional'] += $money['fractional'];
-		$this->sum['vat_expense']['integer']      += intval( $vat['integer'] );
-		$this->sum['vat_expense']['fractional']   += intval( $vat['fractional'] );
+		if ( isset( $money['integer'] ) ) {
+			$this->sum['expense_netto']['integer'] += $money['integer'];
+		}
+		if ( isset( $money['fractional'] ) ) {
+			$this->sum['expense_netto']['fractional'] += $money['fractional'];
+		}
+		if ( isset( $vat['integer'] ) ) {
+			$this->sum['vat_expense']['integer'] += intval( $vat['integer'] );
+		}
+		if ( isset( $vat['fractional'] ) ) {
+			$this->sum['vat_expense']['fractional'] += intval( $vat['fractional'] );
+		}
 		return $data;
 	}
 
@@ -182,15 +200,19 @@ abstract class iworks_kpir_jpk {
 		$data['sale_date']      = $data['create_date'] = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
 		$data['invoice_number'] = get_the_title();
 		$type                   = get_post_meta( $ID, 'iworks_kpir_income_vat_type', true );
+		$data['money']          = $money                              = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
 		switch ( $type ) {
+			case 'c00':
+				$data['K_10']                       = sprintf( '%d.%02d', $money['integer'], $money['fractional'] );
+				$this->sum['income']['integer']    += $money['integer'];
+				$this->sum['income']['fractional'] += $money['fractional'];
+				break;
 			case 'c01':
-				$money                              = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
 				$data['K_11']                       = sprintf( '%d.%02d', $money['integer'], $money['fractional'] );
 				$this->sum['income']['integer']    += $money['integer'];
 				$this->sum['income']['fractional'] += $money['fractional'];
 				break;
 			case 'c06':
-				$money                              = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
 				$data['K_19']                       = sprintf( '%d.%02d', $money['integer'], $money['fractional'], );
 				$this->sum['income']['integer']    += $money['integer'];
 				$this->sum['income']['fractional'] += $money['fractional'];

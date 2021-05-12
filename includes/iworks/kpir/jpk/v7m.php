@@ -128,6 +128,59 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 			$this->sum[ $key ] = $this->normalize_money( $money );
 		}
 		/**
+		 * sumarize
+		 *
+		 * P_10
+		 * Wysokość podstawy opodatkowania z tytułu dostawy towarów oraz
+		 * świadczenia usług na terytorium kraju, zwolnionych od podatku
+		 */
+		/**
+		 * P_11
+		 * Wysokość podstawy opodatkowania z tytułu dostawy towarów oraz
+		 * świadczenia usług poza terytorium kraju
+		 */
+		/**
+		 * P_12
+		 * Wysokość podstawy opodatkowania z tytułu świadczenia usług,
+		 * o których mowa w art. 100 ust. 1 pkt 4 ustawy
+		 */
+		/**
+		 * P_13
+		 * Wysokość podstawy opodatkowania z tytułu dostawy towarów oraz
+		 * świadczenia usług na terytorium kraju, opodatkowanych stawką 0%
+		 */
+		/**
+		 * P_14
+		 * Wysokość podstawy opodatkowania z tytułu dostawy towarów, o której
+		 * mowa w art. 129 ustawy
+		 */
+		/**
+		 * P_15
+		 * Wysokość podstawy opodatkowania z tytułu dostawy towarów oraz
+		 * świadczenia usług na terytorium kraju, opodatkowanych stawką 5%,
+		 * oraz korekty dokonanej zgodnie z art. 89a ust. 1 i 4 ustawy
+		 */
+		/**
+		 * P_16
+		 * Wysokość podatku należnego z tytułu dostawy towarów oraz
+		 * świadczenia usług na terytorium kraju, opodatkowanych stawką 5%,
+		 * oraz korekty dokonanej zgodnie z art. 89a ust. 1 i 4 ustawy
+		 */
+		/**
+		 * P_17
+		 * Wysokość podstawy opodatkowania z tytułu dostawy towarów oraz
+		 * świadczenia usług na terytorium kraju, opodatkowanych stawką 7%
+		 * albo 8%, oraz korekty dokonanej zgodnie z art. 89a ust.
+		 * 1 i 4 ustawy
+		 */
+		/**
+		 * P_18
+		 * Wysokość podatku należnego z tytułu dostawy towarów oraz
+		 * świadczenia usług na terytorium kraju, opodatkowanych stawką 7%
+		 * albo 8%, oraz korekty dokonanej zgodnie z art. 89a ust.
+		 * 1 i 4 ustawy
+		 */
+		/**
 		 * P_19
 		 *
 		 * Wysokość podstawy opodatkowania z tytułu dostawy towarów oraz
@@ -135,7 +188,32 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		 * albo 23%, oraz korekty dokonanej zgodnie z art. 89a ust.
 		 * 1 i 4 ustawy
 		 */
-		$args['P_19'] = $this->sum['income']['intval'];
+		for ( $income_vat_rate_binding = 10; $income_vat_rate_binding < 20; $income_vat_rate_binding++ ) {
+			$field_name                 = sprintf( 'K_%d', $income_vat_rate_binding );
+			$target_field_name          = sprintf( 'P_%d', $income_vat_rate_binding );
+			$args[ $target_field_name ] = array(
+				'integer'    => 0,
+				'fractional' => 0,
+			);
+			foreach ( $args['incomes'] as $one_income ) {
+				if ( isset( $one_income[ $field_name ] ) ) {
+					foreach ( array( 'integer', 'fractional' ) as $money_part ) {
+						if ( isset( $one_income['money'][ $money_part ] ) ) {
+							$args[ $target_field_name ][ $money_part ] += $one_income['money'][ $money_part ];
+						}
+					}
+				}
+			}
+			$s = $args[ $target_field_name ]['integer'] + intval( $args[ $target_field_name ]['fractional'] / 100 );
+			if ( 50 < $args[ $target_field_name ]['fractional'] % 100 ) {
+				$s += 1;
+			}
+			if ( empty( $s ) ) {
+				unset( $args[ $target_field_name ] );
+			} else {
+				$args[ $target_field_name ] = $s;
+			}
+		}
 		/**
 		 * P_37
 		 *
@@ -143,7 +221,7 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		 * P_13, P_15, P_17, P_19, P_21, P_22, P_23, P_25, P_27, P_29, P_31
 		 */
 		$args['P_37'] = 0;
-		$keys         = array( 'P_10', 'P_11', 'P_13', 'P_15', 'P_17', 'P_19', 'P_21', 'P_22', 'P_23', 'P_25', 'P_27', 'P_29', 'P_31' );
+		$keys         = array( 'P_10', 'P_11', 'P_13', 'P_15', 'P_17', 'P_18', 'P_19', 'P_21', 'P_22', 'P_23', 'P_25', 'P_27', 'P_29', 'P_31' );
 		foreach ( $keys as $key ) {
 			if ( isset( $args[ $key ] ) ) {
 				$args['P_37'] += $args[ $key ];
@@ -257,7 +335,7 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		 * income
 		 */
 		if ( empty( $args['incomes'] ) ) {
-				$this->get_template( 'jpk/v7m/xml', 'incomes-empty', $atts );
+				$this->get_template( 'jpk/v7m/xml', 'incomes-empty', $args );
 		} else {
 			foreach ( $args['incomes'] as $one ) {
 				$this->get_template( 'jpk/v7m/xml', 'income', $one );

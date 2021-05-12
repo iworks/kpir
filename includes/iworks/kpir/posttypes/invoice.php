@@ -118,11 +118,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'type' => 'radio',
 					'args' => array(
 						'options' => array(
+							'c00' => array(
+								'label' => __( 'Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz świadczenia usług na terytorium kraju, zwolnionych od podatku', 'kpir' ),
+							),
 							'c01' => array(
-								'label' => __( '1. Dostawa towarów oraz świadczenie usług na terytorium kraju, zwolnione od podatku', 'kpir' ),
+								'label' => __( 'Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz świadczenia usług poza terytorium kraju', 'kpir' ),
 							),
 							'c06' => array(
-								'label' => __( '6. Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 22% albo 23%', 'kpir' ),
+								'label' => __( 'Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz świadczenia usług na terytorium kraju, opodatkowanych stawką 22% albo 23%, z uwzględnieniem korekty dokonanej zgodnie z art. 89a ust. 1 i 4 ustawy', 'kpir' ),
 							),
 						),
 						'default' => 'c06',
@@ -152,6 +155,31 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				'vat'              => array(
 					'type'  => 'money',
 					'label' => __( 'VAT', 'kpir' ),
+				),
+				'vat_rate'         => array(
+					'type'  => 'checkbox',
+					'label' => __( 'VAT rate', 'kpir' ),
+					'type'  => 'radio',
+					'args'  => array(
+						'options' => array(
+							'r23' => array(
+								'label' => __( 'Base 23%', 'kpir' ),
+							),
+							'r08' => array(
+								'label' => __( '8%', 'kpir' ),
+							),
+							'r05' => array(
+								'label' => __( '5%', 'kpir' ),
+							),
+							'r00' => array(
+								'label' => __( '0%', 'kpir' ),
+							),
+							'rzw' => array(
+								'label' => __( 'No VAT', 'kpir' ),
+							),
+						),
+						'default' => 'r23',
+					),
 				),
 				'car'              => array(
 					'type'        => 'checkbox',
