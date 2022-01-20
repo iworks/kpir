@@ -42,11 +42,13 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 0.1.7 - 2022-01-20 =
+* Updated iWorks Options to 2.8.0.
+
 = 0.1.6 - 2021-05-12 =
 * Rename directory `vendor` into `includes`.
 * Added VAT rates.
 * Updated [WordPress Options Class](https://github.com/iworks/wordpress-options-class) to version 2.6.9
-
 
 = 0.1.5 - 2020-11-24 =
 * Fixed VAT calculation for a car.
