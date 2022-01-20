@@ -1,6 +1,6 @@
 === KPiR ===
 Contributors: iworks
-Donate link: http://iworks.pl/donate/kpir.php
+Donate link: https://ko-fi.com/iworks?utm_source=kpir&utm_medium=readme-donate
 Tags: kpir, faktura, księgowość, vat, jpk
 Requires at least: 4.4
 Tested up to: 5.7
