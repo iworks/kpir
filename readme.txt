@@ -42,6 +42,10 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 0.1.8 - 2022-02-24 =
+* Added JPK V7M(2) report.
+* Updated iWorks Options to 2.8.1.
+
 = 0.1.7 - 2022-01-20 =
 * Updated iWorks Options to 2.8.0.
 

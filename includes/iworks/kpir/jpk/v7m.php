@@ -68,6 +68,16 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		 */
 		$year_month = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_STRING );
 		$year_month = $this->validate_year_month( $year_month );
+		/**
+		 * Choose template
+		 */
+		$template = 'jpk/v7m/xml';
+		if ( 2021 < intval( preg_replace( '/\-.+$/', '', $year_month ) ) ) {
+			$template = 'jpk/v7m-2/xml';
+		}
+		/**
+		 * error
+		 */
 		if ( is_wp_error( $year_month ) ) {
 			die( $year_month->get_error_message() );
 		}
@@ -322,23 +332,23 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 			}
 		}
 		ob_start();
-		$this->get_template( 'jpk/v7m/xml', 'header', $args );
-		$this->get_template( 'jpk/v7m/xml', 'head', $args );
+		$this->get_template( $template, 'header', $args );
+		$this->get_template( $template, 'head', $args );
 		if ( $this->is_person() ) {
-			$this->get_template( 'jpk/v7m/xml', 'person', $args );
+			$this->get_template( $template, 'person', $args );
 		} else {
-			$this->get_template( 'jpk/v7m/xml', 'company', $args );
+			$this->get_template( $template, 'company', $args );
 		}
-		$this->get_template( 'jpk/v7m/xml', 'summary', $args );
+		$this->get_template( $template, 'summary', $args );
 		echo '<tns:Ewidencja>';
 		/**
 		 * income
 		 */
 		if ( empty( $args['incomes'] ) ) {
-				$this->get_template( 'jpk/v7m/xml', 'incomes-empty', $args );
+				$this->get_template( $template, 'incomes-empty', $args );
 		} else {
 			foreach ( $args['incomes'] as $one ) {
-				$this->get_template( 'jpk/v7m/xml', 'income', $one );
+				$this->get_template( $template, 'income', $one );
 			}
 			if ( 0 < count( $args['incomes'] ) ) {
 				$integer    = $this->sum['vat_income']['integer'];
@@ -349,14 +359,14 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 					'sum'  => sprintf( '%d.%02d', $integer, $fractional ),
 					'rows' => count( $args['incomes'] ),
 				);
-				$this->get_template( 'jpk/v7m/xml', 'incomes-summary', $atts );
+				$this->get_template( $template, 'incomes-summary', $atts );
 			}
 		}
 		/**
 		 * expense
 		 */
 		foreach ( $args['expenses'] as $one ) {
-			$this->get_template( 'jpk/v7m/xml', 'expense', $one );
+			$this->get_template( $template, 'expense', $one );
 		}
 		if ( 0 < count( $args['expenses'] ) ) {
 			$integer    = $this->sum['vat_expense']['integer'];
@@ -367,10 +377,10 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 				'sum'  => sprintf( '%d.%02d', $integer, $fractional ),
 				'rows' => count( $args['expenses'] ),
 			);
-			$this->get_template( 'jpk/v7m/xml', 'expenses-summary', $atts );
+			$this->get_template( $template, 'expenses-summary', $atts );
 		}
 		echo '</tns:Ewidencja>';
-		$this->get_template( 'jpk/v7m/xml', 'footer', $args );
+		$this->get_template( $template, 'footer', $args );
 		/**
 		 * file
 		 */
