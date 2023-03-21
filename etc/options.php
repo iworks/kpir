@@ -31,6 +31,20 @@ function iworks_kpir_options() {
 				'sanitize_callback' => 'esc_html',
 			),
 			array(
+				'name'              => 'surname',
+				'type'              => 'text',
+				'class'             => 'regular-text',
+				'th'                => __( 'Surname', 'kpir' ),
+				'sanitize_callback' => 'esc_html',
+			),
+			array(
+				'name'              => 'last_name',
+				'type'              => 'text',
+				'class'             => 'regular-text',
+				'th'                => __( 'Last Name', 'kpir' ),
+				'sanitize_callback' => 'esc_html',
+			),
+			array(
 				'name'              => 'email',
 				'type'              => 'email',
 				'class'             => 'regular-text',

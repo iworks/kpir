@@ -1,7 +1,6 @@
-/*! Księga Przychodi i Rozchodu - v0.1.0
- * https://iworks.pl/
- * Copyright (c) 2018; * Licensed GPLv2+
- */
+/*! Księga Przychodi i Rozchodu - v0.1.9
+ * http://iworks.pl/
+ * Copyright (c) 2023; * Licensed GPL-3.0 */
 jQuery( document ).ready(function($) {
     $( function() {
         $( ".iworks-kpir-row .datepicker" ).datepicker({

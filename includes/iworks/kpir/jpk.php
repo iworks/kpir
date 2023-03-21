@@ -105,11 +105,14 @@ abstract class iworks_kpir_jpk {
 			} else {
 				$nip = preg_replace( '/[^\d]+/', '', $nip );
 			}
-			$name                                = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_full_name', true );
-			$address                             = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_street1', true );
-			$address                            .= ', ' . get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_zip', true );
-			$address                            .= ' ' . get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_city', true );
-			$address                            .= ', ' . get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_country', true );
+			$name     = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_full_name', true );
+			$address  = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_street1', true );
+			$address .= ', ' . get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_zip', true );
+			$address .= ' ' . get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_city', true );
+			$address .= ', ' . get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_country', true );
+			/**
+			 * add
+			 */
 			$this->contractors[ $contractor_id ] = array(
 				'nip'     => $nip,
 				'name'    => $name,
@@ -213,7 +216,7 @@ abstract class iworks_kpir_jpk {
 				$this->sum['income']['fractional'] += $money['fractional'];
 				break;
 			case 'c06':
-				$data['K_19']                       = sprintf( '%d.%02d', $money['integer'], $money['fractional'], );
+				$data['K_19']                       = sprintf( '%d.%02d', $money['integer'], $money['fractional'] );
 				$this->sum['income']['integer']    += $money['integer'];
 				$this->sum['income']['fractional'] += $money['fractional'];
 				/**
