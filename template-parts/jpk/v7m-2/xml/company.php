@@ -1,11 +1,12 @@
 <tns:Podmiot1 rola="Podatnik">
 	<tns:OsobaFizyczna>
-		<tns:NIP><?php echo $args['taxpayer']['nip']; ?></tns:NIP>
-		<tns:ImiePierwsze><?php echo $args['taxpayer']['surname']; ?></tns:ImiePierwsze>
-		<tns:Nazwisko><?php echo $args['taxpayer']['last_name']; ?></tns:Nazwisko>
+		<etd:NIP><?php echo $args['taxpayer']['nip']; ?></etd:NIP>
+		<etd:ImiePierwsze><?php echo $args['taxpayer']['surname']; ?></etd:ImiePierwsze>
+		<etd:Nazwisko><?php echo $args['taxpayer']['last_name']; ?></etd:Nazwisko>
+		<etd:DataUrodzenia><?php echo $args['taxpayer']['date_of_birth']; ?></etd:DataUrodzenia>
 		<tns:Email><?php echo $args['taxpayer']['email']; ?></tns:Email>
 <?php if ( isset( $args['taxpayer']['phone'] ) && ! empty( $args['taxpayer']['phone'] ) ) { ?>
-		<tns:Telefon><?php echo $args['taxpayer']['phone']; ?></tns:Telefon>
+		<etd:Telefon><?php echo $args['taxpayer']['phone']; ?></etd:Telefon>
 <?php } ?>
 	</tns:OsobaFizyczna>
 </tns:Podmiot1>

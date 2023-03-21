@@ -45,6 +45,13 @@ function iworks_kpir_options() {
 				'sanitize_callback' => 'esc_html',
 			),
 			array(
+				'name'              => 'date_of_birth',
+				'type'              => 'text',
+				'class'             => 'regular-text',
+				'th'                => __( 'Date of Birth (YYYY-MM-DD)', 'kpir' ),
+				'sanitize_callback' => 'esc_html',
+			),
+			array(
 				'name'              => 'email',
 				'type'              => 'email',
 				'class'             => 'regular-text',
