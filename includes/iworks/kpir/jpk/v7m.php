@@ -90,6 +90,7 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 			'month'      => $date[1],
 			'created'    => preg_replace( '/\+00:00$/', '.000Z', date( 'c' ) ),
 			'taxpayer'   => array(
+				'date_of_birth'         => get_option( $this->options->get_option_name( 'date_of_birth' ) ),
 				'department_of_revenue' => get_option( $this->options->get_option_name( 'department_of_revenue' ) ),
 				'email'                 => get_option( $this->options->get_option_name( 'email' ) ),
 				'last_name'             => $this->convert_chars( get_option( $this->options->get_option_name( 'last_name' ) ) ),

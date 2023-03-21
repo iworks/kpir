@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KPiR Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kpir\n"
-"POT-Creation-Date: 2023-03-21 19:10:01+00:00\n"
+"POT-Creation-Date: 2023-03-21 19:36:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -46,34 +46,38 @@ msgid "Last Name"
 msgstr ""
 
 #: etc/options.php:51
-msgid "E-Mail"
+msgid "Date of Birth (YYYY-MM-DD)"
 msgstr ""
 
 #: etc/options.php:58
+msgid "E-Mail"
+msgstr ""
+
+#: etc/options.php:65
 msgid "Department of Revenue"
 msgstr ""
 
-#: etc/options.php:66
+#: etc/options.php:73
 msgid "Phone"
 msgstr ""
 
-#: etc/options.php:73
+#: etc/options.php:80
 msgid "Monthly Report"
 msgstr ""
 
-#: etc/options.php:74
+#: etc/options.php:81
 msgid "Monthly"
 msgstr ""
 
-#: etc/options.php:98 includes/iworks/kpir.php:276
+#: etc/options.php:105 includes/iworks/kpir.php:276
 msgid "JPK V7M"
 msgstr ""
 
-#: etc/options.php:109
+#: etc/options.php:116
 msgid "Annually Report"
 msgstr ""
 
-#: etc/options.php:110
+#: etc/options.php:117
 msgid "Annually"
 msgstr ""
 

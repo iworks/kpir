@@ -6,7 +6,7 @@
 		<etd:DataUrodzenia><?php echo $args['taxpayer']['date_of_birth']; ?></etd:DataUrodzenia>
 		<tns:Email><?php echo $args['taxpayer']['email']; ?></tns:Email>
 <?php if ( isset( $args['taxpayer']['phone'] ) && ! empty( $args['taxpayer']['phone'] ) ) { ?>
-		<etd:Telefon><?php echo $args['taxpayer']['phone']; ?></etd:Telefon>
+		<tns:Telefon><?php echo $args['taxpayer']['phone']; ?></tns:Telefon>
 <?php } ?>
 	</tns:OsobaFizyczna>
 </tns:Podmiot1>
