@@ -42,6 +42,9 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 1.0.0 - 2023-06-07 =
+* The BDO number has been added.
+
 = 0.1.9 - 2023-02-21 =
 * The person type for JPK V7M has been changed.
 

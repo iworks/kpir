@@ -88,10 +88,12 @@ class iworks_kpir_posttypes {
 			if ( isset( $data['label'] ) && ! empty( $data['label'] ) ) {
 				$content .= sprintf( '<label for=%s">%s</label>', esc_attr( $args['id'] ), esc_html( $data['label'] ) );
 			}
+			$content .= '<div class="iworks-kpir-row-value">';
 			$content .= $this->options->get_field_by_type( $type, $name, $value, $args );
 			if ( isset( $data['description'] ) ) {
 				$content .= sprintf( '<p class="description">%s</p>', $data['description'] );
 			}
+			$content .= '</div>';
 			$content .= '</div>';
 		}
 		echo $content;

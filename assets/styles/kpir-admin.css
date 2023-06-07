@@ -1,7 +1,8 @@
 .iworks-kpir-row {
-  display: -ms-flexbox;
-  display: flex;
-  padding-bottom: .5em;
+  display: grid;
+  grid-template-columns: 10em auto;
+  gap: 1em;
+  margin: 1em 0;
 }
 .iworks-kpir-row label {
   width: 100px;

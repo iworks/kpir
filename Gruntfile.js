@@ -157,20 +157,33 @@ module.exports = function(grunt) {
             options: {
                 banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
                     ' * <%= pkg.homepage %>\n' +
-                    ' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
-                    ' * Licensed <%= pkg.license %>' +
-                    ' */\n',
-                mergeIntoShorthands: false
+                    ' * Copyright (c) <%= grunt.template.today("yyyy") %>;\n' +
+                    ' * Licensed GPLv2+\n' +
+                    ' */\n'
             },
-            target: {
-                sourceMap: true,
+            minify: {
                 expand: true,
-                files: {
-                    // 'assets/css/ultimate-branding-admin.min.css': [
-                    // 'assets/css/admin/*.css'
-                    // ]
-                },
+                src: ['*.css', '!*.min.css'],
+                cwd: 'assets/styles/',
+                dest: 'assets/styles/',
+                ext: '.min.css',
+                extDot: 'last'
+            }
+        },
+
+        // CSS - concat .css source files into single .css file
+        concat_css: {
+            options: {
+                stripBanners: true,
+                banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
+                    ' * <%= pkg.homepage %>\n' +
+                    ' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
+                    ' * Licensed GPLv2+\n' +
+                    ' */\n'
             },
+            scripts: {
+                files: conf.css_files_concat
+            }
         },
 
         watch: {
@@ -403,9 +416,9 @@ module.exports = function(grunt) {
 
     // Default task.
 
-    grunt.registerTask('default', ['clean:temp', 'concat', 'uglify', 'sass', 'cssmin']);
+    grunt.registerTask('default', ['clean:temp', 'concat', 'uglify', 'css', 'concat_css' ]);
     grunt.registerTask('js', ['concat', 'uglify']);
-    grunt.registerTask('css', ['sass', 'cssmin']);
+    grunt.registerTask('css', ['sass', 'concat_css', 'cssmin']);
     //grunt.registerTask('i18n', ['checktextdomain', 'makepot', 'potomo']);
     grunt.registerTask('i18n', ['checktextdomain', 'makepot']);
 

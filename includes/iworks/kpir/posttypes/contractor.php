@@ -57,7 +57,12 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 					'label' => __( 'NIP', 'kpir' ),
 				),
 				'regon'        => array(
-					'label' => __( 'REGON', 'kpir' ),
+					'label'       => __( 'REGON', 'kpir' ),
+					'description' => __( 'Register of National Economy', 'kpir' ),
+				),
+				'bdo'          => array(
+					'label'       => __( 'BDO', 'kpir' ),
+					'description' => __( 'Database on products, packaging and waste management', 'kpir' ),
 				),
 				'krs'          => array(
 					'label' => __( 'KRS', 'kpir' ),
