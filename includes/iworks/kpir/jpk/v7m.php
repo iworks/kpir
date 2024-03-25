@@ -342,6 +342,17 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		} else {
 			$this->get_template( $template, 'company', $args );
 		}
+		/**
+		 * Remove P_20 field if it is empty.
+		 *
+		 * @since 1.0.1
+		 */
+		if (
+			isset( $args['P_20'] )
+			&& empty( $args['P_20'] )
+		) {
+			unset( $args['P_20'] );
+		}
 		$this->get_template( $template, 'summary', $args );
 		echo '<tns:Ewidencja>';
 		/**

@@ -42,6 +42,10 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 1.0.1 - 2024-03-25 =
+* Updated [WordPress Options Class](https://github.com/iworks/wordpress-options-class) to version 2.6.9
+* The P_20 field has been temoved from JPK-VAT xml if is empty.
+
 = 1.0.0 - 2023-06-07 =
 * The BDO number has been added.
 
