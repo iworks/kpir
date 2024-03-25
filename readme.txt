@@ -2,13 +2,14 @@
 Contributors: iworks
 Donate link: https://ko-fi.com/iworks?utm_source=kpir&utm_medium=readme-donate
 Tags: kpir, faktura, księgowość, vat, jpk
-Requires at least: 4.4
-Tested up to: 6.2
+Requires at least: PLUGIN_REQUIRES_WORDPRESS
+Tested up to: PLUGIN_TESTED_WORDPRESS
 Stable tag: PLUGIN_VERSION
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Requires PHP: PLUGIN_REQUIRES_PHP
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-The plugin allows you to keep a small business bookkeeping in Poland.
+PLUGIN_TAGLINE
 
 == Description ==
 

@@ -1,14 +1,14 @@
-# Copyright (C) 2023 Marcin Pietrzak
-# This file is distributed under the GPLv2 or later.
+# Copyright (C) 2024 Marcin Pietrzak
+# This file is distributed under the same license as the KPiR package.
 msgid ""
 msgstr ""
-"Project-Id-Version: KPiR Base PLUGIN_VERSION\n"
+"Project-Id-Version: KPiR PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kpir\n"
-"POT-Creation-Date: 2023-03-21 19:44:50+00:00\n"
+"POT-Creation-Date: 2024-03-25 07:00:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en\n"
@@ -29,11 +29,11 @@ msgid "Configuration"
 msgstr ""
 
 #: etc/options.php:23 includes/iworks/kpir/posttypes/contractor.php:57
-#: includes/iworks/kpir/posttypes/contractor.php:237
+#: includes/iworks/kpir/posttypes/contractor.php:242
 msgid "NIP"
 msgstr ""
 
-#: etc/options.php:30 includes/iworks/kpir/posttypes/contractor.php:236
+#: etc/options.php:30 includes/iworks/kpir/posttypes/contractor.php:241
 msgid "Full Name"
 msgstr ""
 
@@ -128,12 +128,12 @@ msgid "ZIP Code:"
 msgstr ""
 
 #: includes/iworks/kpir/posttypes/contractor.php:51
-#: includes/iworks/options/options.php:1646
+#: includes/iworks/options/options.php:1697
 msgid "City"
 msgstr ""
 
 #: includes/iworks/kpir/posttypes/contractor.php:54
-#: includes/iworks/options/options.php:1645
+#: includes/iworks/options/options.php:1696
 msgid "Country"
 msgstr ""
 
@@ -141,156 +141,168 @@ msgstr ""
 msgid "REGON"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:63
+#: includes/iworks/kpir/posttypes/contractor.php:61
+msgid "Register of National Economy"
+msgstr ""
+
+#: includes/iworks/kpir/posttypes/contractor.php:64
+msgid "BDO"
+msgstr ""
+
+#: includes/iworks/kpir/posttypes/contractor.php:65
+msgid "Database on products, packaging and waste management"
+msgstr ""
+
+#: includes/iworks/kpir/posttypes/contractor.php:68
 msgid "KRS"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:66
+#: includes/iworks/kpir/posttypes/contractor.php:71
 msgid "Bank"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:69
+#: includes/iworks/kpir/posttypes/contractor.php:74
 msgid "Bank account"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:73
-#: includes/iworks/kpir/posttypes/contractor.php:77
 #: includes/iworks/kpir/posttypes/contractor.php:78
+#: includes/iworks/kpir/posttypes/contractor.php:82
+#: includes/iworks/kpir/posttypes/contractor.php:83
 msgid "Website"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:74
+#: includes/iworks/kpir/posttypes/contractor.php:79
 msgid "email"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:75
+#: includes/iworks/kpir/posttypes/contractor.php:80
 msgid "mobile"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:76
+#: includes/iworks/kpir/posttypes/contractor.php:81
 msgid "phone"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:102
 #: includes/iworks/kpir/posttypes/contractor.php:107
+#: includes/iworks/kpir/posttypes/contractor.php:112
 msgid "Contractors"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:103
-#: includes/iworks/kpir/posttypes/contractor.php:129
+#: includes/iworks/kpir/posttypes/contractor.php:108
+#: includes/iworks/kpir/posttypes/contractor.php:134
 #: includes/iworks/kpir/posttypes/invoice.php:63
 #: includes/iworks/kpir/posttypes/invoice.php:575
 msgid "Contractor"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:104
+#: includes/iworks/kpir/posttypes/contractor.php:109
 msgid "Contractor Archives"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:105
+#: includes/iworks/kpir/posttypes/contractor.php:110
 msgid "Contractor Attributes"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:106
+#: includes/iworks/kpir/posttypes/contractor.php:111
 msgid "Parent Contractor:"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:108
+#: includes/iworks/kpir/posttypes/contractor.php:113
 msgid "Add New Contractor"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:109
+#: includes/iworks/kpir/posttypes/contractor.php:114
 #: includes/iworks/kpir/posttypes/invoice.php:291
 msgid "Add New"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:110
+#: includes/iworks/kpir/posttypes/contractor.php:115
 msgid "New Contractor"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:111
+#: includes/iworks/kpir/posttypes/contractor.php:116
 msgid "Edit Contractor"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:112
+#: includes/iworks/kpir/posttypes/contractor.php:117
 msgid "Update Contractor"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:113
+#: includes/iworks/kpir/posttypes/contractor.php:118
 msgid "View Contractor"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:114
+#: includes/iworks/kpir/posttypes/contractor.php:119
 msgid "View Contractors"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:115
+#: includes/iworks/kpir/posttypes/contractor.php:120
 msgid "Search Contractor"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:116
+#: includes/iworks/kpir/posttypes/contractor.php:121
 #: includes/iworks/kpir/posttypes/invoice.php:298
 msgid "Not found"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:117
+#: includes/iworks/kpir/posttypes/contractor.php:122
 #: includes/iworks/kpir/posttypes/invoice.php:299
 msgid "Not found in Trash"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:118
+#: includes/iworks/kpir/posttypes/contractor.php:123
 #: includes/iworks/kpir/posttypes/invoice.php:300
 msgid "Featured Image"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:119
+#: includes/iworks/kpir/posttypes/contractor.php:124
 #: includes/iworks/kpir/posttypes/invoice.php:301
 msgid "Set featured image"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:120
+#: includes/iworks/kpir/posttypes/contractor.php:125
 #: includes/iworks/kpir/posttypes/invoice.php:302
 msgid "Remove featured image"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:121
+#: includes/iworks/kpir/posttypes/contractor.php:126
 #: includes/iworks/kpir/posttypes/invoice.php:303
 msgid "Use as featured image"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:122
+#: includes/iworks/kpir/posttypes/contractor.php:127
 msgid "Insert into contractor"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:123
+#: includes/iworks/kpir/posttypes/contractor.php:128
 msgid "Uploaded to this contractor"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:124
+#: includes/iworks/kpir/posttypes/contractor.php:129
 msgid "Contractors list"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:125
+#: includes/iworks/kpir/posttypes/contractor.php:130
 msgid "Contractors list navigation"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:126
+#: includes/iworks/kpir/posttypes/contractor.php:131
 msgid "Filter contractors list"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:130
+#: includes/iworks/kpir/posttypes/contractor.php:135
 msgid "Contractor Description"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:151
+#: includes/iworks/kpir/posttypes/contractor.php:156
 msgid "Contractor Data"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:152
+#: includes/iworks/kpir/posttypes/contractor.php:157
 msgid "Contact Data"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:294
+#: includes/iworks/kpir/posttypes/contractor.php:299
 msgid "All contractors"
 msgstr ""
 
@@ -459,7 +471,7 @@ msgstr ""
 msgid "ZUS 53"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/invoice.php:284
+#. Plugin Name of the plugin/theme
 msgid "KPiR"
 msgstr ""
 
@@ -680,37 +692,41 @@ msgstr ""
 msgid "Copy of %s"
 msgstr ""
 
-#: includes/iworks/options/options.php:251
+#: includes/iworks/options/options.php:258
 msgid "An error occurred while getting the configuration."
 msgstr ""
 
-#: includes/iworks/options/options.php:754
-#: includes/iworks/options/options.php:1751
+#: includes/iworks/options/options.php:769
+#: includes/iworks/options/options.php:1802
 msgid "Select Image"
 msgstr ""
 
-#: includes/iworks/options/options.php:759
+#: includes/iworks/options/options.php:774
 msgid "Delete image"
 msgstr ""
 
-#: includes/iworks/options/options.php:845
+#: includes/iworks/options/options.php:862
 msgid "Save Changes"
 msgstr ""
 
-#: includes/iworks/options/options.php:1647
+#: includes/iworks/options/options.php:1698
 msgid "Street"
 msgstr ""
 
-#: includes/iworks/options/options.php:1648
+#: includes/iworks/options/options.php:1699
 msgid "ZIP code"
 msgstr ""
 
-#: includes/iworks/options/options.php:1804
+#: includes/iworks/options/options.php:1855
 msgid "OFF"
 msgstr ""
 
-#: includes/iworks/options/options.php:1805
+#: includes/iworks/options/options.php:1856
 msgid "ON"
+msgstr ""
+
+#: includes/iworks/options/options.php:1921
+msgid "Failed Security Check"
 msgstr ""
 
 #: template-parts/jpk/v7m/show.php:11 template-parts/jpk/v7m-2/show.php:11
@@ -725,12 +741,8 @@ msgstr ""
 msgid "correction of the declaration"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
-msgid "KPiR Base"
-msgstr ""
-
 #. Plugin URI of the plugin/theme
-msgid "http://iworks.pl/kpir/"
+msgid "PLUGIN_URI"
 msgstr ""
 
 #. Description of the plugin/theme
@@ -745,12 +757,12 @@ msgstr ""
 msgid "http://iworks.pl/"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:100
+#: includes/iworks/kpir/posttypes/contractor.php:105
 msgctxt "Contractor General Name"
 msgid "Contractors"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/contractor.php:101
+#: includes/iworks/kpir/posttypes/contractor.php:106
 msgctxt "Contractor Singular Name"
 msgid "Contractor"
 msgstr ""

@@ -1,16 +1,14 @@
 <?php
 /*
-Plugin Name: KPiR Base
+Plugin Name: KPiR
+Plugin URI: PLUGIN_URI
 Text Domain: kpir
-Plugin URI: http://iworks.pl/kpir/
 Description: Podatkowa Księga Przychodu i Rozchodu
-Version: PLUGIN_VERSION
 Author: Marcin Pietrzak
+Version: PLUGIN_VERSION
 Author URI: http://iworks.pl/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Copyright 2017 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2017-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as

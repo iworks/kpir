@@ -219,7 +219,7 @@ class iworks_kpir_jpk_vat_3 {
         <tns:DataWytworzeniaJPK>%s</tns:DataWytworzeniaJPK>
         <tns:DataOd>%s</tns:DataOd>
         <tns:DataDo>%s</tns:DataDo>
-        <tns:NazwaSystemu>KPiR Base PLUGIN_VERSION</tns:NazwaSystemu>
+        <tns:NazwaSystemu>KPiR PLUGIN_VERSION</tns:NazwaSystemu>
     </tns:Naglowek>';
 		$data .= PHP_EOL;
 		$data .= PHP_EOL;
