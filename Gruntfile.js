@@ -11,6 +11,8 @@
  */
 
 module.exports = function(grunt) {
+    // Show elapsed time at the end.
+    require('time-grunt')(grunt);
 
     // Load all grunt tasks.
     require('load-grunt-tasks')(grunt);
@@ -37,37 +39,81 @@ module.exports = function(grunt) {
         css_files_concat: {
             'assets/styles/kpir-admin.css': [ 'assets/styles/admin/*.css' ]
         },
-
-        plugin_dir: '',
-        plugin_file: 'kpir.php',
+        // BUILD patterns to exclude code for specific builds.
+        replaces: {
+            patterns: [
+                { match: /AUTHOR_NAME/g, replace: '<%= pkg.author[0].name %>' },
+                { match: /AUTHOR_URI/g, replace: '<%= pkg.author[0].uri %>' },
+                { match: /BUILDTIME/g, replace: buildtime },
+                { match: /IWORKS_RATE_TEXTDOMAIN/g, replace: '<%= pkg.name %>' },
+                { match: /IWORKS_OPTIONS_TEXTDOMAIN/g, replace: '<%= pkg.name %>' },
+                { match: /PLUGIN_DESCRIPTION/g, replace: '<%= pkg.description %>' },
+                { match: /PLUGIN_NAME/g, replace: '<%= pkg.name %>' },
+                { match: /PLUGIN_REQUIRES_PHP/g, replace: '<%= pkg.requires.PHP %>' },
+                { match: /PLUGIN_REQUIRES_WORDPRESS/g, replace: '<%= pkg.requires.WordPress %>' },
+                { match: /PLUGIN_TESTED_WORDPRESS/g, replace: '<%= pkg.tested.WordPress %>' },
+                { match: /PLUGIN_TAGLINE/g, replace: '<%= pkg.tagline %>' },
+                { match: /PLUGIN_TITLE/g, replace: '<%= pkg.title %>' },
+                { match: /PLUGIN_TILL_YEAR/g, replace: buildyear },
+                { match: /PLUGIN_URI/g, replace: '<%= pkg.homepage %>' },
+                { match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
+                { match: /^Version: .+$/g, replace: 'Version: <%= pkg.version %>' },
+            ],
+            // Files to apply above patterns to (not only php files).
+            files: {
+                expand: true,
+                src: [
+                    '**/*.php',
+                    '**/*.css',
+                    '**/*.js',
+                    '**/*.html',
+                    '**/*.txt',
+                    '!node_modules/**',
+                    '!lib/**',
+                    '!docs/**',
+                    '!release/**',
+                    '!Gruntfile.js',
+                    '!package-lock.json',
+                    '!build/**',
+                    '!tests/**',
+                    '!.git/**',
+                    '!stylelint.config.js',
+                ],
+                dest: './release/<%= pkg.version %>/'
+            }
+        },
 
         // Regex patterns to exclude from transation.
         translation: {
             ignore_files: [
+                'README.md',
                 '.git*',
                 'node_modules/.*',
                 '(^.php)', // Ignore non-php files.
+                'inc/external/.*', // External libraries.
                 'release/.*', // Temp release files.
                 '.sass-cache/.*',
                 'tests/.*', // Unit testing.
             ],
             pot_dir: 'languages/', // With trailing slash.
-            textdomain: 'kpir',
-        }
+            textdomain: "<%= pkg.name %>",
+        },
+        dir: "<%= pkg.name %>/",
+        plugin_file: 'kpir.php'
     };
-
 
     // Project configuration
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
+        // JS - Concat .js source files into a single .js file.
         concat: {
             options: {
                 stripBanners: true,
                 banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
                     ' * <%= pkg.homepage %>\n' +
                     ' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
-                    ' * Licensed <%= pkg.license %>' +
+                    ' * Licensed <%= pkg.license %>\n' +
                     ' */\n'
             },
             scripts: {
@@ -75,6 +121,7 @@ module.exports = function(grunt) {
             }
         },
 
+        // JS - Validate .js source code.
         jshint: {
             all: [
                 'Gruntfile.js',
@@ -99,6 +146,7 @@ module.exports = function(grunt) {
             }
         },
 
+        // JS - Uglyfies the source code of .js files (to make files smaller).
         uglify: {
             all: {
                 files: [{
@@ -122,70 +170,7 @@ module.exports = function(grunt) {
             }
         },
 
-        test: {
-            files: ['assets/scripts/test/**/*.js']
-        },
-
-        phpunit: {
-            classes: {
-                dir: ''
-            },
-            options: {
-                bin: 'phpunit',
-                bootstrap: 'tests/php/bootstrap.php',
-                testsuite: 'default',
-                configuration: 'tests/php/phpunit.xml',
-                colors: true,
-                tap: true,
-                staticBackup: false,
-                noGlobalsBackup: false
-            }
-        },
-
-        sass: {
-            all: {
-                options: {
-                    'sourcemap=none': true, // 'sourcemap': 'none' does not work...
-                    unixNewlines: true,
-                    style: 'expanded'
-                },
-                files: conf.css_files_compile
-            }
-        },
-
-        cssmin: {
-            options: {
-                banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
-                    ' * <%= pkg.homepage %>\n' +
-                    ' * Copyright (c) <%= grunt.template.today("yyyy") %>;\n' +
-                    ' * Licensed GPLv2+\n' +
-                    ' */\n'
-            },
-            minify: {
-                expand: true,
-                src: ['*.css', '!*.min.css'],
-                cwd: 'assets/styles/',
-                dest: 'assets/styles/',
-                ext: '.min.css',
-                extDot: 'last'
-            }
-        },
-
-        // CSS - concat .css source files into single .css file
-        concat_css: {
-            options: {
-                stripBanners: true,
-                banner: '/*! <%= pkg.title %> - v<%= pkg.version %>\n' +
-                    ' * <%= pkg.homepage %>\n' +
-                    ' * Copyright (c) <%= grunt.template.today("yyyy") %>;' +
-                    ' * Licensed GPLv2+\n' +
-                    ' */\n'
-            },
-            scripts: {
-                files: conf.css_files_concat
-            }
-        },
-
+        // WATCH - Watch filesystem for changes during development.
         watch: {
             sass: {
                 files: [
@@ -206,14 +191,16 @@ module.exports = function(grunt) {
             }
         },
 
-        clean: {
-            main: {
-                src: ['release/<%= pkg.version %>']
-            },
-            temp: {
-                src: ['**/*.tmp', '**/.afpDeleted*', '**/.DS_Store'],
-                dot: true,
-                filter: 'isFile'
+        // BUILD - Create a zip-version of the plugin.
+        compress: {
+            target: {
+                options: {
+                    mode: 'zip',
+                    archive: './release/<%= pkg.name %>.zip'
+                },
+                expand: true,
+                cwd: './release/<%= pkg.version %>/',
+                src: ['**/*']
             }
         },
 
@@ -221,6 +208,7 @@ module.exports = function(grunt) {
         makepot: {
             target: {
                 options: {
+                    cwd: '',
                     domainPath: conf.translation.pot_dir,
                     exclude: conf.translation.ignore_files,
                     mainFile: conf.plugin_file,
@@ -229,201 +217,102 @@ module.exports = function(grunt) {
                         poedit: true, // Includes common Poedit headers.
                         'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
                     },
-                    type: 'wp-plugin',
-                    updateTimestamp: true,
-                    updatePoFiles: true
+                    processPot: null, // A callback function for manipulating the POT file.
+                    type: 'wp-plugin', // wp-plugin or wp-theme
+                    updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
+                    updatePoFiles: true // Whether to update PO files in the same directory as the POT file.
                 }
-            }
-        },
-
-        potomo: {
-            dist: {
-                options: {
-                    poDel: false
-                },
-                files: [{
-                    expand: true,
-                    cwd: conf.translation.pot_dir,
-                    src: ['*.po'],
-                    dest: conf.translation.pot_dir,
-                    ext: '.mo',
-                    nonull: true
-                }]
-            }
-        },
-
-        copy: {
-            // Copy the plugin to a versioned release directory
-            main: {
-                src: [
-                    '**',
-                    '!.git/**',
-                    '!.git*',
-                    '!assets/sass/**',
-                    '!assets/scss/**',
-                    '!node_modules/**',
-                    '!package-lock.json',
-                    '!postcss.config.js',
-                    '!README.md',
-                    '!LICENSE',
-                    '!**/README.md',
-                    '!**/*.map',
-                    '!release/**',
-                    '!.sass-cache/**',
-                    '!webpack.config.js',
-                    '!**/bitbucket-pipelines.yml',
-                    '!**/css/less/**',
-                    '!**/css/sass/**',
-                    '!**/css/src/**',
-                    '!**/Gruntfile.js',
-                    '!**/img/src/**',
-                    '!**/js/src/**',
-                    '!**/package.json',
-                    '!**/tests/**'
-                ],
-                dest: 'release/<%= pkg.version %>/<%= pkg.name %>/'
             }
         },
 
         // BUILD: Replace conditional tags in code.
         replace: {
+            target: {
+                options: {
+                    patterns: conf.replaces.patterns
+                },
+                files: [conf.replaces.files]
+            }
+        },
+
+        clean: {
             options: {
-                patterns: [{
-                        match: /AUTHOR_NAME/g,
-                        replace: '<%= pkg.author[0].name %>'
-                    },
-                    {
-                        match: /AUTHOR_URI/g,
-                        replace: '<%= pkg.author[0].uri %>'
-                    },
-                    {
-                        match: /BUILDTIME/g,
-                        replace: buildtime
-                    },
-                    {
-                        match: /IWORKS_RATE_TEXTDOMAIN/g,
-                        replace: '<%= pkg.name %>'
-                    },
-                    {
-                        match: /IWORKS_OPTIONS_TEXTDOMAIN/g,
-                        replace: '<%= pkg.name %>'
-                    },
-                    {
-                        match: /PLUGIN_DESCRIPTION/g,
-                        replace: '<%= pkg.description %>'
-                    },
-                    {
-                        match: /PLUGIN_NAME/g,
-                        replace: '<%= pkg.name %>'
-                    },
-                    {
-                        match: /PLUGIN_REQUIRES_PHP/g,
-                        replace: '<%= pkg.requires.PHP %>'
-                    },
-                    {
-                        match: /PLUGIN_REQUIRES_WORDPRESS/g,
-                        replace: '<%= pkg.requires.WordPress %>'
-                    },
-                    {
-                        match: /PLUGIN_TAGLINE/g,
-                        replace: '<%= pkg.tagline %>'
-                    },
-                    {
-                        match: /PLUGIN_TILL_YEAR/g,
-                        replace: buildyear
-                    },
-                    {
-                        match: /PLUGIN_TITLE/g,
-                        replace: '<%= pkg.title %>'
-                    },
-                    {
-                        match: /PLUGIN_URI/g,
-                        replace: '<%= pkg.homepage %>'
-                    },
-                    {
-                        match: /PLUGIN_VERSION/g,
-                        replace: '<%= pkg.version %>'
-                    },
-                    {
-                        match: /^Version: .+$/g,
-                        replace: 'Version: <%= pkg.version %>'
-                    },
-                ]
+                force: true
             },
-            files: {
+            release: {
+                options: {
+                    force: true
+                },
+                src: ['./release', './release/*', './release/**']
+            }
+        },
+
+        copy: {
+            release: {
                 expand: true,
                 src: [
-                    'release/**',
-                    '!release/**/images/**'
+                    '*',
+                    '**',
+                    '!assets/js/src',
+                    '!assets/js/src/*',
+                    '!assets/js/src/**',
+                    '!assets/sass',
+                    '!assets/sass/*',
+                    '!assets/sass/**',
+                    '!bitbucket-pipelines.yml',
+                    '!composer.json',
+                    '!composer.lock',
+                    '!.git',
+                    '!.github',
+                    '!.github/*',
+                    '!.github/**',
+                    '!Gruntfile.js',
+                    '!.idea', // PHPStorm settings
+                    '!languages/*~',
+                    '!**/LICENSE',
+                    '!LICENSE',
+                    '!node_modules',
+                    '!node_modules/*',
+                    '!node_modules/**',
+                    '!package.json',
+                    '!package-lock.json',
+                    '!phpcs.xml.dist',
+                    '!**/README.md',
+                    '!README.md',
+                    '!stylelint.config.js',
+                    '!tests/*',
+                    '!tests/**',
                 ],
-                dest: '.'
-            }
-        },
-
-        compress: {
-            main: {
-                options: {
-                    mode: 'zip',
-                    archive: './release/<%= pkg.name %>.zip'
-                },
-                expand: true,
-                cwd: 'release/<%= pkg.version %>/',
-                src: ['**/*'],
-                dest: conf.plugin_dir
-            }
-        },
-
-        checktextdomain: {
-            options: {
-                text_domain: ['kpir', 'IWORKS_RATE_TEXTDOMAIN'],
-                keywords: [ //List keyword specifications
-                    '__:1,2d',
-                    '_e:1,2d',
-                    '_x:1,2c,3d',
-                    'esc_html__:1,2d',
-                    'esc_html_e:1,2d',
-                    'esc_html_x:1,2c,3d',
-                    'esc_attr__:1,2d',
-                    'esc_attr_e:1,2d',
-                    'esc_attr_x:1,2c,3d',
-                    '_ex:1,2c,3d',
-                    '_n:1,2,4d',
-                    '_nx:1,2,4c,5d',
-                    '_n_noop:1,2,3d',
-                    '_nx_noop:1,2,3c,4d'
-                ]
+                dest: './release/<%= pkg.version %>/',
+                noEmpty: true
             },
-            files: {
-                src: ['kpir.php', 'vendor/**/*.php'], //all php 
-                expand: true,
-            },
-        },
+        }
 
     });
 
-    grunt.registerTask('notes', 'Show release notes', function() {
-        grunt.log.subhead('Release notes');
-        grunt.log.writeln('  1. Check FORUM for open threads');
-        grunt.log.writeln('  2. REPLY to forum threads + unsubscribe');
-        grunt.log.writeln('  3. Update the TRANSLATION files');
-        grunt.log.writeln('  4. Generate ARCHIVE');
-        grunt.log.writeln('  5. Check ARCHIVE structure - it should be a folder with plugin name');
-        grunt.log.writeln('  6. INSTALL on a clean WordPress installation');
-        grunt.log.writeln('  7. RELEASE the plugin on WordPress.org!');
-        grunt.log.writeln('  8. Add git tag!');
-        grunt.log.writeln('  9. RELEASE the plugin on GitHub!');
+    // Test task.
+    grunt.registerTask('hello', 'Test if grunt is working', function() {
+        grunt.log.subhead('Hi there :)');
+        grunt.log.writeln('Looks like grunt is installed!');
+    });
+
+    grunt.registerTask('release', 'Generating release copy', function() {
+        grunt.task.run('clean');
+        grunt.task.run('js');
+        grunt.task.run('makepot');
+        grunt.task.run('copy');
+        grunt.task.run('replace');
+        grunt.task.run('compress');
     });
 
     // Default task.
 
-    grunt.registerTask('default', ['clean:temp', 'concat', 'uglify', 'css', 'concat_css' ]);
+    grunt.registerTask('build', ['release']);
+    grunt.registerTask('default', ['clean', 'jshint', 'concat', 'uglify', 'makepot']);
     grunt.registerTask('js', ['concat', 'uglify']);
-    grunt.registerTask('css', ['sass', 'concat_css', 'cssmin']);
-    //grunt.registerTask('i18n', ['checktextdomain', 'makepot', 'potomo']);
-    grunt.registerTask('i18n', ['checktextdomain', 'makepot']);
+    //grunt.registerTask( 'test', ['phpunit', 'jshint'] );
 
-    grunt.registerTask('build', ['default', 'i18n', 'clean', 'copy', 'replace', 'compress', 'notes']);
-    grunt.registerTask('test', ['phpunit', 'jshint', 'notes']);
-
+    grunt.task.run('clear');
     grunt.util.linefeed = '\n';
+
 };
