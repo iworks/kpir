@@ -43,8 +43,12 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 1.0.2 - 2025-02-22 =
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.9.5.
+* Empty vat field has been fixed.
+
 = 1.0.1 - 2024-03-25 =
-* Updated [WordPress Options Class](https://github.com/iworks/wordpress-options-class) to version 2.6.9
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.8.9.
 * The P_20 field has been temoved from JPK-VAT xml if is empty.
 
 = 1.0.0 - 2023-06-07 =
@@ -55,15 +59,15 @@ There are 3 ways to install this plugin:
 
 = 0.1.8 - 2022-02-24 =
 * Added JPK V7M(2) report.
-* Updated iWorks Options to 2.8.1.
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.8.1.
 
 = 0.1.7 - 2022-01-20 =
-* Updated iWorks Options to 2.8.0.
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.8.0.
 
 = 0.1.6 - 2021-05-12 =
 * Rename directory `vendor` into `includes`.
 * Added VAT rates.
-* Updated [WordPress Options Class](https://github.com/iworks/wordpress-options-class) to version 2.6.9
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.6.9.
 
 = 0.1.5 - 2020-11-24 =
 * Fixed VAT calculation for a car.
@@ -76,7 +80,7 @@ There are 3 ways to install this plugin:
 * Added annually report.
 
 = 0.1.2 - 2019-11-12 =
-* Updated [WordPress Options Class](https://github.com/iworks/wordpress-options-class) to version 2.6.8
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.6.8.
 
 = 0.1.1 =
 * Added new car related count: 20%, 75% and 100% for expenses.

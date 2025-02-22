@@ -142,6 +142,12 @@ abstract class iworks_kpir_jpk {
 		 */
 		$data['money'] = $money = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
 		$data['vat']   = $vat   = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
+		if ( empty( $vat ) || is_string( $vat ) ) {
+			$vat = $data['vat'] = array(
+				'integer'    => 0,
+				'fractional' => 0,
+			);
+		}
 		switch ( $is_car_related ) {
 			case '20':
 			case '75':
@@ -173,9 +179,11 @@ abstract class iworks_kpir_jpk {
 				$money['integer']    = round( ( $v - $money['fractional'] ) / 100 );
 				break;
 			case 'yes':
-				$v                 = round( ( $vat['integer'] / 2 ) * 100 + $vat['fractional'] / 2 );
-				$vat['fractional'] = $v % 100;
-				$vat['integer']    = round( ( $v - $vat['fractional'] ) / 100 );
+				if ( is_array( $vat ) ) {
+					$v                 = round( ( $vat['integer'] / 2 ) * 100 + $vat['fractional'] / 2 );
+					$vat['fractional'] = $v % 100;
+					$vat['integer']    = round( ( $v - $vat['fractional'] ) / 100 );
+				}
 				break;
 		}
 		$data['K_42'] = sprintf( '%d.%02d', $money['integer'], $money['fractional'] );
