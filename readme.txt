@@ -13,6 +13,8 @@ PLUGIN_TAGLINE
 
 == Description ==
 
+The "KPiR" plugin is available also on [GitHub - Orphans](https://github.com/iworks/kpir).
+
 == Installation ==
 
 There are 3 ways to install this plugin:
@@ -42,6 +44,12 @@ There are 3 ways to install this plugin:
 == Screenshots ==
 
 == Changelog ==
+
+Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
+
+= 1.0.2 - 2025-03-xx =
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.9.5.
+* The plugin repository has been moved to GitHub.
 
 = 1.0.2 - 2025-02-22 =
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.9.5.
