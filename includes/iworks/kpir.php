@@ -55,16 +55,13 @@ class iworks_kpir extends iworks {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'wp_loaded', array( $this, 'plugins_loaded' ), 1 );
 		/**
-		 * Load plugin textdomain.
-		 *
-		 * @since 1.0.0
+		 * load github class
 		 */
-		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
-	}
-
-	public function load_textdomain() {
-		$dir = basename( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/languages';
-		load_plugin_textdomain( 'kpir', false, $dir . '/languages' );
+		$filename = $this->includes_directory . '/class-iworks-kpir-github.php';
+		if ( is_file( $filename ) ) {
+			include_once $filename;
+			new iworks_kpir_github();
+		}
 	}
 
 	public function plugins_loaded() {
@@ -288,10 +285,10 @@ class iworks_kpir extends iworks {
 	public function plugin_row_meta( $links, $file ) {
 		if ( $this->dir . '/kpir.php' == $file ) {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
-				$links[] = '<a href="themes.php?page=' . $this->dir . '/admin/index.php">' . __( 'Settings' ) . '</a>';
+				$links[] = '<a href="themes.php?page=' . $this->dir . '/admin/index.php">' . __( 'Settings', 'kpir' ) . '</a>';
 			}
 			/* start:free */
-			$links[] = '<a href="http://iworks.pl/donate/kpir.php">' . __( 'Donate' ) . '</a>';
+			$links[] = '<a href="http://iworks.pl/donate/kpir.php">' . __( 'Donate', 'kpir' ) . '</a>';
 			/* end:free */
 		}
 		return $links;
