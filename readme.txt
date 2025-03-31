@@ -47,8 +47,8 @@ There are 3 ways to install this plugin:
 
 Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 
-= 1.0.3 - 2025-03-xx =
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.9.5.
+= 1.0.3 - 2025-03-31 =
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.9.9.
 * The plugin repository has been moved to GitHub.
 * Missing translation domain names have been added.
 

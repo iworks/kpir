@@ -28,6 +28,7 @@ class iworks_kpir_github {
 	private string $repository = 'iworks/kpir';
 	private string $basename   = 'kpir';
 	private $github_response;
+	private string $plugin_file = 'kpir.php';
 
 	public function __construct() {
 		/**
@@ -45,8 +46,8 @@ class iworks_kpir_github {
 	 * @since 1.0.0
 	 */
 	public function action_init_load_plugin_textdomain() {
-		$dir  = plugin_basename( dirname( dirname( dirname( __DIR__ ) ))). '/languages';
-		load_plugin_textdomain( 'kpir', false, $dir);
+		$dir = plugin_basename( dirname( dirname( dirname( __DIR__ ) ) ) ) . '/languages';
+		load_plugin_textdomain( 'kpir', false, $dir );
 	}
 
 	/**

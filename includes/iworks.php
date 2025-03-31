@@ -32,6 +32,7 @@ class iworks {
 	protected $base;
 	protected $dir;
 	protected $version;
+	protected $options;
 
 	public function __construct() {
 		/**

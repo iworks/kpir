@@ -32,8 +32,7 @@ class iworks_kpir_posttypes {
 	protected $post_type_objects = array();
 
 	public function __construct() {
-		global $iworks_kpir_options;
-		$this->options = $iworks_kpir_options;
+		$this->options = iworks_kpir_get_options();
 		add_action( 'init', array( $this, 'register' ) );
 		/**
 		 * save post

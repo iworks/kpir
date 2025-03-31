@@ -16,10 +16,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
  */
-
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
+defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'iworks_kpir' ) ) {
 	return;
@@ -57,7 +54,7 @@ class iworks_kpir extends iworks {
 		/**
 		 * load github class
 		 */
-		$filename = $this->includes_directory . '/class-iworks-kpir-github.php';
+		$filename = __DIR__ . '/kpir/class-iworks-kpir-github.php';
 		if ( is_file( $filename ) ) {
 			include_once $filename;
 			new iworks_kpir_github();
@@ -113,7 +110,8 @@ class iworks_kpir extends iworks {
 	}
 
 	public function admin_init() {
-		iworks_kpir_options_init();
+		$this->options = iworks_kpir_get_options();
+		$this->options->options_init();
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'wp_ajax_kpir_duplicate_invoice', array( $this, 'duplicate_invoice' ) );
 		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
@@ -478,5 +476,11 @@ class iworks_kpir extends iworks {
 				'fractional' => 0,
 			),
 		);
+	}
+
+	public function register_activation_hook() {
+	}
+
+	public function register_deactivation_hook() {
 	}
 }
