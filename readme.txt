@@ -13,7 +13,7 @@ PLUGIN_TAGLINE
 
 == Description ==
 
-The "KPiR" plugin is available also on [GitHub - Orphans](https://github.com/iworks/kpir).
+The "KPiR" plugin is available also on [GitHub](https://github.com/iworks/kpir).
 
 == Installation ==
 
