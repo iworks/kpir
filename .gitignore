@@ -8,3 +8,4 @@ node_modules
 release
 tests/php/readme.txt
 package-lock.json
+assets/styles
