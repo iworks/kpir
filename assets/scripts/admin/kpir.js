@@ -1,4 +1,4 @@
-/*! Księga Przychodi i Rozchodu - v1.0.2
+/*! Księga Przychodi i Rozchodu - v1.0.3
  * http://iworks.pl/
  * Copyright (c) 2025
  * Licensed GPL-3.0

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Plugins - KPiR - Stable (latest release)\n"
 "Report-Msgid-Bugs-To: http://iworks.pl\n"
-"POT-Creation-Date: 2025-03-09 18:59:31+00:00\n"
+"POT-Creation-Date: 2025-03-31 08:25:04+00:00\n"
 "PO-Revision-Date: 2025-03-09 18:53:00+0000\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -59,7 +59,7 @@ msgstr "Raport miesięczny"
 msgid "Monthly"
 msgstr "Miesięcznie"
 
-#: etc/options.php:105 includes/iworks/kpir.php:273
+#: etc/options.php:105 includes/iworks/class-kpir.php:271
 msgid "JPK V7M"
 msgstr "JPK V7M"
 
@@ -70,6 +70,64 @@ msgstr "Raport roczny"
 #: etc/options.php:117
 msgid "Annually"
 msgstr "Roczne"
+
+#: includes/iworks/class-kpir.php:103
+msgid "Current month: %s"
+msgstr "Aktualny miesiąc: %s"
+
+#: includes/iworks/class-kpir.php:104
+msgid "Past month: %s"
+msgstr "Poprzedni miesiąc: %s"
+
+#: includes/iworks/class-kpir.php:193
+msgid "Are you sure you want to create a duplicate copy of this invoice?"
+msgstr "Czy na pewno powielić dokument księgowy?"
+
+#: includes/iworks/class-kpir.php:194
+msgid "An error occurred duplicating invoice. Please try again."
+msgstr ""
+"Wystąpił błąd w czasie powielania dokumentu księgowego. Proszę spróbować "
+"ponownie."
+
+#: includes/iworks/class-kpir.php:197
+msgid "Please select month first!"
+msgstr "Proszę najpierw wybrać miesiąc!"
+
+#: includes/iworks/class-kpir.php:226
+msgid "Monthly report"
+msgstr "Raport miesięczny"
+
+#: includes/iworks/class-kpir.php:233
+msgid "Annually report"
+msgstr "Raport roczny"
+
+#: includes/iworks/class-kpir.php:238
+msgid "Reports"
+msgstr "Raporty"
+
+#: includes/iworks/class-kpir.php:252
+msgid "JPK VAT(3)"
+msgstr "JPK VAT(3)"
+
+#: includes/iworks/class-kpir.php:256 includes/iworks/class-kpir.php:275
+msgid "Something went wrong!"
+msgstr "Coś poszło nie tak!"
+
+#: includes/iworks/class-kpir.php:286
+msgid "Settings"
+msgstr "Ustawienia"
+
+#: includes/iworks/class-kpir.php:289
+msgid "Donate"
+msgstr "Złóż datek"
+
+#: includes/iworks/class-kpir.php:322
+msgid "Duplicate"
+msgstr "Powiel"
+
+#: includes/iworks/class-kpir.php:373
+msgid "Copy of %s"
+msgstr "Kopia %s"
 
 #: includes/iworks/kpir/jpk/vat_3.php:132 template-parts/jpk/no-entries.php:2
 msgid "There is no entries to create JPK VAT file."
@@ -633,64 +691,6 @@ msgstr "(powiązane z samochodem)"
 msgid "There is no invoices in this month."
 msgstr "Brak dokumentów księgowych w tym miesiącu."
 
-#: includes/iworks/kpir.php:106
-msgid "Current month: %s"
-msgstr "Aktualny miesiąc: %s"
-
-#: includes/iworks/kpir.php:107
-msgid "Past month: %s"
-msgstr "Poprzedni miesiąc: %s"
-
-#: includes/iworks/kpir.php:195
-msgid "Are you sure you want to create a duplicate copy of this invoice?"
-msgstr "Czy na pewno powielić dokument księgowy?"
-
-#: includes/iworks/kpir.php:196
-msgid "An error occurred duplicating invoice. Please try again."
-msgstr ""
-"Wystąpił błąd w czasie powielania dokumentu księgowego. Proszę spróbować "
-"ponownie."
-
-#: includes/iworks/kpir.php:199
-msgid "Please select month first!"
-msgstr "Proszę najpierw wybrać miesiąc!"
-
-#: includes/iworks/kpir.php:228
-msgid "Monthly report"
-msgstr "Raport miesięczny"
-
-#: includes/iworks/kpir.php:235
-msgid "Annually report"
-msgstr "Raport roczny"
-
-#: includes/iworks/kpir.php:240
-msgid "Reports"
-msgstr "Raporty"
-
-#: includes/iworks/kpir.php:254
-msgid "JPK VAT(3)"
-msgstr "JPK VAT(3)"
-
-#: includes/iworks/kpir.php:258 includes/iworks/kpir.php:277
-msgid "Something went wrong!"
-msgstr "Coś poszło nie tak!"
-
-#: includes/iworks/kpir.php:288
-msgid "Settings"
-msgstr "Ustawienia"
-
-#: includes/iworks/kpir.php:291
-msgid "Donate"
-msgstr "Złóż datek"
-
-#: includes/iworks/kpir.php:324
-msgid "Duplicate"
-msgstr "Powiel"
-
-#: includes/iworks/kpir.php:375
-msgid "Copy of %s"
-msgstr "Kopia %s"
-
 #: includes/iworks/options/options.php:263
 msgid "An error occurred while getting the configuration."
 msgstr "Wystąpił błąd przy pobieraniu konfiguracji."
@@ -756,6 +756,11 @@ msgstr "Marcin Pietrzak"
 msgid "http://iworks.pl/"
 msgstr "http://iworks.pl/"
 
+#: includes/iworks/class-kpir.php:99 includes/iworks/class-kpir.php:101
+msgctxt "date admin dashbord widget"
+msgid "Y F"
+msgstr "Y F"
+
 #: includes/iworks/kpir/posttypes/contractor.php:105
 msgctxt "Contractor General Name"
 msgid "Contractors"
@@ -775,8 +780,3 @@ msgstr "Dokumenty księgowe"
 msgctxt "Invoice Singular Name"
 msgid "Invoice"
 msgstr "Faktura"
-
-#: includes/iworks/kpir.php:102 includes/iworks/kpir.php:104
-msgctxt "date admin dashbord widget"
-msgid "Y F"
-msgstr "Y F"
