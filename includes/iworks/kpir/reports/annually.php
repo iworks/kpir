@@ -267,8 +267,8 @@ class iworks_kpir_reports_annually {
 				if ( $query->have_posts() ) {
 					while ( $query->have_posts() ) {
 						$query->the_post();
-						$ID                             = get_the_ID();
-						$value                          = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
+						$sum                            = $kpir->zero_sum_table();
+						$value                          = get_post_meta( get_the_ID(), 'iworks_kpir_income_sale', true );
 						$sum['cash_pit']['integer']    += intval( $value['integer'] );
 						$sum['cash_pit']['fractional'] += intval( $value['fractional'] );
 						/**
