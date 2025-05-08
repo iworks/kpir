@@ -131,10 +131,9 @@ class iworks {
 	protected function get_module_file( $filename, $vendor = 'iworks' ) {
 		return realpath(
 			sprintf(
-				'%s/%s/%s/%s.php',
+				'%s/%s/kpir/%s.php',
 				$this->base,
 				$vendor,
-				$this->dir,
 				$filename
 			)
 		);

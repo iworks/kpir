@@ -73,6 +73,16 @@ function iworks_kpir_options() {
 				'th'                => __( 'Phone', 'kpir' ),
 				'sanitize_callback' => 'esc_html',
 			),
+			array(
+				'name'              => 'cash_pit',
+				'type'              => 'checkbox',
+				'sanitize_callback' => 'intval',
+				'default'           => 0,
+				'th'                => esc_html__( 'Cash PIT', 'kpir' ),
+				'description'       => esc_html__( 'Cash PIT allows for the application of personal income tax only after receiving payment from the contractor.', 'kpir' ),
+				'classes'           => array( 'switch-button' ),
+				'since'             => '1.1.0',
+			),
 		),
 		//      'metaboxes' => array(),
 		'pages'      => array(

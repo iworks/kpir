@@ -50,9 +50,10 @@ class iworks_kpir_reports_annually {
 		 */
 		$this->show_filter( $post_type_object, $current );
 
-		$cf_date_name       = $post_type_object->get_custom_field_basic_date_name();
-		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
-		$date_format        = get_option( 'date_format' );
+		$cf_date_name         = $post_type_object->get_custom_field_basic_date_name();
+		$cf_cash_in_date_name = $post_type_object->get_custom_field_date_of_cash_name();
+		$cf_contractor_name   = $post_type_object->get_custom_field_basic_contractor_name();
+		$date_format          = get_option( 'date_format' );
 
 		$query = $kpir->get_annual_query( $current );
 
@@ -253,6 +254,41 @@ class iworks_kpir_reports_annually {
 			/* Restore original Post Data */
 			wp_reset_postdata();
 			/**
+			 * options
+			 */
+			$options = iworks_kpir_get_options();
+			/**
+			 * cash-in PIT
+			 *
+			 * @since 1.1.0
+			 */
+			if ( $options->get_option( 'cash_pit' ) ) {
+				$query = $kpir->get_annual_cash_in_query( $current );
+				if ( $query->have_posts() ) {
+					while ( $query->have_posts() ) {
+						$query->the_post();
+						$ID                             = get_the_ID();
+						$value                          = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
+						$sum['cash_pit']['integer']    += intval( $value['integer'] );
+						$sum['cash_pit']['fractional'] += intval( $value['fractional'] );
+						/**
+						 * month
+						 */
+						$month = date_i18n( 'F', get_post_meta( $ID, $cf_cash_in_date_name, true ) );
+						if ( ! isset( $data[ $month ] ) ) {
+							$data[ $month ] = $kpir->zero_sum_table();
+						}
+						foreach ( $sum as $type => $parts ) {
+							foreach ( $parts as $part => $value ) {
+								$data[ $month ][ $type ][ $part ] += $value;
+							}
+						}
+					}
+					/* Restore original Post Data */
+					wp_reset_postdata();
+				}
+			}
+			/**
 			 * print
 			 */
 			echo '<table class="kpir-report kpir-report-annually">';
@@ -270,6 +306,9 @@ class iworks_kpir_reports_annually {
 				echo $this->html_helper_money( $sum['income'] );
 				echo $this->html_helper_money( array( 0, 0 ) );
 				echo $this->html_helper_money( $sum['income'] );
+				if ( $options->get_option( 'cash_pit' ) ) {
+					echo $this->html_helper_money( $sum['cash_pit'] );
+				}
 				echo $this->html_helper_money( $sum['expense_netto'] );
 				echo $this->html_helper_money( $sum['expense_other'] );
 				echo $this->html_helper_money( $sum['expense_salary'] );
@@ -281,6 +320,9 @@ class iworks_kpir_reports_annually {
 				echo $this->html_helper_money( $cumulative['income'] );
 				echo $this->html_helper_money( array( 0, 0 ) );
 				echo $this->html_helper_money( $cumulative['income'] );
+				if ( $options->get_option( 'cash_pit' ) ) {
+					echo $this->html_helper_money( $cumulative['cash_pit'] );
+				}
 				echo $this->html_helper_money( $cumulative['expense_netto'] );
 				echo $this->html_helper_money( $cumulative['expense_other'] );
 				echo $this->html_helper_money( $cumulative['expense_salary'] );
@@ -298,6 +340,9 @@ class iworks_kpir_reports_annually {
 			echo $this->html_helper_money( $cumulative['income'] );
 			echo $this->html_helper_money( array( 0, 0 ) );
 			echo $this->html_helper_money( $cumulative['income'] );
+			if ( $options->get_option( 'cash_pit' ) ) {
+				echo $this->html_helper_money( $cumulative['cash_pit'] );
+			}
 			echo $this->html_helper_money( $cumulative['expense_netto'] );
 			echo $this->html_helper_money( $cumulative['expense_other'] );
 			echo $this->html_helper_money( $cumulative['expense_salary'] );
@@ -314,6 +359,7 @@ class iworks_kpir_reports_annually {
 	}
 
 	private function html_table_thead() {
+		$options              = iworks_kpir_get_options();
 		$show_currency_symbol = false;
 
 		$fix_row = $show_currency_symbol ? 0 : -1;
@@ -325,6 +371,9 @@ class iworks_kpir_reports_annually {
 		$content .= $this->html_table_th( 'Sprzedane towary i usługi', null, 0 + $fix_row );
 		$content .= $this->html_table_th( 'Pozostałe przychody', null, 0 + $fix_row );
 		$content .= $this->html_table_th( 'Przychód razem', null, 0 + $fix_row );
+		if ( $options->get_option( 'cash_pit' ) ) {
+			$content .= $this->html_table_th( esc_html__( 'Cash-in', 'kpir' ), null, 0 + $fix_row );
+		}
 		$content .= $this->html_table_th( 'Zakup towarów i materiałów', null, 0 + $fix_row );
 		$content .= $this->html_table_th( 'Koszty uboczne', null, 0 + $fix_row );
 		$content .= $this->html_table_th( 'Koszty wynagrodzenia', null, 0 + $fix_row );

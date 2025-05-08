@@ -36,8 +36,58 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	public function __construct() {
 		parent::__construct();
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
+		add_action( 'init', array( $this, 'action_init_set_fields' ), 9823 );
+		add_action( 'init', array( $this, 'action_init_set_filters' ), 9824 );
+		/**
+		 * save extra field
+		 */
+		$this->post_type_objects[ $this->get_name() ] = $this;
+		add_action( 'iworks_kpir_posttype_update_post_meta', array( $this, 'save_year_month_to_extra_field' ), 10, 5 );
+		/**
+		 * Meta Boxes to close by default
+		 */
+		$meta_boxes_to_close = array( 'income', 'expense' );
+		foreach ( $meta_boxes_to_close as $meta_box ) {
+			$filter = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $meta_box );
+			add_filter( $filter, array( $this, 'close_meta_boxes' ) );
+		}
+		/**
+		 * change default columns
+		 */
+		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
+		add_action( 'manage_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
+		/**
+		 * apply default sort order
+		 */
+		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
+	}
+
+	/**
+	 * set filters
+	 *
+	 * @since 1.1.0
+	 */
+	public function action_init_set_filters() {
+		/**
+		 * add class to metaboxes
+		 */
+		foreach ( array_keys( $this->fields ) as $name ) {
+			if ( 'basic' == $name ) {
+				continue;
+			}
+			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
+			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
+		}
+	}
+
+	/**
+	 * set fields
+	 */
+	public function action_init_set_fields() {
 		/**
 		 * fields
+	 *
+	 * @since 1.1.0
 		 */
 		$this->fields = array(
 			'basic'     => array(
@@ -56,6 +106,13 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'args'  => array(
 						'class'   => array( 'medium-text' ),
 						'default' => date_i18n( 'Y-m-d', time() ),
+					),
+				),
+				'date_of_cash'  => array(
+					'type'  => 'date',
+					'label' => __( 'Cash-in Date', 'kpir' ),
+					'args'  => array(
+						'class' => array( 'medium-text' ),
 					),
 				),
 				'contractor'    => array(
@@ -236,39 +293,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			),
 		);
 		/**
-		 * add class to metaboxes
+		 * remove date_of_cash if not cash-in personal income tax method
+		 *
+		 * @since 1.1.0
 		 */
-		foreach ( array_keys( $this->fields ) as $name ) {
-			if ( 'basic' == $name ) {
-				continue;
-			}
-			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
-			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
+		if ( empty( $this->options->get_option( 'cash_pit' ) ) ) {
+			unset( $this->fields['basic']['date_of_cash'] );
 		}
-		/**
-		 * save extra field
-		 */
-		$this->post_type_objects[ $this->get_name() ] = $this;
-		add_action( 'iworks_kpir_posttype_update_post_meta', array( $this, 'save_year_month_to_extra_field' ), 10, 5 );
-		/**
-		 * Meta Boxes to close by default
-		 */
-		$meta_boxes_to_close = array( 'income', 'expense' );
-		foreach ( $meta_boxes_to_close as $meta_box ) {
-			$filter = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $meta_box );
-			add_filter( $filter, array( $this, 'close_meta_boxes' ) );
-		}
-		/**
-		 * change default columns
-		 */
-		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
-		add_action( 'manage_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
-		/**
-		 * apply default sort order
-		 */
-		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
 	}
-
 	/**
 	 * Add default class to postbox,
 	 */
@@ -657,6 +689,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	 */
 	public function get_custom_field_basic_date_name() {
 		return $this->options->get_option_name( 'basic_date' );
+	}
+
+	/**
+	 * Get "date_of_cash" custom filed name.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return string Custom Field meta_key.
+	 */
+	public function get_custom_field_date_of_cash_name() {
+		return $this->options->get_option_name( 'basic_date_of_cash' );
 	}
 
 	/**

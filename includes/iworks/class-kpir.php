@@ -451,6 +451,10 @@ class iworks_kpir extends iworks {
 				'integer'    => 0,
 				'fractional' => 0,
 			),
+			'cash_pit'       => array(
+				'integer'    => 0,
+				'fractional' => 0,
+			),
 			'expense'        => array(
 				'integer'    => 0,
 				'fractional' => 0,
@@ -483,4 +487,43 @@ class iworks_kpir extends iworks {
 
 	public function register_deactivation_hook() {
 	}
+
+	/**
+	 * Get annual cash-in Query
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $annual annual to prepre, format Y-m
+	 *
+	 * @return WP_Query $query WordPress Post Query Object
+	 */
+	public function get_annual_cash_in_query( $annual ) {
+		$cf_date_name = $this->post_type_invoice->get_custom_field_date_of_cash_name();
+		$args         = array(
+			'post_type'        => $this->post_type_invoice->get_name(),
+			'nopaging'         => true,
+			'suppress_filters' => true,
+			'orderby'          => $cf_date_name,
+			'order'            => 'ASC',
+			'meta_query'       => array(
+				'relation' => 'AND',
+				array(
+					'key'     => $cf_date_name,
+					'value'   => array(
+						strtotime( sprintf( '%d-01-01 00:00:00', $annual ) ),
+						strtotime( sprintf( '%d-12-31 23:59:59', $annual ) ),
+					),
+					'compare' => 'BETWEEN',
+					'type'    => 'NUMERIC',
+				),
+				array(
+					'key'   => 'iworks_kpir_basic_type',
+					'value' => 'income',
+				),
+			),
+		);
+		$query        = new WP_Query( $args );
+		return $query;
+	}
+
 }
