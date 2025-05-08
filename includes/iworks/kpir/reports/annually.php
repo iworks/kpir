@@ -267,22 +267,15 @@ class iworks_kpir_reports_annually {
 				if ( $query->have_posts() ) {
 					while ( $query->have_posts() ) {
 						$query->the_post();
-						$sum                            = $kpir->zero_sum_table();
-						$value                          = get_post_meta( get_the_ID(), 'iworks_kpir_income_sale', true );
-						$sum['cash_pit']['integer']    += intval( $value['integer'] );
-						$sum['cash_pit']['fractional'] += intval( $value['fractional'] );
+						$value = get_post_meta( get_the_ID(), 'iworks_kpir_income_sale', true );
 						/**
 						 * month
 						 */
-						$month = date_i18n( 'F', get_post_meta( $ID, $cf_cash_in_date_name, true ) );
+						$month = date_i18n( 'F', get_post_meta( get_the_ID(), $cf_cash_in_date_name, true ) );
 						if ( ! isset( $data[ $month ] ) ) {
 							$data[ $month ] = $kpir->zero_sum_table();
 						}
-						foreach ( $sum as $type => $parts ) {
-							foreach ( $parts as $part => $value ) {
-								$data[ $month ][ $type ][ $part ] += $value;
-							}
-						}
+						$data[ $month ]['cash_pit']['integer'] += $value['integer'];
 					}
 					/* Restore original Post Data */
 					wp_reset_postdata();
