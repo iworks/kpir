@@ -1,11 +1,11 @@
-# Translation of Plugins - KPiR - Stable (latest release) in Polish
-# This file is distributed under the same license as the Plugins - KPiR - Stable (latest release) package.
+# Translation of Plugins - KPiR - Development (trunk) in Polish
+# This file is distributed under the same license as the Plugins - KPiR - Development (trunk) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Plugins - KPiR - Stable (latest release)\n"
+"Project-Id-Version: Plugins - KPiR - Development (trunk)\n"
 "Report-Msgid-Bugs-To: http://iworks.pl\n"
-"POT-Creation-Date: 2025-05-08 19:35:51+00:00\n"
-"PO-Revision-Date: 2025-03-09 18:53:00+0000\n"
+"POT-Creation-Date: 2025-05-09 11:26:41+00:00\n"
+"PO-Revision-Date: 2025-05-09 11:25:37+0000\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,13 +53,15 @@ msgstr "Telefon"
 
 #: etc/options.php:81
 msgid "Cash PIT"
-msgstr ""
+msgstr "Kasowy PIT"
 
 #: etc/options.php:82
 msgid ""
 "Cash PIT allows for the application of personal income tax only after "
 "receiving payment from the contractor."
 msgstr ""
+"Kasowy PIT pozwala na zastosowanie podatku dochodowego od osób fizycznych "
+"dopiero po otrzymaniu zapłaty od kontrahenta."
 
 #: etc/options.php:90
 msgid "Monthly Report"
@@ -154,7 +156,7 @@ msgid "Month"
 msgstr "Miesiąc"
 
 #: includes/iworks/kpir/jpk/vat_3.php:171
-#: includes/iworks/kpir/reports/annually.php:472
+#: includes/iworks/kpir/reports/annually.php:465
 #: includes/iworks/kpir/reports/monthly.php:586
 #: template-parts/jpk/v7m/show.php:56 template-parts/jpk/v7m-2/show.php:56
 msgid "Select month"
@@ -377,9 +379,8 @@ msgid "Event date"
 msgstr "Data wydarzenia"
 
 #: includes/iworks/kpir/posttypes/invoice.php:113
-#, fuzzy
 msgid "Cash-in Date"
-msgstr "Podstawowe dane"
+msgstr "Data wpływu pieniędzy"
 
 #: includes/iworks/kpir/posttypes/invoice.php:127
 msgid "Invoice description"
@@ -684,20 +685,20 @@ msgstr "Opis"
 msgid "Invoice Number"
 msgstr "Numer dokumentu księgowego"
 
-#: includes/iworks/kpir/reports/annually.php:356
+#: includes/iworks/kpir/reports/annually.php:349
 msgid "There is no invoices in this year."
 msgstr "Brak dokumentów księgowych w tym roku."
 
-#: includes/iworks/kpir/reports/annually.php:375
+#: includes/iworks/kpir/reports/annually.php:368
 msgid "Cash-in"
-msgstr ""
+msgstr "Wpływ pieniędzy"
 
-#: includes/iworks/kpir/reports/annually.php:470
+#: includes/iworks/kpir/reports/annually.php:463
 #: includes/iworks/kpir/reports/monthly.php:584
 msgid "Filter by date"
 msgstr "Filtruj po dacie"
 
-#: includes/iworks/kpir/reports/annually.php:482
+#: includes/iworks/kpir/reports/annually.php:475
 #: includes/iworks/kpir/reports/monthly.php:596
 msgid "Filter"
 msgstr "Filtr"

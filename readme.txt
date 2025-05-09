@@ -49,7 +49,7 @@ Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 
 = 1.1.0 - 2025-05-08 =
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.0.0.
-* The cash method of settling income tax has been added.
+* The cash method of settling income tax has been added. [#1](https://github.com/iworks/kpir/issues/1).
 
 = 1.0.3 - 2025-03-31 =
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.9.9.

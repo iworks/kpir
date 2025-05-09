@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.1.0\n"
 "Report-Msgid-Bugs-To: http://iworks.pl\n"
-"POT-Creation-Date: 2025-05-08 19:58:12+00:00\n"
+"POT-Creation-Date: 2025-05-09 11:29:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -162,7 +162,7 @@ msgid "Month"
 msgstr ""
 
 #: includes/iworks/kpir/jpk/vat_3.php:171
-#: includes/iworks/kpir/reports/annually.php:472
+#: includes/iworks/kpir/reports/annually.php:465
 #: includes/iworks/kpir/reports/monthly.php:586
 #: template-parts/jpk/v7m/show.php:56 template-parts/jpk/v7m-2/show.php:56
 msgid "Select month"
@@ -684,20 +684,20 @@ msgstr ""
 msgid "Invoice Number"
 msgstr ""
 
-#: includes/iworks/kpir/reports/annually.php:356
+#: includes/iworks/kpir/reports/annually.php:349
 msgid "There is no invoices in this year."
 msgstr ""
 
-#: includes/iworks/kpir/reports/annually.php:375
+#: includes/iworks/kpir/reports/annually.php:368
 msgid "Cash-in"
 msgstr ""
 
-#: includes/iworks/kpir/reports/annually.php:470
+#: includes/iworks/kpir/reports/annually.php:463
 #: includes/iworks/kpir/reports/monthly.php:584
 msgid "Filter by date"
 msgstr ""
 
-#: includes/iworks/kpir/reports/annually.php:482
+#: includes/iworks/kpir/reports/annually.php:475
 #: includes/iworks/kpir/reports/monthly.php:596
 msgid "Filter"
 msgstr ""
