@@ -31,13 +31,22 @@ class iworks_kpir_posttypes {
 	protected $fields;
 	protected $post_type_objects = array();
 
+
+
+	protected bool $use_cash_pit = false;
+
 	public function __construct() {
-		$this->options = iworks_kpir_get_options();
 		add_action( 'init', array( $this, 'register' ) );
+		add_action( 'init', array( $this, 'action_init_set_options' ), 7020 );
 		/**
 		 * save post
 		 */
 		add_action( 'save_post', array( $this, 'save_post_meta' ), 10, 3 );
+	}
+
+	public function action_init_set_options() {
+		$this->options      = iworks_kpir_get_options();
+		$this->use_cash_pit = $this->options->get_option_name( 'use_cash_pit' );
 	}
 
 	public function get_name() {
@@ -170,5 +179,3 @@ class iworks_kpir_posttypes {
 		return false;
 	}
 }
-
-

@@ -1,9 +1,24 @@
 <?php
+/**
+ * Plugin Name: KPIR - Invoices Post Type
+ * Plugin URI: https://iworks.pl/
+ * Description: Handles the custom post type for Invoices in KPIR (Księga Przychodów i Rozchodów) plugin.
+ * Version: 1.0.0
+ * Author: Marcin Pietrzak
+ * Author URI: https://iworks.pl/
+ * License: GPLv3 or later
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * @package KPIR
+ * @category PostTypes
+ * @author Marcin Pietrzak <marcin@iworks.pl>
+ */
+
 /*
 Copyright 2017-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as
+it under the terms of the GNU General Public License, version 3, as
 published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
@@ -25,14 +40,53 @@ if ( class_exists( 'iworks_kpir_posttypes_invoice' ) ) {
 	return;
 }
 
-require_once dirname( dirname( __FILE__ ) ) . '/posttypes.php';
+require_once dirname( __DIR__, 1 ) . '/posttypes.php';
 
+/**
+ * Handles the Invoices custom post type for KPIR plugin.
+ *
+ * This class manages the registration and functionality of the Invoices post type,
+ * including custom meta boxes, columns, and sorting for invoice data.
+ *
+ * @package KPIR
+ * @subpackage PostTypes
+ * @since 1.0.0
+ */
 class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 
-	protected $post_type_name            = 'iworks_kpir_invoice';
-	private $custom_field_year           = 'year';
+	/**
+	 * Post type name.
+	 *
+	 * @var string
+	 */
+	protected $post_type_name = 'iworks_kpir_invoice';
+
+	/**
+	 * Custom field name for storing the year.
+	 *
+	 * @var string
+	 */
+	private $custom_field_year = 'year';
+
+	/**
+	 * Contractor post type object.
+	 *
+	 * @var object|null
+	 */
 	private $contractor_post_type_object = null;
 
+	/**
+	 * Class constructor.
+	 *
+	 * Sets up the invoice post type and related hooks including:
+	 * - Title placeholder text
+	 * - Custom fields initialization
+	 * - Meta boxes configuration
+	 * - Admin columns and sorting
+	 * - Default sort order
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
@@ -55,11 +109,18 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 * change default columns
 		 */
 		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
+		add_filter( "manage_edit-{$this->get_name()}_sortable_columns", array( $this, 'filter_add_sortable_columns' ) );
 		add_action( 'manage_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
 		/**
 		 * apply default sort order
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
+		add_action( 'pre_get_posts', array( $this, 'apply_filter_order_date_of_payment' ) );
+	}
+
+	public function filter_add_sortable_columns( $columns ) {
+		$columns['date_of_payment'] = $this->get_custom_field_date_of_cash_name();
+		return $columns;
 	}
 
 	/**
@@ -297,7 +358,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 *
 		 * @since 1.1.0
 		 */
-		if ( empty( $this->options->get_option( 'cash_pit' ) ) ) {
+		if ( false === $this->use_cash_pit ) {
 			unset( $this->fields['basic']['date_of_cash'] );
 		}
 	}
@@ -577,7 +638,22 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				if ( empty( $timestamp ) ) {
 					echo '-';
 				} else {
-					echo date_i18n( get_option( 'date_format' ), $timestamp );
+					echo date( 'Y-m-d', $timestamp );
+				}
+				break;
+			case 'date_of_payment':
+				$basic_type = get_post_meta( $post_id, $this->get_custom_field_basic_type_name(), true );
+				if ( 'income' == $basic_type ) {
+					$timestamp = get_post_meta( $post_id, $this->get_custom_field_date_of_cash_name(), true );
+					if ( empty( $timestamp ) ) {
+						echo '<small>';
+						esc_html_e( '&mdash; not paid yet &mdash;', 'kpir' );
+						echo '</small>';
+					} else {
+						echo date( 'Y-m-d', $timestamp );
+					}
+				} else {
+					echo '&mdash;';
 				}
 				break;
 			case 'description':
@@ -605,12 +681,15 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
 		$columns['contractor']      = __( 'Contractor', 'kpir' );
-		$columns['date_of_invoice'] = __( 'Date', 'kpir' );
-		$columns['symbol']          = '<span class="dashicons dashicons-admin-generic"></span>';
-		$columns['description']     = __( 'Description', 'kpir' );
-		$columns['expense']         = __( 'Expense', 'kpir' );
-		$columns['income']          = __( 'Income', 'kpir' );
-		$columns['title']           = __( 'Invoice Number', 'kpir' );
+		$columns['date_of_invoice'] = __( 'Date of invoice', 'kpir' );
+		if ( $this->use_cash_pit ) {
+			$columns['date_of_payment'] = __( 'Payment Date', 'kpir' );
+		}
+		$columns['symbol']      = '<span class="dashicons dashicons-admin-generic"></span>';
+		$columns['description'] = __( 'Description', 'kpir' );
+		$columns['expense']     = __( 'Expense', 'kpir' );
+		$columns['income']      = __( 'Income', 'kpir' );
+		$columns['title']       = __( 'Invoice Number', 'kpir' );
 		return $columns;
 	}
 
@@ -632,12 +711,6 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 * do not change outsite th admin area
 		 */
 		if ( ! is_admin() ) {
-			return $query;
-		}
-		/**
-		 * check get_current_screen()
-		 */
-		if ( ! function_exists( 'get_current_screen' ) ) {
 			return $query;
 		}
 		/**
@@ -678,6 +751,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			}
 		}
 		return $query;
+	}
+
+	/**
+	 * Get "basic_type" custom filed name.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Custom Field meta_key.
+	 */
+	public function get_custom_field_basic_type_name() {
+		return $this->options->get_option_name( 'basic_type' );
 	}
 
 	/**
@@ -723,5 +807,29 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	public function get_custom_field_basic_contractor_name() {
 		return $this->options->get_option_name( 'basic_contractor' );
 	}
-}
 
+	public function apply_filter_order_date_of_payment( $query ) {
+		if ( ! is_admin() ) {
+			return $query;
+		}
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return $query;
+		}
+		$key = $this->get_custom_field_date_of_cash_name();
+		if ( get_query_var( 'orderby' ) !== $key ) {
+			return $query;
+		}
+		$query->set( 'orderby', $key );
+		$query->set(
+			'meta_query',
+			array(
+				'relation' => 'AND',
+				$key       => array(
+					'key'     => $key,
+					'compare' => 'EXISTS',
+				),
+			)
+		);
+		return $query;
+	}
+}

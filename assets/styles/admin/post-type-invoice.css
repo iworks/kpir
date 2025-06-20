@@ -31,11 +31,13 @@
 .wp-list-table tbody .column-income {
   padding-right: 10px;
 }
-.wp-list-table .column-expense,
-.wp-list-table .column-income {
+.wp-list-table .column-contractor, .wp-list-table .column-title {
+  width: 15em;
+}
+.wp-list-table .column-expense, .wp-list-table .column-income {
   width: 5em;
 }
-.wp-list-table .column-date_of_invoice {
+.wp-list-table .column-date_of_invoice, .wp-list-table .column-date_of_payment {
   width: 10em;
 }
 .wp-list-table .column-symbol {

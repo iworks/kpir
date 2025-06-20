@@ -25,7 +25,7 @@ if ( class_exists( 'iworks_kpir_posttypes_contractor' ) ) {
 	return;
 }
 
-require_once dirname( dirname( __FILE__ ) ) . '/posttypes.php';
+require_once dirname( __DIR__, 1 ) . '/posttypes.php';
 
 class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 
@@ -33,7 +33,26 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 
 	public function __construct() {
 		parent::__construct();
-		$this->fields                                 = array(
+		add_action( 'init', array( $this, 'action_init_set_fields' ), 9823 );
+		$this->post_type_objects[ $this->get_name() ] = $this;
+		add_action( 'wp_ajax_iworks_get_contractors', array( $this, 'get_contractors_json' ) );
+		/**
+		 * change default columns
+		 */
+		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
+		add_action( 'manage_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
+		/**
+		 * apply default sort order
+		 */
+		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
+		/**
+		 * add Contractors to invoices as a filter
+		 */
+		add_action( 'restrict_manage_posts', array( $this, 'add_contacators_to_invoices_list' ), 10, 2 );
+	}
+
+	public function action_init_set_fields() {
+		$this->fields = array(
 			'contractor_data' => array(
 				'full_name'    => array(
 					'label' => __( 'Full Name:', 'kpir' ),
@@ -83,23 +102,7 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 				'website' => array( 'label' => __( 'Website', 'kpir' ) ),
 			),
 		);
-		$this->post_type_objects[ $this->get_name() ] = $this;
-		add_action( 'wp_ajax_iworks_get_contractors', array( $this, 'get_contractors_json' ) );
-		/**
-		 * change default columns
-		 */
-		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
-		add_action( 'manage_posts_custom_column', array( $this, 'custom_columns' ), 10, 2 );
-		/**
-		 * apply default sort order
-		 */
-		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
-		/**
-		 * add Contractors to invoices as a filter
-		 */
-		add_action( 'restrict_manage_posts', array( $this, 'add_contacators_to_invoices_list' ), 10, 2 );
 	}
-
 	public function register() {
 		$labels = array(
 			'name'                  => _x( 'Contractors', 'Contractor General Name', 'kpir' ),
@@ -308,4 +311,3 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		echo '</select>';
 	}
 }
-

@@ -1,108 +1,136 @@
 .iworks-kpir-row {
-    display: grid;
-    grid-template-columns: 10em auto;
-    gap: 1em;
-    margin: 1em 0;
-    label {
-        width: 100px;
-    }
-    .select2 {
-        min-width: 200px;
-        width: 100%;
-    }
+	display: grid;
+	grid-template-columns: 10em auto;
+	gap: 1em;
+	margin: 1em 0;
+
+	label {
+		width: 100px;
+	}
+
+	.select2 {
+		min-width: 200px;
+		width: 100%;
+	}
 }
 
 #income,
 #expense {
-    .iworks-kpir-row {
-        display: block;
-        label {
-            display: block;
-            width: 100%;
-        }
-    }
+	.iworks-kpir-row {
+		display: block;
+
+		label {
+			display: block;
+			width: 100%;
+		}
+	}
 }
 
 .wp-list-table {
-    tbody {
-        .column-symbol,
-        .column-expense,
-        .column-income {
-            text-align: right;
-        }
-        .column-expense,
-        .column-income {
-            padding-right: 10px;
-        }
-    }
-    .column-expense,
-    .column-income {
-        width: 5em;
-    }
-    .column-date_of_invoice {
-        width: 10em;
-    }
-    .column-symbol {
-        width: 1em;
-    }
-    .duplicate_invoice {
-        a {
-            cursor: pointer
-        }
-    }
+	tbody {
+
+		.column-symbol,
+		.column-expense,
+		.column-income {
+			text-align: right;
+		}
+
+		.column-expense,
+		.column-income {
+			padding-right: 10px;
+		}
+	}
+
+	.column {
+
+		&-contractor,
+		&-title {
+			width: 15em;
+		}
+
+		&-expense,
+		&-income {
+			width: 5em;
+		}
+
+		&-date_of {
+
+			&_invoice,
+			&_payment {
+				width: 10em;
+			}
+		}
+
+		&-symbol {
+			width: 1em;
+		}
+	}
+
+	.duplicate_invoice {
+		a {
+			cursor: pointer
+		}
+	}
 }
 
 body {
-    &:not(.kpir-not-set) {
-        .iworks-type {
-            .iworks-kpir-row-description {
-                display: none;
-            }
-        }
-    }
-    &.kpir-not-set {
-        .iworks-type {
-            .iworks-kpir-row {
-                display: none;
-            }
-            .iworks-kpir-row-description {
-                display: block;
-            }
-        }
-    }
-    &.income {
-        .iworks-type {
-            &:not(#income) {
-                display: none;
-            }
-        }
-    }
-    &.expense {
-        .iworks-type {
-            &:not(#expense) {
-                display: none;
-            }
-        }
-    }
-    &.salary {
-        .iworks-type {
-            &:not(#salary) {
-                display: none;
-            }
-        }
-    }
-    &.asset {
-        .iworks-type {
-            &:not(#asset) {
-                display: none;
-            }
-        }
-    }
-    &.insurance {
-        .iworks-type {
-            &:not(#insurance) {
-                display: none;
-            }
-        }
-    }
+	&:not(.kpir-not-set) {
+		.iworks-type {
+			.iworks-kpir-row-description {
+				display: none;
+			}
+		}
+	}
+
+	&.kpir-not-set {
+		.iworks-type {
+			.iworks-kpir-row {
+				display: none;
+			}
+
+			.iworks-kpir-row-description {
+				display: block;
+			}
+		}
+	}
+
+	&.income {
+		.iworks-type {
+			&:not(#income) {
+				display: none;
+			}
+		}
+	}
+
+	&.expense {
+		.iworks-type {
+			&:not(#expense) {
+				display: none;
+			}
+		}
+	}
+
+	&.salary {
+		.iworks-type {
+			&:not(#salary) {
+				display: none;
+			}
+		}
+	}
+
+	&.asset {
+		.iworks-type {
+			&:not(#asset) {
+				display: none;
+			}
+		}
+	}
+
+	&.insurance {
+		.iworks-type {
+			&:not(#insurance) {
+				display: none;
+			}
+		}
+	}
 }

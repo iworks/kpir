@@ -1,40 +1,94 @@
 <?php
-/*
-Copyright 2017-PLUGIN_TILL_YEAR Marcin Pietrzak (marcin@iworks.pl)
-
-this program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as
-published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
+/**
+ * Plugin Name: KPIR - Main Plugin Class
+ * Plugin URI: https://iworks.pl/
+ * Description: Main plugin class for KPIR (Księga Przychodów i Rozchodów) - Polish Revenue and Expense Ledger.
+ * Version: 1.0.0
+ * Author: Marcin Pietrzak
+ * Author URI: https://iworks.pl/
+ * License: GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * @package KPIR
+ * @category Core
+ * @author Marcin Pietrzak <marcin@iworks.pl>
  */
+
 defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'iworks_kpir' ) ) {
 	return;
 }
 
-require_once dirname( dirname( __FILE__ ) ) . '/iworks.php';
+require_once dirname( __DIR__, 1 ) . '/iworks.php';
 
+/**
+ * Main plugin class for KPIR (Księga Przychodów i Rozchodów).
+ *
+ * This class serves as the main controller for the KPIR plugin,
+ * handling initialization, post type registration, and core functionality.
+ *
+ * @package KPIR
+ * @subpackage Core
+ * @since 1.0.0
+ */
 class iworks_kpir extends iworks {
 
+	/**
+	 * User capability required to access plugin features.
+	 *
+	 * @var string
+	 */
 	private $capability;
+
+	/**
+	 * Instance of the contractor post type handler.
+	 *
+	 * @var iworks_kpir_posttypes_contractor
+	 */
 	private $post_type_contractor;
+
+	/**
+	 * Instance of the invoice post type handler.
+	 *
+	 * @var iworks_kpir_posttypes_invoice
+	 */
 	private $post_type_invoice;
 
+	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 */
+	private $version = 'PLUGIN_VERSION';
+
+	/**
+	 * Base plugin directory path.
+	 *
+	 * @var string
+	 */
+	private $base;
+
+	/**
+	 * Plugin directory name.
+	 *
+	 * @var string
+	 */
+	private $dir;
+
+	/**
+	 * Class constructor.
+	 *
+	 * Initializes the plugin by setting up post types, actions, and filters.
+	 * Sets up the plugin version, capability requirements, and directory paths.
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		parent::__construct();
 		$this->version    = 'PLUGIN_VERSION';
 		$this->capability = apply_filters( 'iworks_kpir_capability', 'manage_options' );
-		$this->base       = dirname( dirname( __FILE__ ) );
+		$this->base       = dirname( __DIR__, 1 );
 		$this->dir        = basename( dirname( $this->base ) );
 		/**
 		 * post_types
@@ -85,11 +139,17 @@ class iworks_kpir extends iworks {
 	}
 
 	public function dashboard_widget_current_month( $post, $callback_args ) {
+		if ( ! is_object( $this->post_type_invoice ) ) {
+			return;
+		}
 		$date = date( 'Y-m', time() );
 		$this->post_type_invoice->month_table( $date );
 	}
 
 	public function dashboard_widget_past_month( $post, $callback_args ) {
+		if ( ! is_object( $this->post_type_invoice ) ) {
+			return;
+		}
 		$date = sprintf( '%s -1 month', date( 'c', time() ) );
 		$date = date( 'Y-m', strtotime( $date ) );
 		$this->post_type_invoice->month_table( $date );
@@ -110,8 +170,6 @@ class iworks_kpir extends iworks {
 	}
 
 	public function admin_init() {
-		$this->options = iworks_kpir_get_options();
-		$this->options->options_init();
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'wp_ajax_kpir_duplicate_invoice', array( $this, 'duplicate_invoice' ) );
 		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widgets' ) );
@@ -306,9 +364,16 @@ class iworks_kpir extends iworks {
 	}
 
 	/**
-	 * entry actions on list table
+	 * Modifies the row actions for the invoice post type in the admin list table.
+	 *
+	 * Adds a 'Duplicate' action link and removes the 'Quick Edit' action.
+	 * Only affects the invoice post type.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param array    $actions An array of row action links.
+	 * @param WP_Post  $item    The post object.
+	 * @return array Modified array of row action links.
 	 */
 	public function row_actions( $actions, $item ) {
 		$post_type = $this->post_type_invoice->get_name();
@@ -321,10 +386,26 @@ class iworks_kpir extends iworks {
 				$item->ID,
 				__( 'Duplicate', 'kpir' )
 			);
+			/**
+			 * remove quick edit
+			 */
+			if ( isset( $actions['inline hide-if-no-js'] ) ) {
+				unset( $actions['inline hide-if-no-js'] );
+			}
 		}
 		return $actions;
 	}
 
+	/**
+	 * Handles the AJAX request to duplicate an invoice.
+	 *
+	 * Creates a copy of the specified invoice as a draft with 'Copy of' prefixed to the title.
+	 * Copies all post meta data from the original invoice.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void Sends JSON response indicating success or failure.
+	 */
 	public function duplicate_invoice() {
 		/**
 		 * check required data
@@ -525,5 +606,4 @@ class iworks_kpir extends iworks {
 		$query        = new WP_Query( $args );
 		return $query;
 	}
-
 }

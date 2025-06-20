@@ -306,11 +306,9 @@ module.exports = function(grunt) {
 		watch: {
 			sass: {
 				files: [
-					'assets/sass/*.scss',
-					'assets/sass/**/*.scss',
-					'include/modules/**/*.scss'
+					'assets/styles/src/admin/*.scss'
 				],
-				tasks: ['sass', 'cssmin'],
+				tasks: ['css'],
 				options: {
 					debounceDelay: 500
 				}
