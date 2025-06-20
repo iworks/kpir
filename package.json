@@ -3,7 +3,7 @@
     "title": "Księga Przychodi i Rozchodu",
     "description": "kpir!",
     "tagline": "The plugin allows you to keep a small business bookkeeping in Poland.",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "homepage": "http://iworks.pl/",
     "tags": [
         "bookkeeping",

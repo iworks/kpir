@@ -47,6 +47,20 @@ There are 3 ways to install this plugin:
 
 Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 
+= 1.1.2 - 2025-06-20 =
+* Code quality improvements and documentation update.
+* Added comprehensive DocBlock comments throughout the codebase.
+* Improved code formatting and consistency.
+* Updated file paths to use `__DIR__` constant for better compatibility.
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.0.1.
+* Added `use_cash_pit` property and `action_init_set_options()` method; constructor hook adjusted.
+* Added `filter_add_sortable_columns`, `apply_filter_order_date_of_payment`, `get_custom_field_basic_type_name` methods to invoice post type.   
+* Removed `quick_edit` from `row_actions`.
+* Added sort by payment date.
+
+= 1.1.1 - 2025-06-20 =
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.0.1.
+
 = 1.1.0 - 2025-05-08 =
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.0.0.
 * The cash method of settling income tax has been added. [#1](https://github.com/iworks/kpir/issues/1).
@@ -133,4 +147,3 @@ Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 * init version
 
 == Upgrade Notice ==
-
