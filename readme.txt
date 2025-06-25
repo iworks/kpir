@@ -13,7 +13,25 @@ PLUGIN_TAGLINE
 
 == Description ==
 
-The "KPiR" plugin is available also on [GitHub](https://github.com/iworks/kpir).
+PLUGIN_DESCRIPTION
+
+**Features:**
+* Manage small business bookkeeping tailored to Polish regulations.
+* Generate JPK V7M and JPK-VAT XML reports for Polish tax compliance.
+* Track expenses, assets, and VAT rates, including car-related expenses with customizable rates (20%, 75%, 100%).
+* Annual and monthly financial reporting.
+* Input sanitization and validation for data integrity and security.
+* Localization support (Polish translation included).
+* Regular updates for compatibility with the latest WordPress and Polish tax law changes.
+
+**Who Is It For?**
+KPiR is perfect for small business owners, freelancers, and sole proprietors in Poland who need a straightforward, WordPress-integrated solution for managing their accounting records and fulfilling local tax obligations.
+
+**User Feedback:**
+Users appreciate KPiR for its simplicity and effectiveness, especially when managing both private and business vehicle-related expenses.
+
+**Open Source & Development:**
+KPiR is open source and actively maintained, with contributions from the community and regular updates reflecting changes in Polish tax regulations. The plugin is available also on [GitHub](https://github.com/iworks/kpir).
 
 == Installation ==
 

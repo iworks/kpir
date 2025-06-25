@@ -1,8 +1,8 @@
 {
     "name": "kpir",
     "title": "Księga Przychodi i Rozchodu",
-    "description": "kpir!",
-    "tagline": "The plugin allows you to keep a small business bookkeeping in Poland.",
+    "description": "**KPiR** streamlines small business bookkeeping for entrepreneurs in Poland. It’s designed for simplicity, compliance, and seamless integration with your WordPress website.",
+    "tagline": "Effortless Polish bookkeeping for small businesses—track expenses, manage VAT, and generate JPK reports directly from your WordPress dashboard.",
     "version": "1.1.2",
     "homepage": "http://iworks.pl/",
     "tags": [
