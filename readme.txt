@@ -16,6 +16,7 @@ PLUGIN_TAGLINE
 PLUGIN_DESCRIPTION
 
 **Features:**
+
 * Manage small business bookkeeping tailored to Polish regulations.
 * Generate JPK V7M and JPK-VAT XML reports for Polish tax compliance.
 * Track expenses, assets, and VAT rates, including car-related expenses with customizable rates (20%, 75%, 100%).
@@ -26,9 +27,6 @@ PLUGIN_DESCRIPTION
 
 **Who Is It For?**
 KPiR is perfect for small business owners, freelancers, and sole proprietors in Poland who need a straightforward, WordPress-integrated solution for managing their accounting records and fulfilling local tax obligations.
-
-**User Feedback:**
-Users appreciate KPiR for its simplicity and effectiveness, especially when managing both private and business vehicle-related expenses.
 
 **Open Source & Development:**
 KPiR is open source and actively maintained, with contributions from the community and regular updates reflecting changes in Polish tax regulations. The plugin is available also on [GitHub](https://github.com/iworks/kpir).
@@ -69,7 +67,7 @@ Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 * Fixed issue with `use cash pit` option.
 
 = 1.1.1 - 2025-06-20 =
-* Added `filter_add_sortable_columns`, `apply_filter_order_date_of_payment`, `get_custom_field_basic_type_name` methods to invoice post type.   
+* Added `filter_add_sortable_columns`, `apply_filter_order_date_of_payment`, `get_custom_field_basic_type_name` methods to invoice post type.
 * Added sort by payment date.
 * Added `use_cash_pit` property and `action_init_set_options()` method; constructor hook adjusted.
 * Code quality improvements and documentation update.
