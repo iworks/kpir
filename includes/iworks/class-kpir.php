@@ -60,21 +60,21 @@ class iworks_kpir extends iworks {
 	 *
 	 * @var string
 	 */
-	private $version = 'PLUGIN_VERSION';
+	protected $version = 'PLUGIN_VERSION';
 
 	/**
 	 * Base plugin directory path.
 	 *
 	 * @var string
 	 */
-	private $base;
+	protected $base;
 
 	/**
 	 * Plugin directory name.
 	 *
 	 * @var string
 	 */
-	private $dir;
+	protected $dir;
 
 	/**
 	 * Class constructor.
