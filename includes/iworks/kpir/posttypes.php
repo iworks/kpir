@@ -25,16 +25,46 @@ if ( class_exists( 'iworks_kpir_posttypes_invoice' ) ) {
 	return;
 }
 
+/**
+ * iworks_kpir_posttypes class.
+ * Handles post type registration, meta box rendering, and metadata saving.
+ */
 class iworks_kpir_posttypes {
+	/**
+	 * The post type name.
+	 *
+	 * @var string
+	 */
 	protected $post_type_name;
+	/**
+	 * Plugin options.
+	 *
+	 * @var iworks_kpir_options
+	 */
 	protected $options;
+	/**
+	 * Array of field definitions.
+	 *
+	 * @var array
+	 */
 	protected $fields;
+	/**
+	 * Array of post type objects.
+	 *
+	 * @var array
+	 */
 	protected $post_type_objects = array();
-
-
-
+	/**
+	 * Whether to use cash PIT.
+	 *
+	 * @var bool
+	 */
 	protected bool $use_cash_pit = false;
 
+	/**
+	 * Class constructor.
+	 * Initializes the post type and sets up necessary hooks.
+	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'register' ) );
 		add_action( 'init', array( $this, 'action_init_set_options' ), 7020 );
@@ -44,15 +74,32 @@ class iworks_kpir_posttypes {
 		add_action( 'save_post', array( $this, 'save_post_meta' ), 10, 3 );
 	}
 
+	/**
+	 * Initialize and set plugin options.
+	 * Hooked to 'init' action with priority 7020.
+	 */
 	public function action_init_set_options() {
 		$this->options      = iworks_kpir_get_options();
-		$this->use_cash_pit = $this->options->get_option_name( 'use_cash_pit' );
+		$this->use_cash_pit = boolval( $this->options->get_option( 'cash_pit' ) );
 	}
 
+	/**
+	 * Get the post type name.
+	 *
+	 * @return string The post type name.
+	 */
 	public function get_name() {
 		return $this->post_type_name;
 	}
 
+	/**
+	 * Generate HTML content for meta box fields.
+	 *
+	 * @param WP_Post $post The post object.
+	 * @param array $fields Array of field definitions.
+	 * @param string $group The field group name.
+	 * @return string Generated HTML content.
+	 */
 	protected function get_meta_box_content( $post, $fields, $group ) {
 		$content  = '';
 		$basename = $this->options->get_option_name( $group );
@@ -110,9 +157,10 @@ class iworks_kpir_posttypes {
 	/**
 	 * Save post metadata when a post is saved.
 	 *
-	 * @param int  $post_id The post ID.
-	 * @param post $post The post object.
-	 * @param bool $update Whether this is an existing post being updated or not.
+	 * @param int $post_id The post ID.
+	 * @param WP_Post $post The post object.
+	 * @param bool $update Whether this is an existing post being updated.
+	 * @param array $fields Array of field definitions to process.
 	 */
 	public function save_post_meta_fields( $post_id, $post, $update, $fields ) {
 
@@ -161,12 +209,10 @@ class iworks_kpir_posttypes {
 	}
 
 	/**
-	 * Check post type
+	 * Check if the given post ID belongs to the current post type.
 	 *
-	 * @since 1.0.0
-	 *
-	 * @param integer $post_ID Post ID to check.
-	 * @returns boolean is correct post type or not
+	 * @param int $post_ID The post ID to check.
+	 * @return bool Whether the post ID belongs to the current post type.
 	 */
 	public function check_post_type_by_id( $post_ID ) {
 		$post = get_post( $post_ID );
