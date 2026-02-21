@@ -63,6 +63,10 @@ There are 3 ways to install this plugin:
 
 Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 
+= 1.1.3 - 2026-02-21 =
+* Fixed issue with `add_value` when some part of value is empty.
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.0.9.
+
 = 1.1.2 - 2025-06-25 =
 * Fixed issue with `use cash pit` option.
 

@@ -118,15 +118,27 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		add_action( 'pre_get_posts', array( $this, 'apply_filter_order_date_of_payment' ) );
 	}
 
+	/**
+	 * Add sortable columns to the admin list table.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $columns Existing sortable columns.
+	 * @return array Modified sortable columns with date_of_payment added.
+	 */
 	public function filter_add_sortable_columns( $columns ) {
 		$columns['date_of_payment'] = $this->get_custom_field_date_of_cash_name();
 		return $columns;
 	}
 
 	/**
-	 * set filters
+	 * Set up filters for the invoice post type.
+	 *
+	 * Adds default CSS classes to meta boxes for better styling.
 	 *
 	 * @since 1.1.0
+	 *
+	 * @return void
 	 */
 	public function action_init_set_filters() {
 		/**
@@ -142,7 +154,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	/**
-	 * set fields
+	 * Set up custom fields for the invoice post type.
+	 *
+	 * Defines all the field configurations for different invoice types
+	 * including basic data, income, expense, salary, asset, and insurance fields.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return void
 	 */
 	public function action_init_set_fields() {
 		/**
@@ -363,13 +382,30 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		}
 	}
 	/**
-	 * Add default class to postbox,
+	 * Add default CSS class to post meta boxes.
+	 *
+	 * Adds the 'iworks-type' class to meta boxes for consistent styling.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param array $classes Existing CSS classes for the meta box.
+	 * @return array Modified CSS classes with 'iworks-type' added.
 	 */
 	public function add_defult_class_to_postbox( $classes ) {
 		$classes[] = 'iworks-type';
 		return $classes;
 	}
 
+	/**
+	 * Register the invoice custom post type.
+	 *
+	 * Sets up the post type with appropriate labels, capabilities,
+	 * and configuration for the KPIR plugin.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function register() {
 		$labels = array(
 			'name'                  => _x( 'Invoices', 'Invoice General Name', 'kpir' ),
@@ -423,14 +459,33 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		register_post_type( $this->post_type_name, $args );
 	}
 
+	/**
+	 * Save post meta data for invoices.
+	 *
+	 * Handles saving all custom field data when an invoice is saved or updated.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int     $post_id The ID of the post being saved.
+	 * @param WP_Post $post    The post object.
+	 * @param bool    $update  Whether this is an existing post being updated.
+	 * @return void
+	 */
 	public function save_post_meta( $post_id, $post, $update ) {
 		$this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
 	}
 
 	/**
-	 * Change "Enter title here" to "Enter invoice number"
+	 * Change "Enter title here" placeholder text for invoice titles.
 	 *
-	 * @since 1.0
+	 * Replaces the default title placeholder with "Enter invoice number"
+	 * for better user experience in the invoice post type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $title The default title placeholder text.
+	 * @param WP_Post $post The current post object.
+	 * @return string Modified placeholder text for invoices.
 	 */
 	public function enter_title_here( $title, $post ) {
 		if ( $post->post_type == $this->post_type_name ) {
@@ -439,6 +494,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		return $title;
 	}
 
+	/**
+	 * Register meta boxes for the invoice post type.
+	 *
+	 * Sets up all the meta boxes needed for invoice data entry including
+	 * basic data, income, expense, salary, asset, and insurance sections.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post The current post object.
+	 * @return void
+	 */
 	public function register_meta_boxes( $post ) {
 		add_meta_box( 'basic', __( 'Basic Data', 'kpir' ), array( $this, 'basic' ), $this->post_type_name );
 		add_meta_box( 'income', __( 'Incomes', 'kpir' ), array( $this, 'income' ), $this->post_type_name );
@@ -448,30 +514,93 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		add_meta_box( 'insurance', __( 'Insurances (ZUS)', 'kpir' ), array( $this, 'insurance' ), $this->post_type_name );
 	}
 
+	/**
+	 * Render the basic data meta box content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post The current post object.
+	 * @return void
+	 */
 	public function basic( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
+	/**
+	 * Render the income meta box content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post The current post object.
+	 * @return void
+	 */
 	public function income( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
+	/**
+	 * Render the expense meta box content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post The current post object.
+	 * @return void
+	 */
 	public function expense( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
+	/**
+	 * Render the salary meta box content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post The current post object.
+	 * @return void
+	 */
 	public function salary( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
+	/**
+	 * Render the asset meta box content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post The current post object.
+	 * @return void
+	 */
 	public function asset( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
+	/**
+	 * Render the insurance meta box content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post The current post object.
+	 * @return void
+	 */
 	public function insurance( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
+	/**
+	 * Save year and month to an extra custom field.
+	 *
+	 * Automatically creates a year-month field (YYYY-MM format) from the date field
+	 * for easier filtering and reporting.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int    $post_id     The ID of the post being saved.
+	 * @param string $option_name The option name being saved.
+	 * @param mixed  $value       The value being saved.
+	 * @param string $key         The field key.
+	 * @param array  $data        Additional data.
+	 * @return void
+	 */
 	public function save_year_month_to_extra_field( $post_id, $option_name, $value, $key, $data ) {
 		if ( 'date' == $key ) {
 			$name   = $this->get_custom_field_year_month_name();
@@ -483,11 +612,30 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		}
 	}
 
+	/**
+	 * Add 'closed' class to meta boxes to make them collapsed by default.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $classes Existing CSS classes for the meta box.
+	 * @return array Modified CSS classes with 'closed' added.
+	 */
 	public function close_meta_boxes( $classes ) {
 		$classes[] = 'closed';
 		return $classes;
 	}
 
+	/**
+	 * Generate and display a monthly summary table for invoices.
+	 *
+	 * Calculates and displays totals for income, expenses, VAT, salaries,
+	 * and asset depreciation for a given month.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $month The month in YYYY-MM format.
+	 * @return void
+	 */
 	public function month_table( $month ) {
 		$args      = array(
 			'post_type'   => $this->get_name(),
@@ -567,15 +715,27 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		echo '</table>';
 	}
 
+	/**
+	 * Add and calculate values from invoice meta fields.
+	 *
+	 * Handles the conversion of money fields stored as arrays with integer
+	 * and fractional parts into a single integer value (in cents).
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int    $post_id   The ID of the invoice post.
+	 * @param string $meta_name The name of the meta field to retrieve.
+	 * @return int The calculated value in cents.
+	 */
 	private function add_value( $post_id, $meta_name ) {
 		$value = 0;
 		$v     = get_post_meta( $post_id, $this->options->get_option_name( $meta_name ), true );
 		if ( is_array( $v ) ) {
 			if ( isset( $v['integer'] ) ) {
-				$value += 100 * $v['integer'];
+				$value += 100 * intval( $v['integer'] );
 			}
 			if ( isset( $v['fractional'] ) ) {
-				$value += $v['fractional'];
+				$value += intval( $v['fractional'] );
 			}
 		}
 		return $value;
@@ -808,6 +968,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		return $this->options->get_option_name( 'basic_contractor' );
 	}
 
+	/**
+	 * Apply filtering for date of payment sorting.
+	 *
+	 * Handles the custom sorting logic for the payment date column
+	 * in the admin list table.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param WP_Query $query The current WP_Query object.
+	 * @return WP_Query Modified query object with payment date sorting applied.
+	 */
 	public function apply_filter_order_date_of_payment( $query ) {
 		if ( ! is_admin() ) {
 			return $query;
