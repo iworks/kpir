@@ -63,6 +63,14 @@ There are 3 ways to install this plugin:
 
 Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 
+
+= 1.1.4 - 2026-03-20 =
+* Massive improvements for `cash pit` feature.
+* Added comprehensive DocBook (PHPDoc) comments to invoice post type class.
+* Improved code documentation with proper parameter and return value documentation.
+* Enhanced method descriptions for better code maintainability.
+* Added @since tags and standardized documentation formatting.
+
 = 1.1.3 - 2026-02-21 =
 * Fixed issue with `add_value` when some part of value is empty.
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.0.9.

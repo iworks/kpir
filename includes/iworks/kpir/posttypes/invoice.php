@@ -116,6 +116,11 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
 		add_action( 'pre_get_posts', array( $this, 'apply_filter_order_date_of_payment' ) );
+
+		/**
+		 * add filter for year_month_cash
+		 */
+		add_action( 'shutdown', array( $this, 'action_shutdown_calculate_year_month_cash' ) );
 	}
 
 	/**
@@ -609,6 +614,30 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			if ( ! $result ) {
 				update_post_meta( $post_id, $name, $value );
 			}
+			/**
+			 * save year_month_cash too for not income type
+			 */
+
+			if ( get_post_meta( $post_id, 'iworks_kpir_basic_type', true ) !== 'income' ) {
+				$name   = $this->get_custom_field_year_month_cash_name();
+				$result = add_post_meta( $post_id, $name, $value, true );
+				if ( ! $result ) {
+					update_post_meta( $post_id, $name, $value );
+				}
+			}
+		}
+		/**
+		 * save year_month_cash too for income type
+		 */
+		if ( 'date_of_cash' == $key ) {
+			if ( get_post_meta( $post_id, 'iworks_kpir_basic_type', true ) === 'income' ) {
+				$name   = $this->get_custom_field_year_month_cash_name();
+				$value  = date( 'Y-m', $value );
+				$result = add_post_meta( $post_id, $name, $value, true );
+				if ( ! $result ) {
+					update_post_meta( $post_id, $name, $value );
+				}
+			}
 		}
 	}
 
@@ -958,6 +987,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	/**
+	 * Get "year_month_cach" custom filed name.
+	 *
+	 * @since 1.0.4
+	 *
+	 * @return string Custom Field meta_key.
+	 */
+	public function get_custom_field_year_month_cash_name() {
+		return $this->options->get_option_name( 'year_month_cash' );
+	}
+
+	/**
 	 * Get "basic_contractor" custom filed name.
 	 *
 	 * @since 1.0.0
@@ -1002,5 +1042,52 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			)
 		);
 		return $query;
+	}
+
+	/**
+	 * Calculate year_month_cash for invoices that don't have it.
+	 *
+	 * @since 1.0.4
+	 */
+	public function action_shutdown_calculate_year_month_cash() {
+		$wp_query_args = array(
+			'post_type'   => $this->get_name(),
+			'meta_query' => array(
+				array(
+					'key'     => $this->get_custom_field_year_month_cash_name(),
+					'compare' => 'NOT EXISTS',
+				),
+			),
+			'fields' => 'ids',
+			'limit'  => -1,
+		);
+		$query = new WP_Query( $wp_query_args );
+		if ( $query->posts ) {
+			echo '<pre>';
+			foreach( $query->posts as $post_id ) {
+				$year_month_of_cash = '';
+				$type = get_post_meta( $post_id, 'iworks_kpir_basic_type', true );
+				echo $post_id . " - " . $type ;
+
+				if ( 'income' === $type ) {
+					$date_of_cash = get_post_meta( $post_id, 'iworks_kpir_basic_date_of_cash', true );
+					echo ' - '.$date_of_cash;
+					if ( ! empty( $date_of_cash ) ) {
+						$year_month_of_cash = date( 'Y-m', $date_of_cash );
+					}
+				} else {
+					$date_of_issue = get_post_meta( $post_id, 'iworks_kpir_basic_date_of_issue', true );
+					echo ' - '.$date_of_issue;
+					if ( ! empty( $date_of_issue ) ) {
+						$year_month_of_cash = date( 'Y-m', $date_of_issue );
+					}
+				}
+				echo ' - '.$year_month_of_cash;
+				echo ' - ';
+				echo add_post_meta( $post_id, $this->get_custom_field_year_month_cash_name(), $year_month_of_cash );
+				echo "\n";
+			}
+			echo '</pre>';
+		}
 	}
 }

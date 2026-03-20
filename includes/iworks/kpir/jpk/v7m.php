@@ -22,15 +22,50 @@ if ( ! defined( 'WPINC' ) ) {
 }
 require_once dirname( dirname( __FILE__ ) ) . '/jpk.php';
 
+/**
+ * JPK V7M report generation class.
+ *
+ * Handles generation of JPK V7M (Jednolity Plik Kontrolny - Version 7M) XML reports
+ * for Polish tax authorities. Extends the base JPK class with specific V7M functionality.
+ *
+ * @package KPIR
+ * @subpackage JPK
+ * @since 0.1.4
+ */
 class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 
+	/**
+	 * Report name identifier.
+	 *
+	 * @var string
+	 */
 	protected $name = 'kpir-jpk-v7m';
 
+	/**
+	 * Class constructor.
+	 *
+	 * Initializes the JPK V7M class and sets up the XML generation hook.
+	 *
+	 * @since 0.1.4
+	 *
+	 * @return void
+	 */
 	public function __construct() {
 		parent::__construct();
 		add_action( 'send_headers', array( $this, 'get_xml' ) );
 	}
 
+	/**
+	 * Display the JPK V7M report interface.
+	 *
+	 * Shows the form for selecting month and generating JPK V7M reports.
+	 * Retrieves available months from the database and displays the template.
+	 *
+	 * @since 0.1.4
+	 *
+	 * @param iworks_kpir $kpir Main KPIR plugin instance.
+	 * @return void
+	 */
 	public function show( $kpir ) {
 		global $wpdb;
 		$post_type_object = $kpir->get_post_type_invoice();
@@ -50,7 +85,15 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 	}
 
 	/**
+	 * Generate and output JPK V7M XML report.
 	 *
+	 * Processes the report generation request, validates input,
+	 * calculates financial data, and outputs the XML file for download.
+	 *
+	 * @since 0.1.4
+	 *
+	 * @param iworks_kpir $kpir Main KPIR plugin instance.
+	 * @return void
 	 */
 	public function get_xml( $kpir ) {
 		if (
@@ -66,7 +109,7 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		/**
 		 * validate input
 		 */
-		$year_month = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_STRING );
+		$year_month = preg_replace( '/[^0-9\-]/', '', filter_input( INPUT_GET, 'm' ) );
 		$year_month = $this->validate_year_month( $year_month );
 		/**
 		 * Choose template

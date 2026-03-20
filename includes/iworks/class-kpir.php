@@ -115,10 +115,20 @@ class iworks_kpir extends iworks {
 		}
 	}
 
+	/**
+	 * Handle plugin initialization and action dispatching.
+	 *
+	 * Processes various AJAX actions for JPK report generation.
+	 * Handles JPK VAT(3) and JPK V7M XML export requests.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function plugins_loaded() {
 		if ( isset( $_REQUEST['action'] ) ) {
 			switch ( $_REQUEST['action'] ) {
-				case 'iworks_kpir_jpk_vat_3';
+				case 'iworks_kpir_jpk_vat_3':
 					$file = $this->get_module_file( 'jpk/vat_3' );
 					if ( is_readable( $file ) ) {
 						include_once $file;
@@ -126,7 +136,7 @@ class iworks_kpir extends iworks {
 						$page->get_xml( $this );
 					}
 				return;
-				case 'iworks_kpir_jpk_v7m';
+				case 'iworks_kpir_jpk_v7m':
 					$file = $this->get_module_file( 'jpk/v7m' );
 					if ( is_readable( $file ) ) {
 						include_once $file;
@@ -138,6 +148,18 @@ class iworks_kpir extends iworks {
 		}
 	}
 
+	/**
+	 * Display current month summary in dashboard widget.
+	 *
+	 * Shows a table with current month's income, expenses, and other financial data.
+	 * Only displays if invoice post type object is available.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed  $post          Widget post object (unused).
+	 * @param array  $callback_args Widget callback arguments (unused).
+	 * @return void
+	 */
 	public function dashboard_widget_current_month( $post, $callback_args ) {
 		if ( ! is_object( $this->post_type_invoice ) ) {
 			return;
@@ -146,6 +168,18 @@ class iworks_kpir extends iworks {
 		$this->post_type_invoice->month_table( $date );
 	}
 
+	/**
+	 * Display past month summary in dashboard widget.
+	 *
+	 * Shows a table with previous month's income, expenses, and other financial data.
+	 * Only displays if invoice post type object is available.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed  $post          Widget post object (unused).
+	 * @param array  $callback_args Widget callback arguments (unused).
+	 * @return void
+	 */
 	public function dashboard_widget_past_month( $post, $callback_args ) {
 		if ( ! is_object( $this->post_type_invoice ) ) {
 			return;
@@ -155,6 +189,16 @@ class iworks_kpir extends iworks {
 		$this->post_type_invoice->month_table( $date );
 	}
 
+	/**
+	 * Register dashboard widgets for KPIR reports.
+	 *
+	 * Creates two dashboard widgets: one for current month and one for past month.
+	 * Widgets display financial summaries for quick overview.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function add_dashboard_widgets() {
 		$current = date( _x( 'Y F', 'date admin dashbord widget', 'kpir' ), time() );
 		$date    = strtotime( sprintf( '%s -1 month', date( 'c', time() ) ) );
@@ -169,6 +213,16 @@ class iworks_kpir extends iworks {
 		}
 	}
 
+	/**
+	 * Initialize admin-specific functionality.
+	 *
+	 * Sets up admin hooks for scripts, styles, AJAX handlers,
+	 * dashboard widgets, and plugin row meta.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function admin_init() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'wp_ajax_kpir_duplicate_invoice', array( $this, 'duplicate_invoice' ) );
@@ -260,6 +314,15 @@ class iworks_kpir extends iworks {
 		);
 	}
 
+	/**
+	 * Initialize frontend functionality.
+	 *
+	 * Enqueues frontend styles when not in admin area.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function init() {
 		if ( is_admin() ) {
 		} else {
@@ -268,12 +331,29 @@ class iworks_kpir extends iworks {
 		}
 	}
 
+	/**
+	 * Get invoice post type object.
+	 *
+	 * Returns the instance of the invoice post type handler.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return iworks_kpir_posttypes_invoice|null Invoice post type object or null if not initialized.
+	 */
 	public function get_post_type_invoice() {
 		return $this->post_type_invoice;
 	}
 
 	/**
-	 * Show reports page
+	 * Show reports page.
+	 *
+	 * Displays different types of reports (monthly, annually) based on the report type parameter.
+	 * Includes the appropriate report class and renders the report interface.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $report Type of report to display. Default 'monthly'.
+	 * @return void
 	 */
 	public function show_page_reports( $report = 'monthly' ) {
 		echo '<div class="wrap">';
@@ -300,7 +380,14 @@ class iworks_kpir extends iworks {
 	}
 
 	/**
-	 * Show JPK VAT(3) page
+	 * Show JPK VAT(3) page.
+	 *
+	 * Displays the JPK VAT(3) report generation interface.
+	 * Includes the appropriate report class and handles the page rendering.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public function show_page_jpk_vat_3() {
 		echo '<div class="wrap">';
@@ -317,9 +404,14 @@ class iworks_kpir extends iworks {
 	}
 
 	/**
-	 * Show JPK v7m page
+	 * Show JPK v7m page.
+	 *
+	 * Displays the JPK V7M report generation interface.
+	 * Includes the appropriate report class and handles the page rendering.
 	 *
 	 * @since 0.1.4
+	 *
+	 * @return void
 	 */
 	public function show_page_jpk_v7m() {
 		echo '<div class="wrap">';
@@ -336,7 +428,16 @@ class iworks_kpir extends iworks {
 	}
 
 	/**
-	 * Plugin row data
+	 * Add plugin row meta links.
+	 *
+	 * Adds settings and donate links to the plugin row in the plugins list.
+	 * Only displays for the main plugin file and on non-multisite installations.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array  $links Existing plugin row meta links.
+	 * @param string $file  Plugin file path relative to plugins directory.
+	 * @return array Modified plugin row meta links.
 	 */
 	public function plugin_row_meta( $links, $file ) {
 		if ( $this->dir . '/kpir.php' == $file ) {
@@ -479,15 +580,22 @@ class iworks_kpir extends iworks {
 			'order'            => 'ASC',
 			'meta_query'       => array(
 				array(
-					'key'   => $this->post_type_invoice->get_custom_field_year_month_name(),
-					'value' => $month,
-				),
-				array(
 					'key'     => $this->post_type_invoice->get_custom_field_basic_date_name(),
 					'compare' => 'EXISTS',
 				),
 			),
 		);
+		if ( $this->is_use_cash_pit() ) {
+			$args['meta_query'][] = array(
+				'key'   => $this->post_type_invoice->get_custom_field_year_month_cash_name(),
+				'value' => $month,
+			);
+		} else {
+			$args['meta_query'][] = array(
+				'key'   => $this->post_type_invoice->get_custom_field_year_month_name(),
+				'value' => $month,
+			);
+		}
 		$query        = new WP_Query( $args );
 		return $query;
 	}
@@ -526,6 +634,16 @@ class iworks_kpir extends iworks {
 		return $query;
 	}
 
+	/**
+	 * Create a zero-initialized sum array structure.
+	 *
+	 * Returns an array with all financial categories initialized to zero
+	 * with integer and fractional parts for proper money handling.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array Zero-initialized sum array with all financial categories.
+	 */
 	public function zero_sum_table() {
 		return array(
 			'income'         => array(
@@ -563,20 +681,40 @@ class iworks_kpir extends iworks {
 		);
 	}
 
+	/**
+	 * Plugin activation hook handler.
+	 *
+	 * Currently empty - reserved for future activation tasks.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function register_activation_hook() {
 	}
 
+	/**
+	 * Plugin deactivation hook handler.
+	 *
+	 * Currently empty - reserved for future deactivation tasks.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function register_deactivation_hook() {
 	}
 
 	/**
-	 * Get annual cash-in Query
+	 * Get annual cash-in Query.
+	 *
+	 * Retrieves invoices with cash-in dates within the specified year.
+	 * Used for cash method PIT calculations and reporting.
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $annual annual to prepre, format Y-m
-	 *
-	 * @return WP_Query $query WordPress Post Query Object
+	 * @param string $annual Year to prepare, format Y.
+	 * @return WP_Query WordPress Post Query Object for annual cash-in data.
 	 */
 	public function get_annual_cash_in_query( $annual ) {
 		$cf_date_name = $this->post_type_invoice->get_custom_field_date_of_cash_name();
@@ -605,5 +743,20 @@ class iworks_kpir extends iworks {
 		);
 		$query        = new WP_Query( $args );
 		return $query;
+	}
+
+	/**
+	 * Check if cash PIT method is enabled.
+	 *
+	 * Determines whether the cash method of personal income tax settlement is enabled
+	 * in the plugin options. This affects how income recognition and reporting work.
+	 *
+	 * @since 1.1.4
+	 *
+	 * @return bool True if cash PIT method is enabled, false otherwise.
+	 */
+	public function is_use_cash_pit() {
+		$options = iworks_kpir_get_options();
+		return boolval( $options->get_option( 'cash_pit' ) );
 	}
 }

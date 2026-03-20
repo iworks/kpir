@@ -25,19 +25,76 @@ if ( class_exists( 'iworks_kpir_reports_monthly' ) ) {
 	return;
 }
 
+/**
+ * Monthly reports generation class for KPIR.
+ *
+ * Handles the generation and display of monthly financial reports
+ * including income, expenses, VAT calculations, and contractor information.
+ * Supports both standard and cash PIT (Personal Income Tax) methods.
+ *
+ * @package KPIR
+ * @subpackage Reports
+ * @since 1.0.0
+ */
 class iworks_kpir_reports_monthly {
 
+	/**
+	 * Whether to show fractional parts separately.
+	 *
+	 * @var bool
+	 */
 	private $show_fractional_separetly = false;
-	private $contractors               = array();
-	private $debug                     = false;
 
+	/**
+	 * Cached contractor data.
+	 *
+	 * @var array
+	 */
+	private $contractors = array();
+
+	/**
+	 * Debug mode flag.
+	 *
+	 * @var bool
+	 */
+	private $debug = false;
+
+	/**
+	 * Whether cash PIT method is enabled.
+	 *
+	 * @since 1.1.4
+	 * @var bool
+	 */
+	private $is_use_cash_pit = false;
+
+	/**
+	 * Class constructor.
+	 *
+	 * Initializes the monthly reports class and sets up debug mode.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function __construct() {
 		$this->debug = defined( 'WP_DEBUG' ) && WP_DEBUG;
 	}
 
+	/**
+	 * Display the monthly report.
+	 *
+	 * Generates and displays a comprehensive monthly financial report
+	 * including income, expenses, VAT, and contractor information.
+	 * Supports both standard and cash PIT reporting methods.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param iworks_kpir $kpir Main KPIR plugin instance.
+	 * @return void
+	 */
 	public function show( $kpir ) {
 		$post_type_object = $kpir->get_post_type_invoice();
-
+		$this->is_use_cash_pit = $kpir->is_use_cash_pit();
 		/**
 		 * get current month
 		 */
@@ -51,6 +108,7 @@ class iworks_kpir_reports_monthly {
 		$this->show_filter( $post_type_object, $current );
 
 		$cf_date_name       = $post_type_object->get_custom_field_basic_date_name();
+		$cf_cash_date_name       = $post_type_object->get_custom_field_date_of_cash_name();
 		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
 		$date_format        = get_option( 'date_format' );
 
@@ -87,7 +145,13 @@ class iworks_kpir_reports_monthly {
 				$query->the_post();
 				$ID            = get_the_ID();
 				$contractor_id = get_post_meta( $ID, $cf_contractor_name, true );
-
+				/**
+				 * type
+				 */
+				$type  = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
+				/**
+				 * start produce row
+				 */
 				echo '<tr>';
 				/**
 				 * ID
@@ -97,6 +161,17 @@ class iworks_kpir_reports_monthly {
 				 * Date
 				 */
 				echo $this->html_table_td( date_i18n( $date_format, get_post_meta( $ID, $cf_date_name, true ) ), 'date' );
+				/**
+				 * cash flow date
+				 */
+				if ( $this->is_use_cash_pit ) {
+					if ( 'income' === $type ) {
+						$cash_flow_date = get_post_meta( $ID, $cf_cash_date_name, true );
+						echo $this->html_table_td( date_i18n( $date_format, $cash_flow_date ), 'date' );
+					} else {
+						echo $this->html_table_td( '&mdash;', 'date' );
+					}
+				}
 				/**
 				 * Invoice ID
 				 */
@@ -141,11 +216,6 @@ class iworks_kpir_reports_monthly {
 					$description .= sprintf( ' <small class="car">%s</small>', esc_html__( '(car related)', 'kpir' ) );
 				}
 				echo $this->html_table_td( $description );
-
-				/**
-				 * type
-				 */
-				$type  = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
 				$netto = $value = array(
 					'integer'    => 0,
 					'fractional' => 0,
@@ -416,7 +486,12 @@ class iworks_kpir_reports_monthly {
 			 */
 			echo '<tbody class="sum">';
 			echo '<tr>';
+				if ( $this->is_use_cash_pit ) {
+			echo $this->html_table_td( '&nbsp;', null, 1, 7 );
+				} else {
 			echo $this->html_table_td( '&nbsp;', null, 1, 6 );
+
+				}
 			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 4 : 2 );
 			echo $this->html_helper_money( $sum['income'] );
 			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 4 : 2 );
@@ -444,6 +519,16 @@ class iworks_kpir_reports_monthly {
 		}
 	}
 
+	/**
+	 * Generate the table header HTML.
+	 *
+	 * Creates the complex table header structure for the monthly report,
+	 * including column spans and proper labeling for Polish tax requirements.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string HTML content for the table header.
+	 */
 	private function html_table_thead() {
 
 		$show_currency_symbol = false;
@@ -454,7 +539,11 @@ class iworks_kpir_reports_monthly {
 		$content  = '<thead>';
 		$content .= '<tr>';
 		$content .= $this->html_table_th( 'Lp.', null, 3 + $fix_row );
-		$content .= $this->html_table_th( 'Data zdarzenia gospodarczego', null, 3 + $fix_row );
+		if ( $this->is_use_cash_pit ) {
+		$content .= $this->html_table_th( 'Data', null, null, 2 );
+		} else {
+			$content .= $this->html_table_th( 'Data zdarzenia', null, 3 + $fix_row );
+		}
 		$content .= $this->html_table_th( 'Nr dowodu księgowego', null, 3 + $fix_row );
 		$content .= $this->html_table_th( 'Kontrahent', null, null, 2 );
 		$content .= $this->html_table_th( 'Opis zdarzenia gospodarczego', null, 3 + $fix_row );
@@ -463,6 +552,10 @@ class iworks_kpir_reports_monthly {
 		$content .= $this->html_table_th( 'VAT', null, null, $this->show_fractional_separetly ? 6 : 3 );
 		$content .= '</tr>';
 		$content .= '<tr>';
+		if ( $this->is_use_cash_pit ) {
+			$content .= $this->html_table_th( 'zdarzenia', null, 2 + $fix_row );
+			$content .= $this->html_table_th( 'zapłaty', null, 2 + $fix_row );
+		}
 		$content .= $this->html_table_th( 'imię i nazwisko (firma)', null, 2 + $fix_row );
 		$content .= $this->html_table_th( 'adres', null, 2 + $fix_row );
 		$content .= $this->html_table_th( 'wartość sprzedanych towarów i usług', null, null, 2 + $fix_col );
@@ -495,6 +588,9 @@ class iworks_kpir_reports_monthly {
 		$content .= '<tr>';
 		$content .= $this->html_table_th( 1 );
 		$content .= $this->html_table_th( 2 );
+		if ( $this->is_use_cash_pit ) {
+			$content .= $this->html_table_th( '2 (MK)' );
+		}
 		$content .= $this->html_table_th( 3 );
 		$content .= $this->html_table_th( 4 );
 		$content .= $this->html_table_th( 5 );
@@ -514,6 +610,19 @@ class iworks_kpir_reports_monthly {
 		return $content;
 	}
 
+	/**
+	 * Generate table cell HTML.
+	 *
+	 * Creates a table cell (td) with optional attributes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $value   Cell content.
+	 * @param string $class   CSS class for the cell.
+	 * @param int    $rowspan Number of rows to span.
+	 * @param int    $colspan Number of columns to span.
+	 * @return string HTML content for the table cell.
+	 */
 	private function html_table_td( $value, $class = '', $rowspan = '', $colspan = '' ) {
 		$args = array(
 			'tag'     => 'td',
@@ -525,6 +634,19 @@ class iworks_kpir_reports_monthly {
 		return $this->html_table_cell( $args );
 	}
 
+	/**
+	 * Generate table header cell HTML.
+	 *
+	 * Creates a table header cell (th) with optional attributes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $value   Cell content.
+	 * @param string $class   CSS class for the cell.
+	 * @param int    $rowspan Number of rows to span.
+	 * @param int    $colspan Number of columns to span.
+	 * @return string HTML content for the table header cell.
+	 */
 	private function html_table_th( $value, $class = '', $rowspan = '', $colspan = '' ) {
 		$args = array(
 			'tag'     => 'th',
@@ -536,6 +658,17 @@ class iworks_kpir_reports_monthly {
 		return $this->html_table_cell( $args );
 	}
 
+	/**
+	 * Generate generic table cell HTML.
+	 *
+	 * Creates a table cell with specified tag and attributes.
+	 * Used internally by html_table_td and html_table_th methods.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $args Cell arguments including tag, value, and attributes.
+	 * @return string HTML content for the table cell.
+	 */
 	private function html_table_cell( $args ) {
 		$attributes = '';
 		foreach ( array( 'class', 'rowspan', 'colspan' ) as $key ) {
@@ -558,6 +691,17 @@ class iworks_kpir_reports_monthly {
 		);
 	}
 
+	/**
+	 * Get contractor data by ID.
+	 *
+	 * Retrieves and caches contractor post data for efficient access
+	 * during report generation.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $contractor_id Contractor post ID.
+	 * @return WP_Post|null Contractor post object or null if not found.
+	 */
 	private function get_contractor( $contractor_id ) {
 		if ( ! isset( $this->contractors[ $contractor_id ] ) ) {
 			$this->contractors[ $contractor_id ] = get_post( $contractor_id );
@@ -565,6 +709,18 @@ class iworks_kpir_reports_monthly {
 		return $this->contractors[ $contractor_id ];
 	}
 
+	/**
+	 * Display the month filter form.
+	 *
+	 * Creates and displays a form for filtering reports by month.
+	 * Retrieves available months from the database and generates a dropdown.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param iworks_kpir_posttypes_invoice $post_type_object Invoice post type object.
+	 * @param string                         $current        Currently selected month.
+	 * @return void
+	 */
 	public function show_filter( $post_type_object, $current ) {
 		global $wpdb;
 
@@ -600,6 +756,17 @@ class iworks_kpir_reports_monthly {
 
 	}
 
+	/**
+	 * Format money values for display.
+	 *
+	 * Handles the formatting of money values in the report table,
+	 * supporting both combined and separate integer/fractional display.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $value Money array with integer and fractional parts.
+	 * @return string HTML content for formatted money display.
+	 */
 	private function html_helper_money( $value ) {
 		if ( ! is_array( $value ) ) {
 			return $this->html_table_td( '0,00', 'money' );
@@ -623,9 +790,16 @@ class iworks_kpir_reports_monthly {
 	}
 
 	/**
-	 * Sum ttwo values
+	 * Sum two money values.
+	 *
+	 * Adds two money arrays together, handling proper carry-over
+	 * between fractional and integer parts.
 	 *
 	 * @since 0.0.7
+	 *
+	 * @param array $value1 First money array with integer and fractional parts.
+	 * @param array $value2 Second money array with integer and fractional parts.
+	 * @return array Summed money array with normalized integer and fractional parts.
 	 */
 	private function sum( $value1, $value2 ) {
 		$value['integer']    = $value1['integer'] + $value2['integer'];
