@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Plugins - KPiR - Development (trunk)\n"
 "Report-Msgid-Bugs-To: http://iworks.pl\n"
-"POT-Creation-Date: 2026-02-21 07:01:38+00:00\n"
+"POT-Creation-Date: 2026-03-20 16:07:02+00:00\n"
 "PO-Revision-Date: 2025-06-25 06:00:09+0000\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -71,7 +71,7 @@ msgstr "Raport miesięczny"
 msgid "Monthly"
 msgstr "Miesięcznie"
 
-#: etc/options.php:115 includes/iworks/class-kpir.php:329
+#: etc/options.php:115 includes/iworks/class-kpir.php:421
 msgid "JPK V7M"
 msgstr "JPK V7M"
 
@@ -83,61 +83,61 @@ msgstr "Raport roczny"
 msgid "Annually"
 msgstr "Roczne"
 
-#: includes/iworks/class-kpir.php:163
+#: includes/iworks/class-kpir.php:207
 msgid "Current month: %s"
 msgstr "Aktualny miesiąc: %s"
 
-#: includes/iworks/class-kpir.php:164
+#: includes/iworks/class-kpir.php:208
 msgid "Past month: %s"
 msgstr "Poprzedni miesiąc: %s"
 
-#: includes/iworks/class-kpir.php:251
+#: includes/iworks/class-kpir.php:305
 msgid "Are you sure you want to create a duplicate copy of this invoice?"
 msgstr "Czy na pewno powielić dokument księgowy?"
 
-#: includes/iworks/class-kpir.php:252
+#: includes/iworks/class-kpir.php:306
 msgid "An error occurred duplicating invoice. Please try again."
 msgstr ""
 "Wystąpił błąd w czasie powielania dokumentu księgowego. Proszę spróbować "
 "ponownie."
 
-#: includes/iworks/class-kpir.php:255
+#: includes/iworks/class-kpir.php:309
 msgid "Please select month first!"
 msgstr "Proszę najpierw wybrać miesiąc!"
 
-#: includes/iworks/class-kpir.php:284
+#: includes/iworks/class-kpir.php:364
 msgid "Monthly report"
 msgstr "Raport miesięczny"
 
-#: includes/iworks/class-kpir.php:291
+#: includes/iworks/class-kpir.php:371
 msgid "Annually report"
 msgstr "Raport roczny"
 
-#: includes/iworks/class-kpir.php:296
+#: includes/iworks/class-kpir.php:376
 msgid "Reports"
 msgstr "Raporty"
 
-#: includes/iworks/class-kpir.php:310
+#: includes/iworks/class-kpir.php:397
 msgid "JPK VAT(3)"
 msgstr "JPK VAT(3)"
 
-#: includes/iworks/class-kpir.php:314 includes/iworks/class-kpir.php:333
+#: includes/iworks/class-kpir.php:401 includes/iworks/class-kpir.php:425
 msgid "Something went wrong!"
 msgstr "Coś poszło nie tak!"
 
-#: includes/iworks/class-kpir.php:344
+#: includes/iworks/class-kpir.php:445
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: includes/iworks/class-kpir.php:347
+#: includes/iworks/class-kpir.php:448
 msgid "Donate"
 msgstr "Złóż datek"
 
-#: includes/iworks/class-kpir.php:387
+#: includes/iworks/class-kpir.php:488
 msgid "Duplicate"
 msgstr "Powiel"
 
-#: includes/iworks/class-kpir.php:454
+#: includes/iworks/class-kpir.php:555
 msgid "Copy of %s"
 msgstr "Kopia %s"
 
@@ -157,7 +157,7 @@ msgstr "Miesiąc"
 
 #: includes/iworks/kpir/jpk/vat_3.php:171
 #: includes/iworks/kpir/reports/annually.php:465
-#: includes/iworks/kpir/reports/monthly.php:586
+#: includes/iworks/kpir/reports/monthly.php:742
 #: template-parts/jpk/v7m/show.php:56 template-parts/jpk/v7m-2/show.php:56
 msgid "Select month"
 msgstr "Wybierz miesiąc"
@@ -167,7 +167,7 @@ msgstr "Wybierz miesiąc"
 msgid "Get XML"
 msgstr "Pobierz XML"
 
-#: includes/iworks/kpir/jpk/vat_3.php:479 includes/iworks/kpir/jpk.php:85
+#: includes/iworks/kpir/jpk/vat_3.php:479 includes/iworks/kpir/jpk.php:160
 msgid "Wrong date, please try again!"
 msgstr "Błędna data, proszę spróbować ponownie."
 
@@ -250,8 +250,8 @@ msgstr "Kontrahenci"
 
 #: includes/iworks/kpir/posttypes/contractor.php:111
 #: includes/iworks/kpir/posttypes/contractor.php:137
-#: includes/iworks/kpir/posttypes/invoice.php:200
-#: includes/iworks/kpir/posttypes/invoice.php:843
+#: includes/iworks/kpir/posttypes/invoice.php:205
+#: includes/iworks/kpir/posttypes/invoice.php:872
 msgid "Contractor"
 msgstr "Kontrahent"
 
@@ -272,7 +272,7 @@ msgid "Add New Contractor"
 msgstr "Dodaj nowego kontrahenta"
 
 #: includes/iworks/kpir/posttypes/contractor.php:117
-#: includes/iworks/kpir/posttypes/invoice.php:420
+#: includes/iworks/kpir/posttypes/invoice.php:425
 msgid "Add New"
 msgstr "Dodaj nowy"
 
@@ -301,32 +301,32 @@ msgid "Search Contractor"
 msgstr "Szukaj kontrachenta"
 
 #: includes/iworks/kpir/posttypes/contractor.php:124
-#: includes/iworks/kpir/posttypes/invoice.php:427
+#: includes/iworks/kpir/posttypes/invoice.php:432
 msgid "Not found"
 msgstr "Nie znaleziono"
 
 #: includes/iworks/kpir/posttypes/contractor.php:125
-#: includes/iworks/kpir/posttypes/invoice.php:428
+#: includes/iworks/kpir/posttypes/invoice.php:433
 msgid "Not found in Trash"
 msgstr "Niczego nie znaleziono w koszu"
 
 #: includes/iworks/kpir/posttypes/contractor.php:126
-#: includes/iworks/kpir/posttypes/invoice.php:429
+#: includes/iworks/kpir/posttypes/invoice.php:434
 msgid "Featured Image"
 msgstr "Obrazek wyróżniający"
 
 #: includes/iworks/kpir/posttypes/contractor.php:127
-#: includes/iworks/kpir/posttypes/invoice.php:430
+#: includes/iworks/kpir/posttypes/invoice.php:435
 msgid "Set featured image"
 msgstr "Ustaw obrazek wyróżniający"
 
 #: includes/iworks/kpir/posttypes/contractor.php:128
-#: includes/iworks/kpir/posttypes/invoice.php:431
+#: includes/iworks/kpir/posttypes/invoice.php:436
 msgid "Remove featured image"
 msgstr "Usuń obrazek wyróżniający"
 
 #: includes/iworks/kpir/posttypes/contractor.php:129
-#: includes/iworks/kpir/posttypes/invoice.php:432
+#: includes/iworks/kpir/posttypes/invoice.php:437
 msgid "Use as featured image"
 msgstr "Użyj jako obrazek wyróżniający"
 
@@ -366,71 +366,71 @@ msgstr "Dane kontaktowe"
 msgid "All contractors"
 msgstr "Wszyscy kontrahenci"
 
-#: includes/iworks/kpir/posttypes/invoice.php:176
+#: includes/iworks/kpir/posttypes/invoice.php:181
 msgid "Date of issue"
 msgstr "Data wydania"
 
-#: includes/iworks/kpir/posttypes/invoice.php:180
+#: includes/iworks/kpir/posttypes/invoice.php:185
 msgid "Copy to event date"
 msgstr "Kopiuj do daty zdarzenia"
 
-#: includes/iworks/kpir/posttypes/invoice.php:185
+#: includes/iworks/kpir/posttypes/invoice.php:190
 msgid "Event date"
 msgstr "Data wydarzenia"
 
-#: includes/iworks/kpir/posttypes/invoice.php:193
+#: includes/iworks/kpir/posttypes/invoice.php:198
 msgid "Cash-in Date"
 msgstr "Data wpływu pieniędzy"
 
-#: includes/iworks/kpir/posttypes/invoice.php:207
+#: includes/iworks/kpir/posttypes/invoice.php:212
 msgid "Invoice description"
 msgstr "Opis dokumentu księgowego"
 
-#: includes/iworks/kpir/posttypes/invoice.php:214
-#: includes/iworks/kpir/posttypes/invoice.php:851
+#: includes/iworks/kpir/posttypes/invoice.php:219
+#: includes/iworks/kpir/posttypes/invoice.php:880
 msgid "Income"
 msgstr "Przychód"
 
-#: includes/iworks/kpir/posttypes/invoice.php:217
-#: includes/iworks/kpir/posttypes/invoice.php:850
+#: includes/iworks/kpir/posttypes/invoice.php:222
+#: includes/iworks/kpir/posttypes/invoice.php:879
 msgid "Expense"
 msgstr "Wydatek"
 
-#: includes/iworks/kpir/posttypes/invoice.php:220
+#: includes/iworks/kpir/posttypes/invoice.php:225
 msgid "Salary"
 msgstr "Wynagrodzenie"
 
-#: includes/iworks/kpir/posttypes/invoice.php:223
+#: includes/iworks/kpir/posttypes/invoice.php:228
 msgid "Asset"
 msgstr "Środek trwały"
 
-#: includes/iworks/kpir/posttypes/invoice.php:226
+#: includes/iworks/kpir/posttypes/invoice.php:231
 msgid "Insurance"
 msgstr "Ubezpieczenie"
 
-#: includes/iworks/kpir/posttypes/invoice.php:231
+#: includes/iworks/kpir/posttypes/invoice.php:236
 msgid "Type"
 msgstr "Typ"
 
-#: includes/iworks/kpir/posttypes/invoice.php:238
-#: includes/iworks/kpir/posttypes/invoice.php:276
+#: includes/iworks/kpir/posttypes/invoice.php:243
+#: includes/iworks/kpir/posttypes/invoice.php:281
 msgid "Please first choose invoice type."
 msgstr "Proszę wybrać typ dokumentu księgowego."
 
-#: includes/iworks/kpir/posttypes/invoice.php:244
+#: includes/iworks/kpir/posttypes/invoice.php:249
 msgid "Value of goods and services sold"
 msgstr "Wartość sprzedanych towarów i usług"
 
-#: includes/iworks/kpir/posttypes/invoice.php:248
+#: includes/iworks/kpir/posttypes/invoice.php:253
 msgid "Other income"
 msgstr "Inne przychody"
 
-#: includes/iworks/kpir/posttypes/invoice.php:252
-#: includes/iworks/kpir/posttypes/invoice.php:294
+#: includes/iworks/kpir/posttypes/invoice.php:257
+#: includes/iworks/kpir/posttypes/invoice.php:299
 msgid "VAT"
 msgstr "VAT"
 
-#: includes/iworks/kpir/posttypes/invoice.php:259
+#: includes/iworks/kpir/posttypes/invoice.php:264
 msgid ""
 "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
 "świadczenia usług na terytorium kraju, zwolnionych od podatku"
@@ -438,7 +438,7 @@ msgstr ""
 "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
 "świadczenia usług na terytorium kraju, zwolnionych od podatku"
 
-#: includes/iworks/kpir/posttypes/invoice.php:262
+#: includes/iworks/kpir/posttypes/invoice.php:267
 msgid ""
 "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
 "świadczenia usług poza terytorium kraju"
@@ -446,7 +446,7 @@ msgstr ""
 "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
 "świadczenia usług poza terytorium kraju"
 
-#: includes/iworks/kpir/posttypes/invoice.php:265
+#: includes/iworks/kpir/posttypes/invoice.php:270
 msgid ""
 "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
 "świadczenia usług na terytorium kraju, opodatkowanych stawką 22% albo 23%, z "
@@ -456,89 +456,89 @@ msgstr ""
 "świadczenia usług na terytorium kraju, opodatkowanych stawką 22% albo 23%, z "
 "uwzględnieniem korekty dokonanej zgodnie z art. 89a ust. 1 i 4 ustawy"
 
-#: includes/iworks/kpir/posttypes/invoice.php:282
+#: includes/iworks/kpir/posttypes/invoice.php:287
 msgid ""
 "The purchase of commercial goods and materials, according to the purchase "
 "price"
 msgstr "Zakup towarów handlowych i materiałów wg cen zakupu"
 
-#: includes/iworks/kpir/posttypes/invoice.php:286
+#: includes/iworks/kpir/posttypes/invoice.php:291
 msgid "Incidental costs of purchase"
 msgstr "Koszty uboczne zakupu  "
 
-#: includes/iworks/kpir/posttypes/invoice.php:290
+#: includes/iworks/kpir/posttypes/invoice.php:295
 msgid "Other expenses"
 msgstr "Inne wydatki"
 
-#: includes/iworks/kpir/posttypes/invoice.php:298
+#: includes/iworks/kpir/posttypes/invoice.php:303
 msgid "VAT rate"
 msgstr "Stawka VAT"
 
-#: includes/iworks/kpir/posttypes/invoice.php:303
+#: includes/iworks/kpir/posttypes/invoice.php:308
 msgid "Base 23%"
 msgstr "Bazowy 23%"
 
-#: includes/iworks/kpir/posttypes/invoice.php:306
+#: includes/iworks/kpir/posttypes/invoice.php:311
 msgid "8%"
 msgstr "8%"
 
-#: includes/iworks/kpir/posttypes/invoice.php:309
+#: includes/iworks/kpir/posttypes/invoice.php:314
 msgid "5%"
 msgstr "5%"
 
-#: includes/iworks/kpir/posttypes/invoice.php:312
+#: includes/iworks/kpir/posttypes/invoice.php:317
 msgid "0%"
 msgstr "0%"
 
-#: includes/iworks/kpir/posttypes/invoice.php:315
+#: includes/iworks/kpir/posttypes/invoice.php:320
 msgid "No VAT"
 msgstr "Brak VAT"
 
-#: includes/iworks/kpir/posttypes/invoice.php:323
+#: includes/iworks/kpir/posttypes/invoice.php:328
 msgid "Car related"
 msgstr "Związane z samochodem"
 
-#: includes/iworks/kpir/posttypes/invoice.php:324
+#: includes/iworks/kpir/posttypes/invoice.php:329
 msgid "It will be calculated as half VAT return."
 msgstr "Będzie policzone jako zwrot połowy VAT."
 
-#: includes/iworks/kpir/posttypes/invoice.php:329
+#: includes/iworks/kpir/posttypes/invoice.php:334
 msgid "100%"
 msgstr "100%"
 
-#: includes/iworks/kpir/posttypes/invoice.php:332
+#: includes/iworks/kpir/posttypes/invoice.php:337
 msgid "75%"
 msgstr "75%"
 
-#: includes/iworks/kpir/posttypes/invoice.php:335
+#: includes/iworks/kpir/posttypes/invoice.php:340
 msgid "20%"
 msgstr "20%"
 
-#: includes/iworks/kpir/posttypes/invoice.php:338
+#: includes/iworks/kpir/posttypes/invoice.php:343
 msgid "Yes (before 2019)"
 msgstr "Tak (przed 2019)"
 
-#: includes/iworks/kpir/posttypes/invoice.php:341
+#: includes/iworks/kpir/posttypes/invoice.php:346
 msgid "No"
 msgstr "Nie"
 
-#: includes/iworks/kpir/posttypes/invoice.php:351
+#: includes/iworks/kpir/posttypes/invoice.php:356
 msgid "Salary in cash and in kind"
 msgstr "Wynagrodzenia w gotówce i w naturze"
 
-#: includes/iworks/kpir/posttypes/invoice.php:357
+#: includes/iworks/kpir/posttypes/invoice.php:362
 msgid "Depreciation of asset"
 msgstr "Środek trwały"
 
-#: includes/iworks/kpir/posttypes/invoice.php:363
+#: includes/iworks/kpir/posttypes/invoice.php:368
 msgid "ZUS 51"
 msgstr "ZUS 51"
 
-#: includes/iworks/kpir/posttypes/invoice.php:367
+#: includes/iworks/kpir/posttypes/invoice.php:372
 msgid "ZUS 52"
 msgstr "ZUS 52"
 
-#: includes/iworks/kpir/posttypes/invoice.php:371
+#: includes/iworks/kpir/posttypes/invoice.php:376
 msgid "ZUS 53"
 msgstr "ZUS 53"
 
@@ -546,150 +546,150 @@ msgstr "ZUS 53"
 msgid "KPiR"
 msgstr "KPiR"
 
-#: includes/iworks/kpir/posttypes/invoice.php:414
-#: includes/iworks/kpir/posttypes/invoice.php:440
+#: includes/iworks/kpir/posttypes/invoice.php:419
+#: includes/iworks/kpir/posttypes/invoice.php:445
 msgid "Invoice"
 msgstr "Faktura"
 
-#: includes/iworks/kpir/posttypes/invoice.php:415
+#: includes/iworks/kpir/posttypes/invoice.php:420
 msgid "Invoice Archives"
 msgstr "Archiwa dokumentów księgowych"
 
-#: includes/iworks/kpir/posttypes/invoice.php:416
+#: includes/iworks/kpir/posttypes/invoice.php:421
 msgid "Invoice Attributes"
 msgstr "Atrybuty dokumentu księgowego"
 
-#: includes/iworks/kpir/posttypes/invoice.php:417
+#: includes/iworks/kpir/posttypes/invoice.php:422
 msgid "Parent Invoice:"
 msgstr "Nadrzędny dokument księgowy::"
 
-#: includes/iworks/kpir/posttypes/invoice.php:418
+#: includes/iworks/kpir/posttypes/invoice.php:423
 msgid "All Invoices"
 msgstr "Księga"
 
-#: includes/iworks/kpir/posttypes/invoice.php:419
+#: includes/iworks/kpir/posttypes/invoice.php:424
 msgid "Add New Invoice"
 msgstr "Dodaj nową fakturę"
 
-#: includes/iworks/kpir/posttypes/invoice.php:421
+#: includes/iworks/kpir/posttypes/invoice.php:426
 msgid "New Invoice"
 msgstr "Nowy dokument księgowy"
 
-#: includes/iworks/kpir/posttypes/invoice.php:422
+#: includes/iworks/kpir/posttypes/invoice.php:427
 msgid "Edit Invoice"
 msgstr "Edytuj fakturę"
 
-#: includes/iworks/kpir/posttypes/invoice.php:423
+#: includes/iworks/kpir/posttypes/invoice.php:428
 msgid "Update Invoice"
 msgstr "Aktualizuj fakturę"
 
-#: includes/iworks/kpir/posttypes/invoice.php:424
+#: includes/iworks/kpir/posttypes/invoice.php:429
 msgid "View Invoice"
 msgstr "Zobacz fakturę"
 
-#: includes/iworks/kpir/posttypes/invoice.php:425
+#: includes/iworks/kpir/posttypes/invoice.php:430
 msgid "View Invoices"
 msgstr "Zobacz dokumenty księgowe"
 
-#: includes/iworks/kpir/posttypes/invoice.php:426
+#: includes/iworks/kpir/posttypes/invoice.php:431
 msgid "Search Invoice"
 msgstr "Szukaj faktur"
 
-#: includes/iworks/kpir/posttypes/invoice.php:433
+#: includes/iworks/kpir/posttypes/invoice.php:438
 msgid "Insert into invoice"
 msgstr "Wstawiony do dokumentu księgowego"
 
-#: includes/iworks/kpir/posttypes/invoice.php:434
+#: includes/iworks/kpir/posttypes/invoice.php:439
 msgid "Uploaded to this invoice"
 msgstr "Dodane do dokumentu księgowego"
 
-#: includes/iworks/kpir/posttypes/invoice.php:435
+#: includes/iworks/kpir/posttypes/invoice.php:440
 msgid "Invoices list"
 msgstr "Lista dokumentów księgowych"
 
-#: includes/iworks/kpir/posttypes/invoice.php:436
+#: includes/iworks/kpir/posttypes/invoice.php:441
 msgid "Invoices list navigation"
 msgstr "Nawigacja listy dokumentów księgowych"
 
-#: includes/iworks/kpir/posttypes/invoice.php:437
+#: includes/iworks/kpir/posttypes/invoice.php:442
 msgid "Filter invoices list"
 msgstr "Filtruj listę dokumentów księgowych"
 
-#: includes/iworks/kpir/posttypes/invoice.php:441
+#: includes/iworks/kpir/posttypes/invoice.php:446
 msgid "Invoice Description"
 msgstr "Opis dokumentu księgowego"
 
-#: includes/iworks/kpir/posttypes/invoice.php:492
+#: includes/iworks/kpir/posttypes/invoice.php:497
 msgid "Enter invoice number"
 msgstr "Wprowadź numer dokumentu księgowego"
 
-#: includes/iworks/kpir/posttypes/invoice.php:509
+#: includes/iworks/kpir/posttypes/invoice.php:514
 msgid "Basic Data"
 msgstr "Podstawowe dane"
 
-#: includes/iworks/kpir/posttypes/invoice.php:510
-#: includes/iworks/kpir/posttypes/invoice.php:697
+#: includes/iworks/kpir/posttypes/invoice.php:515
+#: includes/iworks/kpir/posttypes/invoice.php:726
 msgid "Incomes"
 msgstr "Przychody"
 
-#: includes/iworks/kpir/posttypes/invoice.php:511
+#: includes/iworks/kpir/posttypes/invoice.php:516
 msgid "Expenses (costs)"
 msgstr "Wydatki (koszty)"
 
-#: includes/iworks/kpir/posttypes/invoice.php:512
-#: includes/iworks/kpir/posttypes/invoice.php:703
+#: includes/iworks/kpir/posttypes/invoice.php:517
+#: includes/iworks/kpir/posttypes/invoice.php:732
 msgid "Salaries"
 msgstr "Wypłaty"
 
-#: includes/iworks/kpir/posttypes/invoice.php:513
+#: includes/iworks/kpir/posttypes/invoice.php:518
 msgid "Assets"
 msgstr "Zasoby"
 
-#: includes/iworks/kpir/posttypes/invoice.php:514
+#: includes/iworks/kpir/posttypes/invoice.php:519
 msgid "Insurances (ZUS)"
 msgstr "Ubezpieczenia (ZUS)"
 
-#: includes/iworks/kpir/posttypes/invoice.php:698
+#: includes/iworks/kpir/posttypes/invoice.php:727
 msgid "Expenses"
 msgstr "Wydatki"
 
-#: includes/iworks/kpir/posttypes/invoice.php:699
+#: includes/iworks/kpir/posttypes/invoice.php:728
 msgid "Expenses (VAT)"
 msgstr "Wydatki (VAT)"
 
-#: includes/iworks/kpir/posttypes/invoice.php:700
+#: includes/iworks/kpir/posttypes/invoice.php:729
 msgid "VAT (Income) "
 msgstr "VAT (Przychody) "
 
-#: includes/iworks/kpir/posttypes/invoice.php:701
+#: includes/iworks/kpir/posttypes/invoice.php:730
 msgid "VAT (Expense)"
 msgstr "VAT (Wydatki)"
 
-#: includes/iworks/kpir/posttypes/invoice.php:702
+#: includes/iworks/kpir/posttypes/invoice.php:731
 msgid "VAT (zero)"
 msgstr "VAT (zero)"
 
-#: includes/iworks/kpir/posttypes/invoice.php:704
+#: includes/iworks/kpir/posttypes/invoice.php:733
 msgid "Depreciation of assets"
 msgstr "Amortyzacja środków trwałych"
 
-#: includes/iworks/kpir/posttypes/invoice.php:810
+#: includes/iworks/kpir/posttypes/invoice.php:839
 msgid "&mdash; not paid yet &mdash;"
 msgstr "&mdash; jeszcze nie zapłacone &mdash;"
 
-#: includes/iworks/kpir/posttypes/invoice.php:844
+#: includes/iworks/kpir/posttypes/invoice.php:873
 msgid "Date of invoice"
 msgstr "Data wystawienia faktury"
 
-#: includes/iworks/kpir/posttypes/invoice.php:846
+#: includes/iworks/kpir/posttypes/invoice.php:875
 msgid "Payment Date"
 msgstr "Data płatności"
 
-#: includes/iworks/kpir/posttypes/invoice.php:849
+#: includes/iworks/kpir/posttypes/invoice.php:878
 msgid "Description"
 msgstr "Opis"
 
-#: includes/iworks/kpir/posttypes/invoice.php:852
+#: includes/iworks/kpir/posttypes/invoice.php:881
 msgid "Invoice Number"
 msgstr "Numer dokumentu księgowego"
 
@@ -702,20 +702,20 @@ msgid "Cash-in"
 msgstr "Wpływ pieniędzy"
 
 #: includes/iworks/kpir/reports/annually.php:463
-#: includes/iworks/kpir/reports/monthly.php:584
+#: includes/iworks/kpir/reports/monthly.php:740
 msgid "Filter by date"
 msgstr "Filtruj po dacie"
 
 #: includes/iworks/kpir/reports/annually.php:475
-#: includes/iworks/kpir/reports/monthly.php:596
+#: includes/iworks/kpir/reports/monthly.php:752
 msgid "Filter"
 msgstr "Filtr"
 
-#: includes/iworks/kpir/reports/monthly.php:141
+#: includes/iworks/kpir/reports/monthly.php:216
 msgid "(car related)"
 msgstr "(powiązane z samochodem)"
 
-#: includes/iworks/kpir/reports/monthly.php:442
+#: includes/iworks/kpir/reports/monthly.php:517
 msgid "There is no invoices in this month."
 msgstr "Brak dokumentów księgowych w tym miesiącu."
 
@@ -788,7 +788,7 @@ msgstr "Marcin Pietrzak"
 msgid "http://iworks.pl/"
 msgstr "http://iworks.pl/"
 
-#: includes/iworks/class-kpir.php:159 includes/iworks/class-kpir.php:161
+#: includes/iworks/class-kpir.php:203 includes/iworks/class-kpir.php:205
 msgctxt "date admin dashbord widget"
 msgid "Y F"
 msgstr "Y F"
@@ -803,12 +803,12 @@ msgctxt "Contractor Singular Name"
 msgid "Contractor"
 msgstr "Kontrahent"
 
-#: includes/iworks/kpir/posttypes/invoice.php:411
+#: includes/iworks/kpir/posttypes/invoice.php:416
 msgctxt "Invoice General Name"
 msgid "Invoices"
 msgstr "Dokumenty księgowe"
 
-#: includes/iworks/kpir/posttypes/invoice.php:412
+#: includes/iworks/kpir/posttypes/invoice.php:417
 msgctxt "Invoice Singular Name"
 msgid "Invoice"
 msgstr "Faktura"
