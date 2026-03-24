@@ -1,12 +1,13 @@
 <Podmiot1 rola="Podatnik">
-	<OsobaNiefizyczna>
-		<NIP><?php echo $args['taxpayer']['nip']; ?></NIP>
-		<PelnaNazwa><?php echo $args['taxpayer']['name']; ?></PelnaNazwa>
+	<OsobaFizyczna>
+		<etd:NIP><?php echo $args['taxpayer']['nip']; ?></etd:NIP>
+		<etd:ImiePierwsze><?php echo $args['taxpayer']['surname']; ?></etd:ImiePierwsze>
+		<etd:Nazwisko><?php echo $args['taxpayer']['last_name']; ?></etd:Nazwisko>
+		<etd:DataUrodzenia><?php echo $args['taxpayer']['date_of_birth']; ?></etd:DataUrodzenia>
 		<Email><?php echo $args['taxpayer']['email']; ?></Email>
 <?php if ( isset( $args['taxpayer']['phone'] ) && ! empty( $args['taxpayer']['phone'] ) ) { ?>
 		<Telefon><?php echo $args['taxpayer']['phone']; ?></Telefon>
 <?php } ?>
-	</OsobaNiefizyczna>
+	</OsobaFizyczna>
 </Podmiot1>
-
 

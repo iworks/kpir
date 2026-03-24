@@ -8,3 +8,4 @@
 	<Rok><?php echo $args['year']; ?></Rok>
 	<Miesiac><?php echo $args['month']; ?></Miesiac>
 </Naglowek>
+

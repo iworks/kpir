@@ -24,6 +24,23 @@ function iworks_kpir_options() {
 				'sanitize_callback' => 'esc_html',
 			),
 			array(
+				'name'              => 'taxpayer_type',
+				'type'              => 'radio',
+				'class'             => 'regular-text',
+				'th'                => __( 'Taxpayer Type', 'kpir' ),
+				'sanitize_callback' => 'esc_html',
+				'options' => array(
+					'person' => array(
+						'label' => __( 'Person', 'kpir' ),
+					),
+					'company' => array(
+						'label' => __( 'Company', 'kpir' ),
+					),
+				),
+				'default' => 'person',
+				'since' => '1.2.0',
+			),
+			array(
 				'name'              => 'name',
 				'type'              => 'text',
 				'class'             => 'regular-text',

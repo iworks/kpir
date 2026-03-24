@@ -185,7 +185,7 @@ abstract class iworks_kpir_jpk {
 	 * @return bool False by default, to be overridden in child classes.
 	 */
 	protected function is_person() {
-		return false;
+		return get_option( $this->options->get_option_name( 'taxpayer_type' ) ) === 'person';
 	}
 
 	/**

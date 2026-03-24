@@ -68,6 +68,7 @@ Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 * Added KSeF number to JPK reports.
 * Added JPK V7M (3) support.
 * Added simple VAT inconsistency check.
+* Added ability to chose tax payer type.
 
 = 1.1.4 - 2026-03-20 =
 * Massive improvements for `cash pit` feature.
