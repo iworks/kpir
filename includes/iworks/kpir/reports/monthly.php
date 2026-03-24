@@ -96,6 +96,11 @@ class iworks_kpir_reports_monthly {
 		$post_type_object = $kpir->get_post_type_invoice();
 		$this->is_use_cash_pit = $kpir->is_use_cash_pit();
 		/**
+		 * check vat 
+		 * @since 1.2.0
+		 */
+		$check_vat = boolval( get_option( 'iworks_kpir_check_vat_on_monothly', 0 ) );
+		/**
 		 * get current month
 		 */
 		$current = isset( $_GET['m'] ) ? $_GET['m'] : '';
@@ -458,12 +463,19 @@ class iworks_kpir_reports_monthly {
 						}
 						break;
 					case 'income':
+						$check_vat_class = array();
 						$vat = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
 						if ( is_array( $vat ) ) {
 							$sum['vat_income']['integer']    += intval( $vat['integer'] );
 							$sum['vat_income']['fractional'] += intval( $vat['fractional'] );
+							if ( $check_vat ) {
+								$value = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
+								$n     = ( $value['integer'] * 100 + $value['fractional'] ) * 0.23;
+								$v     = ( $vat['integer'] * 100 + $vat['fractional'] );
+								$check_vat_class[] = intval(abs($n - $v)) ? 'vat-failed' : 'vat-passed';
+							}
 						}
-						echo $this->html_helper_money( $vat );
+						echo $this->html_helper_money( $vat, $check_vat_class );
 						if ( $this->show_fractional_separetly ) {
 							echo $this->html_table_td( '&nbsp;' );
 						}
@@ -497,7 +509,16 @@ class iworks_kpir_reports_monthly {
 			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 4 : 2 );
 			echo $this->html_helper_money( $sum['expense'] );
 			echo $this->html_helper_money( $sum['expense_netto'] );
-			echo $this->html_helper_money( $sum['vat_income'] );
+			/**
+			 * check vat
+			 */
+			$check_vat_class = array();
+			if ( $check_vat ) {
+				$n = ( $sum['income']['integer'] * 100 + $sum['income']['fractional'] ) * .23;
+				$v = ( $sum['vat_income']['integer'] * 100 + $sum['vat_income']['fractional'] );
+				$check_vat_class[] = intval(abs($n-$v)) ? 'vat-failed' : 'vat-passed';
+			}
+			echo $this->html_helper_money( $sum['vat_income'], $check_vat_class );
 			if ( $this->show_fractional_separetly ) {
 				echo $this->html_table_td( '&nbsp;' );
 			}
@@ -517,6 +538,7 @@ class iworks_kpir_reports_monthly {
 			_e( 'There is no invoices in this month.', 'kpir' );
 			echo '</p>';
 		}
+
 	}
 
 	/**
@@ -767,24 +789,26 @@ class iworks_kpir_reports_monthly {
 	 * @param array $value Money array with integer and fractional parts.
 	 * @return string HTML content for formatted money display.
 	 */
-	private function html_helper_money( $value ) {
+	private function html_helper_money( $value, $classes = array() ) {
+		$classes[] = 'money';
+		$class     = implode( ' ', array_unique( $classes ) );
 		if ( ! is_array( $value ) ) {
-			return $this->html_table_td( '0,00', 'money' );
+			return $this->html_table_td( '0,00', $class );
 		}
 		$content = '';
 		if ( ! isset( $value['fractional'] ) && ! isset( $value['integer'] ) ) {
-			return $this->html_table_td( '0,00', 'money' );
+			return $this->html_table_td( '0,00', $class );
 		}
 		if ( $value['fractional'] > 99 ) {
 			$value['integer']   += intval( $value['fractional'] / 100 );
 			$value['fractional'] = $value['fractional'] % 100;
 		}
 		if ( $this->show_fractional_separetly ) {
-			$content .= $this->html_table_td( $value['integer'], 'money' );
-			$content .= $this->html_table_td( $value['fractional'], 'money' );
+			$content .= $this->html_table_td( $value['integer'], $class );
+			$content .= $this->html_table_td( $value['fractional'], $class );
 		} else {
 			$val      = sprintf( '%d,%02d', $value['integer'], $value['fractional'] );
-			$content .= $this->html_table_td( $val, 'money' );
+			$content .= $this->html_table_td( $val, $class );
 		}
 		return $content;
 	}

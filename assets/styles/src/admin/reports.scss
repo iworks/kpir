@@ -1,23 +1,48 @@
 .kpir-report {
-    border-collapse: collapse;
-    td, th {
-        padding: 5px;
-        border: 1px solid #000;
-    }
-    td {
-        &.money {
-            font-family: monospace;
-            padding: 0 5px;
-            text-align: right;
-            width: 3em;
-        }
-    }
-    tr {
-        &:nth-child(even) {
-            td {
-                background-color: #ddd;
-            }
-        }
-    }
-}
+	border-collapse: collapse;
 
+	td,
+	th {
+		padding: 5px;
+		border: 1px solid #000;
+	}
+
+	td {
+		&.money {
+			font-family: monospace;
+			padding: 0 5px;
+			text-align: right;
+			width: 3em;
+		}
+
+		&.vat {
+			&-passed {
+				background-color: #00701730;
+			}
+
+			&-failed {
+				background-color: #d6363830;
+
+			}
+		}
+	}
+
+	tr {
+		&:nth-child(even) {
+			td {
+				background-color: #ddd;
+
+				&.vat {
+					&-passed {
+						background-color: #00701750;
+					}
+
+					&-failed {
+						background-color: #d6363850;
+
+					}
+				}
+			}
+		}
+	}
+}

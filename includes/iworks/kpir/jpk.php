@@ -316,6 +316,13 @@ abstract class iworks_kpir_jpk {
 		if ( isset( $vat['fractional'] ) ) {
 			$this->sum['vat_expense']['fractional'] += intval( $vat['fractional'] );
 		}
+		/**
+		 * Krajowy System e-Faktur
+		 * KSeF number
+		 *
+		 * @since 1.1.16
+		 */
+		$data['ksef_number'] = $this->get_ksef_number( $ID );
 		return $data;
 	}
 
@@ -366,6 +373,13 @@ abstract class iworks_kpir_jpk {
 				$this->sum['vat_income']['fractional'] += $money['fractional'];
 				break;
 		}
+		/**
+		 * Krajowy System e-Faktur
+		 * KSeF number
+		 * 
+		 * @since 1.1.16
+		 */
+		$data['ksef_number'] = $this->get_ksef_number( $ID );
 		return $data;
 	}
 
@@ -385,6 +399,24 @@ abstract class iworks_kpir_jpk {
 		$money['fractional'] = $money['fractional'] % 100;
 		$money['intval']     = round( $money['integer'] + $money['fractional'] / 100 );
 		return $money;
+	}
+
+	/**
+	 * Get KSeF number for invoice.
+	 * Krajowy System e-Faktur
+	 *
+	 * @param int $ID Invoice ID.
+	 * @return string KSeF number.
+	 */
+	private function get_ksef_number( $ID ) {
+		$value = get_post_meta( $ID, 'iworks_kpir_basic_ksef_number', true );
+		if ( empty( $value ) ) {
+			$value = get_post_meta( $ID, 'iworks_kpir_basic_ksef_type', true );
+		}
+		if ( empty( $value ) ) {
+			$value = 'OFF';
+		}
+		return $value;
 	}
 }
 

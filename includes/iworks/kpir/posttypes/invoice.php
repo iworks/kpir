@@ -200,6 +200,31 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 						'class' => array( 'medium-text' ),
 					),
 				),
+				'ksef_number'     => array(
+					'type'  => 'text',
+					'args'  => array(
+						'class' => array( 'large-text' ),
+					),
+					'label' => __( 'KSeF Number', 'kpir' ),
+				),
+				'ksef_type'     => array(
+					'type'  => 'radio',
+					'args'  => array(
+						'options' => array(
+							'OFF' => array(
+								'label' => __( 'An invoice that, on the date of submission of the records, does not have a number identifying this invoice in the National e-Invoice System', 'kpir' ),
+							),
+							'BFK'    => array(
+								'label' => __( 'Electronic invoice or invoice in paper form', 'kpir' ),
+							),
+							'DI'    => array(
+								'label' => __( 'Other evidence than invoice', 'kpir' ),
+							),
+						),
+						'default' => 'BFK',
+					),
+					'label' => __( 'KSeF Type', 'kpir' ),
+				),
 				'contractor'    => array(
 					'type'  => 'select2',
 					'label' => __( 'Contractor', 'kpir' ),

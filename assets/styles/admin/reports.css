@@ -1,7 +1,8 @@
 .kpir-report {
   border-collapse: collapse;
 }
-.kpir-report td, .kpir-report th {
+.kpir-report td,
+.kpir-report th {
   padding: 5px;
   border: 1px solid #000;
 }
@@ -11,6 +12,18 @@
   text-align: right;
   width: 3em;
 }
+.kpir-report td.vat-passed {
+  background-color: #00701730;
+}
+.kpir-report td.vat-failed {
+  background-color: #d6363830;
+}
 .kpir-report tr:nth-child(even) td {
   background-color: #ddd;
+}
+.kpir-report tr:nth-child(even) td.vat-passed {
+  background-color: #00701750;
+}
+.kpir-report tr:nth-child(even) td.vat-failed {
+  background-color: #d6363850;
 }

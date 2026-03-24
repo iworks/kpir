@@ -115,8 +115,22 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		 * Choose template
 		 */
 		$template = 'jpk/v7m/xml';
+		/**
+		 * JPK V7M-2 from 2021
+		 */
 		if ( 2021 < intval( preg_replace( '/\-.+$/', '', $year_month ) ) ) {
 			$template = 'jpk/v7m-2/xml';
+		}
+		/**
+		 * JPK V7M-3 from 2026-2
+		 * 
+		 * @since 1.2.0
+		 */
+		if (
+			2025 < intval( preg_replace( '/\-.+$/', '', $year_month ) )
+			&& 1 < intval( preg_replace( '/^.+\-/', '', $year_month ) )
+		) {
+			$template = 'jpk/v7m-3/xml';
 		}
 		/**
 		 * error
@@ -397,7 +411,10 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 			unset( $args['P_20'] );
 		}
 		$this->get_template( $template, 'summary', $args );
-		echo '<tns:Ewidencja>';
+		/**
+		 * Start evidence
+		 */
+		$this->get_template( $template, 'evidence-start', $args );
 		/**
 		 * income
 		 */
@@ -436,7 +453,13 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 			);
 			$this->get_template( $template, 'expenses-summary', $atts );
 		}
-		echo '</tns:Ewidencja>';
+		/**
+		 * End evidence
+		 */
+		$this->get_template( $template, 'evidence-end', $args );
+		/**
+		 * Footer
+		 */
 		$this->get_template( $template, 'footer', $args );
 		/**
 		 * file

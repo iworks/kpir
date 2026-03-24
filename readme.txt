@@ -64,6 +64,11 @@ There are 3 ways to install this plugin:
 Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 
 
+= 1.2.0 - 2026-03-24 =
+* Added KSeF number to JPK reports.
+* Added JPK V7M (3) support.
+* Added simple VAT inconsistency check.
+
 = 1.1.4 - 2026-03-20 =
 * Massive improvements for `cash pit` feature.
 * Added comprehensive DocBook (PHPDoc) comments to invoice post type class.
