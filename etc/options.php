@@ -83,6 +83,16 @@ function iworks_kpir_options() {
 				'classes'           => array( 'switch-button' ),
 				'since'             => '1.1.0',
 			),
+			array(
+				'name'              => 'check_vat_on_monothly',
+				'type'              => 'checkbox',
+				'sanitize_callback' => 'intval',
+				'default'           => 0,
+				'th'                => esc_html__( 'Check VAT on Monthly Report', 'kpir' ),
+				'description'       => esc_html__( 'Simple check VAT on Monthly Report as netto sum multiple basic rate.', 'kpir' ),
+				'classes'           => array( 'switch-button' ),
+				'since'             => '1.2.0',
+			),
 		),
 		//      'metaboxes' => array(),
 		'pages'      => array(
