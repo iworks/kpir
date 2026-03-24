@@ -10,8 +10,7 @@ for ( $i = 10; $i < 37; $i++ ) {
 	$key = sprintf( 'K_%d', $i );
 	if ( isset( $args[ $key ] ) ) {
 		?>
-	<tns:<?php echo $key; ?>><?php echo $args[ $key ]; ?></tns:<?php echo $key; ?>>
-		<?php
+	<tns:<?php echo $key; ?>><?php echo $args[ $key ]; ?></tns:<?php echo $key; ?>><?php
 	}
 }
 ?>

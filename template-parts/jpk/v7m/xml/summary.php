@@ -17,3 +17,4 @@ for ( $i = 10; $i < 70; $i++ ) {
 	</tns:PozycjeSzczegolowe>
 	<tns:Pouczenia>1</tns:Pouczenia>
 </tns:Deklaracja>
+

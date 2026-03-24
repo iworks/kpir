@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JPK xmlns="http://crd.gov.pl/wzor/2025/12/19/14090/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://crd.gov.pl/wzor/2025/12/19/14090/ JPK_V7M3.xsd">
