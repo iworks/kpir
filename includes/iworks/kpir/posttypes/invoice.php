@@ -978,6 +978,12 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			return $query;
 		}
 		/**
+		 * do not change if it is already set by request and post status is "imported" or "trash"
+		 */
+		if ( isset( $_REQUEST['post_status'] ) && in_array( $_REQUEST['post_status'], array( 'imported', 'trash' ) ) ) {
+			return $query;
+		}
+		/**
 		 * do not change outsite th admin area
 		 */
 		if ( ! is_admin() ) {
