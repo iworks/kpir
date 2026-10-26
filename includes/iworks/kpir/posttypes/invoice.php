@@ -92,6 +92,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
 		add_action( 'init', array( $this, 'action_init_set_fields' ), 9823 );
 		add_action( 'init', array( $this, 'action_init_set_filters' ), 9824 );
+		add_action( 'init', array( $this, 'register_imported_status' ), 9825 );
 		/**
 		 * save extra field
 		 */
@@ -121,6 +122,33 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		 * add filter for year_month_cash
 		 */
 		add_action( 'shutdown', array( $this, 'action_shutdown_calculate_year_month_cash' ) );
+
+		/**
+		 * filter for duplicate invoice
+		 */
+		add_filter( 'iworks/kpir/duplicate_invoice/skip_meta', array( $this, 'filter_duplicate_invoice_skip_meta' ), 10, 2 );
+	}
+
+	/**
+	 * Register the "imported" post status for invoices.
+	 *
+	 * Registers a custom post status to mark invoices that have been imported
+	 * from KSeF (Krajowy System e-Faktur).
+	 *
+	 * @since 1.2.1
+	 */
+	public function register_imported_status() {
+		register_post_status(
+			'imported',
+			array(
+				'label'                     => _x( 'Imported', 'post status', 'kpir' ),
+				'public'                    => false,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => true,
+				'show_in_admin_status_list' => true,
+				'label_count'               => _n_noop( 'Imported <span class="count">(%s)</span>', 'Imported <span class="count">(%s)</span>', 'kpir' ),
+			)
+		);
 	}
 
 	/**
@@ -171,27 +199,29 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	public function action_init_set_fields() {
 		/**
 		 * fields
-	 *
-	 * @since 1.1.0
+		 *
+		 * @since 1.1.0
 		 */
 		$this->fields = array(
 			'basic'     => array(
 				'date_of_issue' => array(
-					'type'  => 'date',
-					'label' => __( 'Date of issue', 'kpir' ),
-					'args'  => array(
+					'type'          => 'date',
+					'label'         => __( 'Date of issue', 'kpir' ),
+					'args'          => array(
 						'class'   => array( 'medium-text' ),
 						'default' => date_i18n( 'Y-m-d', time() ),
 						'after'   => sprintf( ' <a class="button" id="kpir-copy-date-button">%s</a>', esc_html__( 'Copy to event date', 'kpir' ) ),
 					),
+					'ksef_xml_name' => 'Fa,P_1',
 				),
 				'date'          => array(
-					'type'  => 'date',
-					'label' => __( 'Event date', 'kpir' ),
-					'args'  => array(
+					'type'          => 'date',
+					'label'         => __( 'Event date', 'kpir' ),
+					'args'          => array(
 						'class'   => array( 'medium-text' ),
 						'default' => date_i18n( 'Y-m-d', time() ),
 					),
+					'ksef_xml_name' => 'Fa,P_6',
 				),
 				'date_of_cash'  => array(
 					'type'  => 'date',
@@ -200,30 +230,32 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 						'class' => array( 'medium-text' ),
 					),
 				),
-				'ksef_number'     => array(
-					'type'  => 'text',
-					'args'  => array(
+				'ksef_number'   => array(
+					'type'     => 'text',
+					'args'     => array(
 						'class' => array( 'large-text' ),
 					),
-					'label' => __( 'KSeF Number', 'kpir' ),
+					'label'    => __( 'KSeF Number', 'kpir' ),
+					'copyable' => 'off',
 				),
 				'ksef_type'     => array(
-					'type'  => 'radio',
-					'args'  => array(
+					'type'     => 'radio',
+					'args'     => array(
 						'options' => array(
 							'OFF' => array(
 								'label' => __( 'An invoice that, on the date of submission of the records, does not have a number identifying this invoice in the National e-Invoice System', 'kpir' ),
 							),
-							'BFK'    => array(
+							'BFK' => array(
 								'label' => __( 'Electronic invoice or invoice in paper form', 'kpir' ),
 							),
-							'DI'    => array(
+							'DI'  => array(
 								'label' => __( 'Other evidence than invoice', 'kpir' ),
 							),
 						),
 						'default' => 'BFK',
 					),
-					'label' => __( 'KSeF Type', 'kpir' ),
+					'label'    => __( 'KSeF Type', 'kpir' ),
+					'copyable' => 'off',
 				),
 				'contractor'    => array(
 					'type'  => 'select2',
@@ -234,7 +266,8 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 				),
 				'description'   => array(
-					'label' => __( 'Invoice description', 'kpir' ),
+					'label'         => __( 'Invoice description', 'kpir' ),
+					'ksef_xml_name' => 'Fa,FaWiersz,P_7',
 				),
 				'type'          => array(
 					'type'  => 'radio',
@@ -308,8 +341,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 				),
 				'purchase'         => array(
-					'type'  => 'money',
-					'label' => __( 'The purchase of commercial goods and materials, according to the purchase price', 'kpir' ),
+					'type'          => 'money',
+					'label'         => __( 'The purchase of commercial goods and materials, according to the purchase price', 'kpir' ),
+					'ksef_xml_name' => 'Fa,P_13_1',
 				),
 				'cost_of_purchase' => array(
 					'type'  => 'money',
@@ -320,8 +354,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'label' => __( 'Other expenses', 'kpir' ),
 				),
 				'vat'              => array(
-					'type'  => 'money',
-					'label' => __( 'VAT', 'kpir' ),
+					'type'          => 'money',
+					'label'         => __( 'VAT', 'kpir' ),
+					'ksef_xml_name' => 'Fa,P_14_1',
 				),
 				'vat_rate'         => array(
 					'type'  => 'checkbox',
@@ -360,6 +395,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 							),
 							'75'  => array(
 								'label' => __( '75%', 'kpir' ),
+							),
+							'50'  => array(
+								'label' => __( '50%', 'kpir' ),
 							),
 							'20'  => array(
 								'label' => __( '20%', 'kpir' ),
@@ -411,6 +449,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			unset( $this->fields['basic']['date_of_cash'] );
 		}
 	}
+
 	/**
 	 * Add default CSS class to post meta boxes.
 	 *
@@ -798,10 +837,13 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	/**
 	 * Get custom column values.
 	 *
+	 * Displays custom column content for the invoice admin list table.
+	 *
 	 * @since 1.0.0
 	 *
-	 * @param string  $column Column name,
-	 * @param integer $post_id Current post id (Invoice),
+	 * @param string $column  Column name.
+	 * @param int    $post_id Current post ID (Invoice).
+	 * @return void
 	 */
 	public function custom_columns( $column, $post_id ) {
 		switch ( $column ) {
@@ -873,6 +915,10 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			case 'description':
 				echo get_post_meta( $post_id, $this->options->get_option_name( 'basic_description' ), true );
 				break;
+			case 'ksef_id':
+				$ksef_id = get_post_meta( $post_id, $this->options->get_option_name( 'basic_ksef_number' ), true );
+				echo $ksef_id ? esc_html( $ksef_id ) : '&mdash;';
+				break;
 			case 'symbol':
 				$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
 				$is_car_related = 'no' !== $is_car_related;
@@ -885,12 +931,15 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	/**
-	 * change default columns
+	 * Add custom columns to the invoice admin list table.
+	 *
+	 * Removes the default date column and adds custom columns for contractor,
+	 * invoice date, payment date, KSeF ID, symbol, description, expense, and income.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $columns list of columns.
-	 * @return array $columns list of columns.
+	 * @param array $columns Existing columns.
+	 * @return array Modified columns with invoice-specific columns added.
 	 */
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
@@ -899,6 +948,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		if ( $this->use_cash_pit ) {
 			$columns['date_of_payment'] = __( 'Payment Date', 'kpir' );
 		}
+		$columns['ksef_id']     = __( 'KSeF ID', 'kpir' );
 		$columns['symbol']      = '<span class="dashicons dashicons-admin-generic"></span>';
 		$columns['description'] = __( 'Description', 'kpir' );
 		$columns['expense']     = __( 'Expense', 'kpir' );
@@ -908,11 +958,15 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	/**
-	 * Add default sorting
+	 * Apply default sorting to the invoice admin list table.
+	 *
+	 * Sets the default sort order to sort by invoice date (meta_value_num).
+	 * Handles contractor filtering when a contractor is selected.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param WP_Query $query WP Query object.
+	 * @param WP_Query $query WP_Query object.
+	 * @return WP_Query Modified query object with default sorting applied.
 	 */
 	public function apply_default_sort_order( $query ) {
 		/**
@@ -1012,7 +1066,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	/**
-	 * Get "year_month_cach" custom filed name.
+	 * Get "year_month_cash" custom field name.
 	 *
 	 * @since 1.0.4
 	 *
@@ -1072,47 +1126,118 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	/**
 	 * Calculate year_month_cash for invoices that don't have it.
 	 *
+	 * Backfills the year_month_cash field for existing invoices based on their
+	 * type (income uses date_of_cash, others use date_of_issue).
+	 *
 	 * @since 1.0.4
+	 *
+	 * @return void
 	 */
 	public function action_shutdown_calculate_year_month_cash() {
 		$wp_query_args = array(
-			'post_type'   => $this->get_name(),
+			'post_type'  => $this->get_name(),
 			'meta_query' => array(
 				array(
 					'key'     => $this->get_custom_field_year_month_cash_name(),
 					'compare' => 'NOT EXISTS',
 				),
 			),
-			'fields' => 'ids',
-			'limit'  => -1,
+			'fields'     => 'ids',
+			'limit'      => -1,
 		);
-		$query = new WP_Query( $wp_query_args );
+		$query         = new WP_Query( $wp_query_args );
 		if ( $query->posts ) {
 			echo '<pre>';
-			foreach( $query->posts as $post_id ) {
+			foreach ( $query->posts as $post_id ) {
 				$year_month_of_cash = '';
-				$type = get_post_meta( $post_id, 'iworks_kpir_basic_type', true );
-				echo $post_id . " - " . $type ;
+				$type               = get_post_meta( $post_id, 'iworks_kpir_basic_type', true );
+				echo $post_id . ' - ' . $type;
 
 				if ( 'income' === $type ) {
 					$date_of_cash = get_post_meta( $post_id, 'iworks_kpir_basic_date_of_cash', true );
-					echo ' - '.$date_of_cash;
+					echo ' - ' . $date_of_cash;
 					if ( ! empty( $date_of_cash ) ) {
 						$year_month_of_cash = date( 'Y-m', $date_of_cash );
 					}
 				} else {
 					$date_of_issue = get_post_meta( $post_id, 'iworks_kpir_basic_date_of_issue', true );
-					echo ' - '.$date_of_issue;
+					echo ' - ' . $date_of_issue;
 					if ( ! empty( $date_of_issue ) ) {
 						$year_month_of_cash = date( 'Y-m', $date_of_issue );
 					}
 				}
-				echo ' - '.$year_month_of_cash;
+				echo ' - ' . $year_month_of_cash;
 				echo ' - ';
 				echo add_post_meta( $post_id, $this->get_custom_field_year_month_cash_name(), $year_month_of_cash );
 				echo "\n";
 			}
 			echo '</pre>';
 		}
+	}
+
+	/**
+	 * Filter for duplicate invoice meta fields.
+	 *
+	 * Determines which meta fields should be skipped when duplicating an invoice
+	 * based on the 'copyable' field configuration.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @param array|bool $skip_meta  Array of meta keys to skip or true to skip all.
+	 * @param string     $meta_name  The meta field name being checked.
+	 * @return array|bool Modified array of meta keys to skip or true if field should be skipped.
+	 */
+	public function filter_duplicate_invoice_skip_meta( $skip_meta, $meta_name ) {
+		$cat = implode( '|', array_keys( $this->fields ) );
+		if ( ! preg_match( '/^iworks_kpir_(' . $cat . ')_(.+)$/', $meta_name, $matches ) ) {
+			return $skip_meta;
+		}
+		if ( ! isset( $this->fields[ $matches[1] ] ) ) {
+			return $skip_meta;
+		}
+		if ( ! isset( $this->fields[ $matches[1] ][ $matches[2] ] ) ) {
+			return $skip_meta;
+		}
+		if ( ! isset( $this->fields[ $matches[1] ][ $matches[2] ]['copyable'] ) ) {
+			return $skip_meta;
+		}
+		if ( 'off' === $this->fields[ $matches[1] ][ $matches[2] ]['copyable'] ) {
+			return true;
+		}
+		return $skip_meta;
+	}
+
+	public function get_fields() {
+		return $this->fields;
+	}
+
+	/**
+	 * Get contractor ID by NIP (tax identification number).
+	 *
+	 * Queries the contractor post type to find a contractor matching the given NIP.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $nip The NIP (tax identification number) to search for.
+	 * @return int Contractor post ID on success, 0 if not found.
+	 */
+	public function get_contractor_id_by_nip( $nip ) {
+		$args  = array(
+			'post_type'  => 'iworks_kpir_contract',
+			'meta_query' => array(
+				array(
+					'key'     => 'iworks_kpir_contractor_data_nip',
+					'value'   => $nip,
+					'compare' => '=',
+				),
+			),
+			'fields'     => 'ids',
+			'limit'      => 1,
+		);
+		$query = new WP_Query( $args );
+		if ( $query->posts ) {
+			return $query->posts[0];
+		}
+		return 0;
 	}
 }

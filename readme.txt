@@ -65,7 +65,9 @@ Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 
 
 = 1.2.1 - 2026-xx-xx =
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.1.0.
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.1.1.
+* Avoid to duplicate KSEF data on an invoice.
+* Added ability to import purchase invoices from KSeF xml file.
 
 = 1.2.0 - 2026-03-24 =
 * Added KSeF number to JPK reports.

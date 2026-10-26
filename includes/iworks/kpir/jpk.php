@@ -95,7 +95,7 @@ abstract class iworks_kpir_jpk {
 	protected function __construct() {
 		global $iworks_kpir_options;
 		$this->options       = $iworks_kpir_options;
-		$this->template_base = dirname( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/template-parts';
+		$this->template_base = dirname( __DIR__, 3 ) . '/template-parts';
 	}
 
 	/**
@@ -263,6 +263,7 @@ abstract class iworks_kpir_jpk {
 		}
 		switch ( $is_car_related ) {
 			case '20':
+			case '50':
 			case '75':
 				/**
 				 * Cut vat to half at first and add it into base
@@ -286,7 +287,13 @@ abstract class iworks_kpir_jpk {
 				/**
 				 * Cut costs by factor
 				 */
-				$factor              = intval( $is_car_related );
+				$factor = intval( $is_car_related );
+				/**
+				 * 50% vat, nie całości
+				 */
+				if ( '50' === $is_car_related ) {
+					$factor = 100;
+				}
 				$v                   = round( $factor * $money['integer'] + $factor * $money['fractional'] / 100 );
 				$money['fractional'] = $v % 100;
 				$money['integer']    = round( ( $v - $money['fractional'] ) / 100 );
@@ -338,8 +345,8 @@ abstract class iworks_kpir_jpk {
 	 * @return array Processed income data with calculated values.
 	 */
 	protected function income_row( $data ) {
-		$ID                     = $data['ID'];
-		$data['sale_date']      = $data['create_date'] = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
+		$ID                = $data['ID'];
+		$data['sale_date'] = $data['create_date'] = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
 		/**
 		 * sale date for cash method is a cash date
 		 */
@@ -376,7 +383,7 @@ abstract class iworks_kpir_jpk {
 		/**
 		 * Krajowy System e-Faktur
 		 * KSeF number
-		 * 
+		 *
 		 * @since 1.1.16
 		 */
 		$data['ksef_number'] = $this->get_ksef_number( $ID );
@@ -419,4 +426,3 @@ abstract class iworks_kpir_jpk {
 		return $value;
 	}
 }
-

@@ -29,16 +29,16 @@ function iworks_kpir_options() {
 				'class'             => 'regular-text',
 				'th'                => __( 'Taxpayer Type', 'kpir' ),
 				'sanitize_callback' => 'esc_html',
-				'options' => array(
-					'person' => array(
+				'options'           => array(
+					'person'  => array(
 						'label' => __( 'Person', 'kpir' ),
 					),
 					'company' => array(
 						'label' => __( 'Company', 'kpir' ),
 					),
 				),
-				'default' => 'person',
-				'since' => '1.2.0',
+				'default'           => 'person',
+				'since'             => '1.2.0',
 			),
 			array(
 				'name'              => 'name',
@@ -113,6 +113,18 @@ function iworks_kpir_options() {
 		),
 		//      'metaboxes' => array(),
 		'pages'      => array(
+			'ksef_import'     => array(
+				'page_title'         => __( 'KSeF Import', 'kpir' ),
+				'menu_title'         => __( 'KSeF Import', 'kpir' ),
+				'menu'               => 'submenu',
+				'parent'             => add_query_arg(
+					array(
+						'post_type' => 'iworks_kpir_invoice',
+					),
+					'edit.php'
+				),
+				'show_page_callback' => 'iworks_kpir_ksef_import',
+			),
 			'report_monthly'  => array(
 				'page_title'         => __( 'Monthly Report', 'kpir' ),
 				'menu_title'         => __( 'Monthly', 'kpir' ),
@@ -166,8 +178,20 @@ function iworks_kpir_options() {
 	return $iworks_kpir_options;
 }
 
+/**
+ * KSeF Import page callback.
+ *
+ * @since 1.2.1
+ */
+function iworks_kpir_ksef_import() {
+	do_action( 'iworks/kpir/admin/page/ksef/import' );
+}
+
+/**
+ * Monthly report page callback.
+ */
 function iworks_kpir_report_monthly() {
-	 global $iworks_kpir;
+	global $iworks_kpir;
 	$iworks_kpir->show_page_reports( 'monthly' );
 }
 

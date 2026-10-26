@@ -76,6 +76,16 @@ class iworks_kpir extends iworks {
 	 */
 	protected $dir;
 
+
+	/**
+	 * Array of plugin objects.
+	 *
+	 * @var array
+	 *
+	 * @since x.x.x
+	 */
+	protected $objects = array();
+
 	/**
 	 * Class constructor.
 	 *
@@ -96,9 +106,10 @@ class iworks_kpir extends iworks {
 		$post_types = array( 'invoice', 'contractor' );
 		foreach ( $post_types as $post_type ) {
 			include_once $this->base . '/iworks/kpir/posttypes/' . $post_type . '.php';
-			$class        = sprintf( 'iworks_kpir_posttypes_%s', $post_type );
-			$value        = sprintf( 'post_type_%s', $post_type );
-			$this->$value = new $class();
+			$class                   = sprintf( 'iworks_kpir_posttypes_%s', $post_type );
+			$value                   = sprintf( 'post_type_%s', $post_type );
+			$this->$value            = new $class();
+			$this->objects[ $value ] = $this->$value;
 		}
 		/**
 		 * admin init
@@ -111,7 +122,15 @@ class iworks_kpir extends iworks {
 		$filename = __DIR__ . '/kpir/class-iworks-kpir-github.php';
 		if ( is_file( $filename ) ) {
 			include_once $filename;
-			new iworks_kpir_github();
+			$this->objects['github'] = new iworks_kpir_github();
+		}
+		/**
+		 * load ksef class
+		 */
+		$filename = __DIR__ . '/kpir/class-iworks-kpir-ksef.php';
+		if ( is_file( $filename ) ) {
+			include_once $filename;
+			$this->objects['ksef'] = new iworks_kpir_ksef( $this->objects );
 		}
 	}
 
@@ -135,7 +154,7 @@ class iworks_kpir extends iworks {
 						$page = new iworks_kpir_jpk_vat_3();
 						$page->get_xml( $this );
 					}
-				return;
+					return;
 				case 'iworks_kpir_jpk_v7m':
 					$file = $this->get_module_file( 'jpk/v7m' );
 					if ( is_readable( $file ) ) {
@@ -143,7 +162,7 @@ class iworks_kpir extends iworks {
 						$page = new iworks_kpir_jpk_v7m();
 						$page->get_xml( $this );
 					}
-				return;
+					return;
 			}
 		}
 	}
@@ -548,9 +567,13 @@ class iworks_kpir extends iworks {
 		 */
 		$post_meta = get_post_meta( $_POST['ID'] );
 		foreach ( $post_meta as $key => $value ) {
-			if ( preg_match( '/^iworks_kpir/', $key ) ) {
-				$post_data['meta_input'][ $key ] = maybe_unserialize( array_shift( $value ) );
+			if ( ! preg_match( '/^iworks_kpir/', $key ) ) {
+				continue;
 			}
+			if ( apply_filters( 'iworks/kpir/duplicate_invoice/skip_meta', false, $key ) ) {
+				continue;
+			}
+			$post_data['meta_input'][ $key ] = maybe_unserialize( array_shift( $value ) );
 		}
 		$post_data['post_title']  = sprintf( __( 'Copy of %s', 'kpir' ), $post_data['post_title'] );
 		$post_data['post_status'] = 'draft';
@@ -596,7 +619,7 @@ class iworks_kpir extends iworks {
 				'value' => $month,
 			);
 		}
-		$query        = new WP_Query( $args );
+		$query = new WP_Query( $args );
 		return $query;
 	}
 
