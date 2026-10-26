@@ -117,6 +117,14 @@ class iworks_kpir extends iworks {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'wp_loaded', array( $this, 'plugins_loaded' ), 1 );
 		/**
+		 * load db class
+		 */
+		$filename = __DIR__ . '/kpir/class-iworks-kpir-db.php';
+		if ( is_file( $filename ) ) {
+			include_once $filename;
+			new iworks_kpir_db();
+		}
+		/**
 		 * load github class
 		 */
 		$filename = __DIR__ . '/kpir/class-iworks-kpir-github.php';
