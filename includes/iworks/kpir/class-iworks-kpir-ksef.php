@@ -104,13 +104,58 @@ class iworks_kpir_ksef {
 			return;
 		}
 		$this->init();
-		if ( isset( $_FILES[ $this->filename ] ) ) {
-			$file = $_FILES[ $this->filename ];
-			if ( $file['error'] === UPLOAD_ERR_OK ) {
-				$ksef_id      = basename( $file['name'], '.xml' );
-				$file_content = file_get_contents( $file['tmp_name'] );
-				$xml          = simplexml_load_string( $file_content );
-				$this->process_xml( $xml, $ksef_id );
+		if ( isset( $_FILES[ $this->filename ] ) && is_array( $_FILES[ $this->filename ]['name'] ) ) {
+			$files     = $_FILES[ $this->filename ];
+			$count     = count( $files['name'] );
+			$processed = 0;
+			$failed    = 0;
+
+			for ( $i = 0; $i < $count; $i++ ) {
+				if ( $files['error'][ $i ] === UPLOAD_ERR_OK ) {
+					$ksef_id      = basename( $files['name'][ $i ], '.xml' );
+					$file_content = file_get_contents( $files['tmp_name'][ $i ] );
+					$xml          = simplexml_load_string( $file_content );
+
+					if ( $xml ) {
+						if ( $this->process_xml( $xml, $ksef_id ) ) {
+							++$processed;
+						} else {
+							++$failed;
+						}
+					} else {
+						$this->add_notice(
+							sprintf( __( 'Failed to parse XML file: %s', 'kpir' ), $files['name'][ $i ] ),
+							'error'
+						);
+						++$failed;
+					}
+				} else {
+					$this->add_notice(
+						sprintf( __( 'Error uploading file: %s', 'kpir' ), $files['name'][ $i ] ),
+						'error'
+					);
+					++$failed;
+				}
+			}
+
+			if ( $processed > 0 ) {
+				$this->add_notice(
+					sprintf(
+						_n( 'Successfully imported %d invoice.', 'Successfully imported %d invoices.', $processed, 'kpir' ),
+						$processed
+					),
+					'success'
+				);
+			}
+
+			if ( $failed > 0 ) {
+				$this->add_notice(
+					sprintf(
+						_n( 'Failed to import %d invoice.', 'Failed to import %d invoices.', $failed, 'kpir' ),
+						$failed
+					),
+					'error'
+				);
 			}
 		}
 	}
@@ -135,7 +180,7 @@ class iworks_kpir_ksef {
 				new WP_Error( 'missing_data', __( 'Missing seller or buyer data in the XML file.', 'kpir' ) ),
 				'error'
 			);
-			return;
+			return false;
 		}
 		$nip        = $this->options->get_option( 'nip' );
 		$seller_nip = (string) $seller->DaneIdentyfikacyjne->NIP[0];
@@ -146,31 +191,30 @@ class iworks_kpir_ksef {
 		 */
 		if ( $seller_nip === $nip ) {
 			if ( $this->is_invoice_already_imported( $ksef_id ) ) {
-				return;
+				return false;
 			}
-			$this->import_income( $xml, $ksef_id );
-			return;
+			return $this->import_income( $xml, $ksef_id );
 		}
 		/**
 		 * purchase
 		 */
 		if ( $buyer_nip === $nip ) {
 			if ( $this->is_invoice_already_imported( $ksef_id ) ) {
-				return;
+				return false;
 			}
-			$this->import_expense( $xml, $ksef_id );
-			return;
+			return $this->import_expense( $xml, $ksef_id );
 		}
 		/**
 		 * handle mismatch
 		 */
-			$this->add_notice(
-				new WP_Error(
-					'mismatch_nip',
-					esc_html__( 'Mismatch in the seller\'s tax identification number.', 'kpir' )
-				),
-				'error'
-			);
+		$this->add_notice(
+			new WP_Error(
+				'mismatch_nip',
+				esc_html__( 'Mismatch in the seller\'s tax identification number.', 'kpir' )
+			),
+			'error'
+		);
+		return false;
 	}
 
 	/**
@@ -243,7 +287,7 @@ class iworks_kpir_ksef {
 		$post_id = wp_insert_post( $post_data );
 		if ( is_wp_error( $post_id ) ) {
 			$this->add_notice( $post_id, 'error' );
-			return;
+			return false;
 		}
 		$this->add_notice(
 			sprintf(
@@ -257,6 +301,7 @@ class iworks_kpir_ksef {
 			),
 			'success'
 		);
+		return true;
 	}
 
 	/**
@@ -327,7 +372,7 @@ class iworks_kpir_ksef {
 		$post_id = wp_insert_post( $post_data );
 		if ( is_wp_error( $post_id ) ) {
 			$this->add_notice( $post_id, 'error' );
-			return;
+			return false;
 		}
 		$this->add_notice(
 			sprintf(
@@ -341,6 +386,7 @@ class iworks_kpir_ksef {
 			),
 			'success'
 		);
+		return true;
 	}
 
 	/**
@@ -402,7 +448,7 @@ class iworks_kpir_ksef {
 	/**
 	 * Render the KSeF import form.
 	 *
-	 * Displays the file upload form for importing KSeF XML invoices.
+	 * Displays a drag-and-drop zone for importing multiple KSeF XML invoices.
 	 * Includes nonce field for security and accepts .xml files only.
 	 *
 	 * @since 1.0.0
@@ -410,18 +456,145 @@ class iworks_kpir_ksef {
 	public function render_form() {
 		echo '<div class="wrap">';
 		echo '<h1>' . __( 'KSeF Import', 'kpir' ) . '</h1>';
-		echo '<form method="post" enctype="multipart/form-data">';
+		echo '<form method="post" enctype="multipart/form-data" id="ksef-import-form">';
 		wp_nonce_field( 'ksef_import_action', 'ksef_import_nonce' );
-		echo '<table class="form-table">';
-		echo '<tr>';
-		echo '<th scope="row"><label for="' . esc_attr( $this->filename ) . '">' . __( 'XML File', 'kpir' ) . '</label></th>';
-		echo '<td><input type="file" name="' . esc_attr( $this->filename ) . '" accept=".xml" required /></td>';
-		echo '</tr>';
-		echo '</table>';
+		echo '<div id="ksef-dropzone" class="ksef-dropzone">';
+		echo '<div class="ksef-dropzone-content">';
+		echo '<span class="dashicons dashicons-upload"></span>';
+		echo '<p>' . __( 'Drag & drop XML files here or click to select', 'kpir' ) . '</p>';
+		echo '<p class="description">' . __( 'Multiple .xml files are supported', 'kpir' ) . '</p>';
+		echo '</div>';
+		echo '<input type="file" name="' . esc_attr( $this->filename ) . '[]" id="ksef-file-input" accept=".xml" multiple style="display:none;" />';
+		echo '<div id="ksef-file-list" class="ksef-file-list"></div>';
+		echo '</div>';
 		echo '<p class="submit">';
 		echo '<input type="submit" name="ksef_import_submit" class="button button-primary" value="' . __( 'Import', 'kpir' ) . '" />';
 		echo '</p>';
 		echo '</form>';
+		echo '<style>
+			.ksef-dropzone {
+				border: 2px dashed #ccc;
+				border-radius: 8px;
+				padding: 40px 20px;
+				text-align: center;
+				background: #fafafa;
+				transition: all 0.3s ease;
+				cursor: pointer;
+				margin-bottom: 20px;
+			}
+			.ksef-dropzone:hover,
+			.ksef-dropzone.dragover {
+				border-color: #0073aa;
+				background: #f0f7fc;
+			}
+			.ksef-dropzone-content .dashicons {
+				font-size: 48px;
+				width: 48px;
+				height: 48px;
+				color: #666;
+				margin-bottom: 10px;
+			}
+			.ksef-dropzone-content p {
+				margin: 5px 0;
+				font-size: 14px;
+			}
+			.ksef-file-list {
+				margin-top: 20px;
+			}
+			.ksef-file-item {
+				display: flex;
+				align-items: center;
+				padding: 10px;
+				background: #fff;
+				border: 1px solid #ddd;
+				margin-bottom: 5px;
+				border-radius: 4px;
+			}
+			.ksef-file-item .dashicons {
+				margin-right: 10px;
+				color: #0073aa;
+			}
+			.ksef-file-item .remove-file {
+				margin-left: auto;
+				cursor: pointer;
+				color: #a00;
+			}
+		</style>';
+		echo '<script>
+			jQuery(document).ready(function($) {
+				var dropzone = $("#ksef-dropzone");
+				var fileInput = $("#ksef-file-input");
+				var fileList = $("#ksef-file-list");
+				var files = [];
+
+				// Click to select files
+				dropzone.on("click", function(e) {
+					if ($(e.target).hasClass("remove-file")) {
+						return;
+					}
+					fileInput.click();
+				});
+
+				// Handle file selection
+				fileInput.on("change", function(e) {
+					handleFiles(this.files);
+				});
+
+				// Drag and drop events
+				dropzone.on("dragover", function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					dropzone.addClass("dragover");
+				});
+
+				dropzone.on("dragleave", function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					dropzone.removeClass("dragover");
+				});
+
+				dropzone.on("drop", function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					dropzone.removeClass("dragover");
+					handleFiles(e.originalEvent.dataTransfer.files);
+				});
+
+				function handleFiles(newFiles) {
+					for (var i = 0; i < newFiles.length; i++) {
+						if (newFiles[i].name.endsWith(".xml")) {
+							files.push(newFiles[i]);
+						}
+					}
+					updateFileList();
+				}
+
+				function updateFileList() {
+					fileList.empty();
+					for (var i = 0; i < files.length; i++) {
+						var item = $("<div>").addClass("ksef-file-item");
+						item.append("<span class=\"dashicons dashicons-media-document\"></span>");
+						item.append("<span>" + files[i].name + "</span>");
+						item.append("<span class=\"dashicons dashicons-no remove-file\" data-index=\"" + i + "\"></span>");
+						fileList.append(item);
+					}
+					// Update file input
+					var dataTransfer = new DataTransfer();
+					for (var i = 0; i < files.length; i++) {
+						dataTransfer.items.add(files[i]);
+					}
+					fileInput[0].files = dataTransfer.files;
+				}
+
+				// Remove file
+				$(document).on("click", ".remove-file", function(e) {
+					e.stopPropagation();
+					var index = $(this).data("index");
+					files.splice(index, 1);
+					updateFileList();
+				});
+			});
+		</script>';
 		echo '</div>';
 	}
 
