@@ -303,16 +303,18 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 				),
 				'sale'        => array(
-					'type'  => 'money',
-					'label' => __( 'Value of goods and services sold', 'kpir' ),
+					'type'          => 'money',
+					'label'         => __( 'Value of goods and services sold', 'kpir' ),
+					'ksef_xml_name' => 'Fa,P_13_1',
 				),
 				'other'       => array(
 					'type'  => 'money',
 					'label' => __( 'Other income', 'kpir' ),
 				),
 				'vat'         => array(
-					'type'  => 'money',
-					'label' => __( 'VAT', 'kpir' ),
+					'type'          => 'money',
+					'label'         => __( 'VAT', 'kpir' ),
+					'ksef_xml_name' => 'Fa,P_14_1',
 				),
 				'vat_type'    => array(
 					'type' => 'radio',

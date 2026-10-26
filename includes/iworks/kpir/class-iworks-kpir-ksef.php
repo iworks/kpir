@@ -148,7 +148,7 @@ class iworks_kpir_ksef {
 			if ( $this->is_invoice_already_imported( $ksef_id ) ) {
 				return;
 			}
-			$this->import_sale( $xml, $ksef_id );
+			$this->import_income( $xml, $ksef_id );
 			return;
 		}
 		/**
@@ -158,7 +158,7 @@ class iworks_kpir_ksef {
 			if ( $this->is_invoice_already_imported( $ksef_id ) ) {
 				return;
 			}
-			$this->import_purchase( $xml, $ksef_id );
+			$this->import_expense( $xml, $ksef_id );
 			return;
 		}
 		/**
@@ -187,7 +187,7 @@ class iworks_kpir_ksef {
 	 * @param string           $ksef_id The KSeF invoice identifier.
 	 * @return int|WP_Error Post ID on success, WP_Error on failure.
 	 */
-	private function import_purchase( $xml, $ksef_id ) {
+	private function import_expense( $xml, $ksef_id ) {
 		$seller_nip    = (string) $xml->Podmiot1->DaneIdentyfikacyjne->NIP[0];
 		$invoice_class = $this->objects['post_type_invoice'];
 		$fields        = $invoice_class->get_fields();
@@ -203,6 +203,12 @@ class iworks_kpir_ksef {
 			),
 		);
 		foreach ( $fields as $group => $fields ) {
+			/**
+			 * Skip income group for purchase invoices.
+			 */
+			if ( 'income' === $group ) {
+				continue;
+			}
 			foreach ( $fields as $slug => $field ) {
 				if ( ! isset( $field['ksef_xml_name'] ) ) {
 					continue;
@@ -222,6 +228,90 @@ class iworks_kpir_ksef {
 						break;
 					case 'iworks_kpir_expense_purchase':
 					case 'iworks_kpir_expense_vat':
+						$parts = explode( '.', number_format( $value, 2, '.', '' ) );
+						$value = array(
+							'integer'    => (int) $parts[0],
+							'fractional' => (int) $parts[1],
+						);
+						break;
+				}
+				if ( ! empty( $value ) ) {
+					$post_data['meta_input'][ $meta ] = $value;
+				}
+			}
+		}
+		$post_id = wp_insert_post( $post_data );
+		if ( is_wp_error( $post_id ) ) {
+			$this->add_notice( $post_id, 'error' );
+			return;
+		}
+		$this->add_notice(
+			sprintf(
+				esc_html__( 'Imported KSeF invoice: %s.', 'kpir' ),
+				sprintf(
+					'<a href="%s">%s - KSeF: %s</a>',
+					get_edit_post_link( $post_id ),
+					get_the_title( $post_id ),
+					$ksef_id
+				)
+			),
+			'success'
+		);
+	}
+
+	/**
+	 * Import a sale invoice from KSeF XML.
+	 *
+	 * Creates a new invoice post from the KSeF XML data for sale invoices.
+	 * Sets the post status to 'imported' and maps XML fields to invoice meta fields
+	 * using the ksef_xml_name configuration. Handles special field types like dates
+	 * and monetary amounts.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @param SimpleXMLElement $xml    The parsed XML object from KSeF.
+	 * @param string           $ksef_id The KSeF invoice identifier.
+	 * @return void
+	 */
+	private function import_income( $xml, $ksef_id ) {
+		$buyer_nip     = (string) $xml->Podmiot2->DaneIdentyfikacyjne->NIP[0];
+		$invoice_class = $this->objects['post_type_invoice'];
+		$fields        = $invoice_class->get_fields();
+
+		$post_data = array(
+			'post_title'  => (string) $xml->Fa->P_2,
+			'post_type'   => $invoice_class->get_name(),
+			'post_status' => 'imported',
+			'meta_input'  => array(
+				'iworks_kpir_basic_contractor'  => $invoice_class->get_contractor_id_by_nip( $buyer_nip ),
+				'iworks_kpir_basic_ksef_type'   => 'BFK',
+				'iworks_kpir_basic_ksef_number' => $ksef_id,
+				'iworks_kpir_basic_type'        => 'income',
+			),
+		);
+		foreach ( $fields as $group => $fields ) {
+			if ( 'expense' === $group ) {
+				continue;
+			}
+			foreach ( $fields as $slug => $field ) {
+				if ( ! isset( $field['ksef_xml_name'] ) ) {
+					continue;
+				}
+				$names = explode( ',', $field['ksef_xml_name'] );
+				$value = $xml;
+				while ( ! empty( $names ) ) {
+					$name  = array_shift( $names );
+					$value = $value->$name;
+				}
+				$value = (string) $value;
+				$meta  = sprintf( 'iworks_kpir_%s_%s', $group, $slug );
+				switch ( $meta ) {
+					case 'iworks_kpir_basic_date_of_issue':
+					case 'iworks_kpir_basic_date':
+						$value = strtotime( $value );
+						break;
+					case 'iworks_kpir_income_sale':
+					case 'iworks_kpir_income_vat':
 						$parts = explode( '.', number_format( $value, 2, '.', '' ) );
 						$value = array(
 							'integer'    => (int) $parts[0],
