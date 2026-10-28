@@ -215,13 +215,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'ksef_xml_name' => 'Fa,P_1',
 				),
 				'date'          => array(
-					'type'          => 'date',
-					'label'         => __( 'Event date', 'kpir' ),
-					'args'          => array(
+					'type'                   => 'date',
+					'label'                  => __( 'Event date', 'kpir' ),
+					'args'                   => array(
 						'class'   => array( 'medium-text' ),
 						'default' => date_i18n( 'Y-m-d', time() ),
 					),
-					'ksef_xml_name' => 'Fa,P_6',
+					'ksef_xml_name'          => 'Fa,P_6',
+					'ksef_xml_name_fallback' => 'Fa,P_1',
 				),
 				'date_of_cash'  => array(
 					'type'  => 'date',

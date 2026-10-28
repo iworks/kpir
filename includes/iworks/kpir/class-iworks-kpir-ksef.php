@@ -235,8 +235,7 @@ class iworks_kpir_ksef {
 		$seller_nip    = (string) $xml->Podmiot1->DaneIdentyfikacyjne->NIP[0];
 		$invoice_class = $this->objects['post_type_invoice'];
 		$fields        = $invoice_class->get_fields();
-
-		$post_data = array(
+		$post_data     = array(
 			'post_title'  => (string) $xml->Fa->P_2,
 			'post_type'   => $invoice_class->get_name(),
 			'post_status' => 'imported',
@@ -257,6 +256,9 @@ class iworks_kpir_ksef {
 				if ( ! isset( $field['ksef_xml_name'] ) ) {
 					continue;
 				}
+				/**
+				 * basic mapping
+				 */
 				$names = explode( ',', $field['ksef_xml_name'] );
 				$value = $xml;
 				while ( ! empty( $names ) ) {
@@ -264,7 +266,22 @@ class iworks_kpir_ksef {
 					$value = $value->$name;
 				}
 				$value = (string) $value;
-				$meta  = sprintf( 'iworks_kpir_%s_%s', $group, $slug );
+				/**
+				 * fallback mapping
+				 */
+				if ( empty( $value ) && isset( $field['ksef_xml_name_fallback'] ) ) {
+					$names = explode( ',', $field['ksef_xml_name_fallback'] );
+					$value = $xml;
+					while ( ! empty( $names ) ) {
+						$name  = array_shift( $names );
+						$value = $value->$name;
+					}
+					$value = (string) $value;
+				}
+				/**
+				 * meta name
+				 */
+				$meta = sprintf( 'iworks_kpir_%s_%s', $group, $slug );
 				switch ( $meta ) {
 					case 'iworks_kpir_basic_date_of_issue':
 					case 'iworks_kpir_basic_date':
