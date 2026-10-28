@@ -67,8 +67,9 @@ Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 = 1.3.0 - 2026-xx-xx =
 * Added ability to import purchase invoices from KSeF XML files.
 * Added ability to import sales invoices from KSeF XML files.
-* Added fallback mapping for KSeF XML date field.
+* Added fallback mapping for KSeF XML date field for purchase and sale invoices.
 * Added NIP unification - removed "-", " ", and leading "PL" to make it consistent and compatible with KSeF NIP format.
+* Code quality improvements in KSeF XML field mapping.
 * Prevent duplication of KSeF data on an invoice.
 * Removed default sorting for invoices in "imported" or "trash" status.
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.1.1.

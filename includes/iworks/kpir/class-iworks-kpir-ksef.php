@@ -229,7 +229,7 @@ class iworks_kpir_ksef {
 	 *
 	 * @param SimpleXMLElement $xml    The parsed XML object from KSeF.
 	 * @param string           $ksef_id The KSeF invoice identifier.
-	 * @return int|WP_Error Post ID on success, WP_Error on failure.
+	 * @return bool True on success, false on failure.
 	 */
 	private function import_expense( $xml, $ksef_id ) {
 		$seller_nip    = (string) $xml->Podmiot1->DaneIdentyfikacyjne->NIP[0];
@@ -257,27 +257,9 @@ class iworks_kpir_ksef {
 					continue;
 				}
 				/**
-				 * basic mapping
+				 * value from XML
 				 */
-				$names = explode( ',', $field['ksef_xml_name'] );
-				$value = $xml;
-				while ( ! empty( $names ) ) {
-					$name  = array_shift( $names );
-					$value = $value->$name;
-				}
-				$value = (string) $value;
-				/**
-				 * fallback mapping
-				 */
-				if ( empty( $value ) && isset( $field['ksef_xml_name_fallback'] ) ) {
-					$names = explode( ',', $field['ksef_xml_name_fallback'] );
-					$value = $xml;
-					while ( ! empty( $names ) ) {
-						$name  = array_shift( $names );
-						$value = $value->$name;
-					}
-					$value = (string) $value;
-				}
+				$value = $this->get_value_from_xml( $xml, $field );
 				/**
 				 * meta name
 				 */
@@ -333,7 +315,7 @@ class iworks_kpir_ksef {
 	 *
 	 * @param SimpleXMLElement $xml    The parsed XML object from KSeF.
 	 * @param string           $ksef_id The KSeF invoice identifier.
-	 * @return void
+	 * @return bool True on success, false on failure.
 	 */
 	private function import_income( $xml, $ksef_id ) {
 		$buyer_nip     = (string) $xml->Podmiot2->DaneIdentyfikacyjne->NIP[0];
@@ -359,13 +341,7 @@ class iworks_kpir_ksef {
 				if ( ! isset( $field['ksef_xml_name'] ) ) {
 					continue;
 				}
-				$names = explode( ',', $field['ksef_xml_name'] );
-				$value = $xml;
-				while ( ! empty( $names ) ) {
-					$name  = array_shift( $names );
-					$value = $value->$name;
-				}
-				$value = (string) $value;
+				$value = $this->get_value_from_xml( $xml, $field );
 				$meta  = sprintf( 'iworks_kpir_%s_%s', $group, $slug );
 				switch ( $meta ) {
 					case 'iworks_kpir_basic_date_of_issue':
@@ -404,6 +380,38 @@ class iworks_kpir_ksef {
 			'success'
 		);
 		return true;
+	}
+
+	/**
+	 * Resolve a field value from KSeF XML using primary and fallback mapping.
+	 *
+	 * Tries the 'ksef_xml_name' path first; when the result is empty, retries
+	 * with the optional 'ksef_xml_name_fallback' path.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param SimpleXMLElement $xml   Parsed KSeF XML document.
+	 * @param array            $field Field definition containing 'ksef_xml_name'
+	 *                                and optional 'ksef_xml_name_fallback' keys.
+	 * @return string Resolved value, empty string when not found.
+	 */
+	private function get_value_from_xml( $xml, $field ) {
+		foreach ( array( 'ksef_xml_name', 'ksef_xml_name_fallback' ) as $key ) {
+			if ( empty( $field[ $key ] ) ) {
+				continue;
+			}
+			$names = explode( ',', $field[ $key ] );
+			$value = $xml;
+			while ( ! empty( $names ) ) {
+				$name  = array_shift( $names );
+				$value = $value->$name;
+			}
+			$value = (string) $value;
+			if ( ! empty( $value ) ) {
+				return $value;
+			}
+		}
+		return '';
 	}
 
 	/**
