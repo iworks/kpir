@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12/phpunit.xsd"
+         bootstrap="bootstrap.php"
+         colors="true"
+         cacheResult="false">
+    <testsuites>
+        <testsuite name="default">
+            <directory>unit</directory>
+        </testsuite>
+        <!-- Integration suite (WordPress + database) can be added here later:
+        <testsuite name="integration">
+            <directory suffix="test.php">integration</directory>
+        </testsuite>
+        -->
+    </testsuites>
+</phpunit>

@@ -46,6 +46,9 @@ module.exports = function(grunt) {
 		'!release/**',
 		'!.sass-cache/**',
 		'!**/tests/**',
+		'!vendor/**',
+		'!composer.json',
+		'!composer.lock',
 		'!webpack.config.js',
 	];
 
@@ -160,6 +163,7 @@ module.exports = function(grunt) {
 				'release/.*', // Temp release files.
 				'.sass-cache/.*',
 				'tests/.*', // Unit testing.
+				'vendor/.*', // Composer dependencies.
 				'.editorconfig', // editor configuration
 			],
 			pot_dir: 'languages/', // With trailing slash.
@@ -241,19 +245,19 @@ module.exports = function(grunt) {
 
 		/**
 		 * TEST - Run the PHPUnit tests.
-		 * -- Not used right now...
+		 * Install dependencies first: $ composer install
 		 */
 		phpunit: {
 			classes: {
 				dir: ''
 			},
 			options: {
-				bin: 'phpunit',
+				bin: 'vendor/bin/phpunit',
 				bootstrap: 'tests/php/bootstrap.php',
 				testsuite: 'default',
 				configuration: 'tests/php/phpunit.xml',
 				colors: true,
-				tap: true,
+				tap: false,
 				staticBackup: false,
 				noGlobalsBackup: false
 			}
@@ -359,7 +363,7 @@ module.exports = function(grunt) {
 						'report-msgid-bugs-to': 'http://iworks.pl',
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
 					},
-					exclude: ['node_modules', '.git', '.sass-cache', 'release'],
+					exclude: ['node_modules', '.git', '.sass-cache', 'release', 'vendor'],
 					type: 'wp-plugin',
 					updateTimestamp: true,
 					updatePoFiles: true

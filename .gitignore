@@ -6,6 +6,8 @@ prepros.json
 *.log
 node_modules
 release
+vendor
+composer.lock
 tests/php/readme.txt
 package-lock.json
 assets/styles/*.css
