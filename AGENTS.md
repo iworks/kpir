@@ -77,7 +77,8 @@ Git: the default branch is `master` (not `main`).
 
 `bun run dev` (watcher: rebuilds assets on JS/SCSS change) ·
 `bun run js` / `bun run css` (asset pipelines only) ·
-`bun run build` (both flavors: wporg with Plugin Check first, then github) ·
+`bun run build` (both flavors: github first, then wporg with Plugin
+Check) ·
 `bun run build:wporg` (wp.org ZIP + Plugin Check) ·
 `bun run build:github` (GitHub ZIP + .mo) ·
 `bun run make-pot` (translations) ·

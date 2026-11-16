@@ -121,11 +121,16 @@ function printSummary(errors, warnings, perFile, fileCounts) {
   const byErrorsDesc = (a, b) => b.errors - a.errors || b.warnings - a.warnings;
   const col = (text, width) => {
     text = String(text);
-    return text.length > width ? `${text.slice(0, width - 1)}…` : text.padEnd(width);
+    return text.length > width
+      ? `${text.slice(0, width - 1)}…`
+      : text.padEnd(width);
   };
   const line = (rule) => `  ${rule.repeat(64)}`;
   log("", "i");
-  log(`  SUMMARY — ${errors} error(s), ${warnings} warning(s)`, errors ? "e" : "w");
+  log(
+    `  SUMMARY — ${errors} error(s), ${warnings} warning(s)`,
+    errors ? "e" : "w",
+  );
   log("", "i");
   // Per-file table.
   log("  By file:", "i");
@@ -148,9 +153,7 @@ function printSummary(errors, warnings, perFile, fileCounts) {
   }
   log("", "i");
   log("  By check code:", "i");
-  console.log(
-    `  ${col("CODE", 56)}  ${col("ERR", 4)}  ${col("WARN", 5)}`,
-  );
+  console.log(`  ${col("CODE", 56)}  ${col("ERR", 4)}  ${col("WARN", 5)}`);
   log("─");
   for (const entry of [...perCode.values()].sort(byErrorsDesc)) {
     console.log(
@@ -253,7 +256,12 @@ export async function pluginCheck(slug, version) {
         continue;
       }
       const key = `${file}\t${code}`;
-      const entry = fileCounts.get(key) || { file, code, errors: 0, warnings: 0 };
+      const entry = fileCounts.get(key) || {
+        file,
+        code,
+        errors: 0,
+        warnings: 0,
+      };
       if (isError) {
         entry.errors++;
       } else {
@@ -284,7 +292,10 @@ export async function pluginCheck(slug, version) {
     // Full results to a log file (gitignored).
     const logFile = join(root, "plugin-check.log");
     const header = `# plugin-check — ${new Date().toISOString()} — ${slug} ${version}\n`;
-    writeFileSync(logFile, header + (result.stdout.trim() || "(no output)") + "\n");
+    writeFileSync(
+      logFile,
+      header + (result.stdout.trim() || "(no output)") + "\n",
+    );
     log(`plugin-check — full output written to plugin-check.log`, "i");
   } finally {
     rmSync(target, { recursive: true, force: true });

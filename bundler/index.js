@@ -4,7 +4,7 @@
  *
  * Modes:
  *   dev (default) — watcher, rebuilds assets on JS/SCSS change
- *   build         — both flavors: build:wporg (+ Plugin Check) + build:github
+ *   build         — both flavors: build:github + build:wporg (+ Plugin Check)
  *   build:wporg   — production build → release/wporg/{name}.zip
  *   build:github  — production build + .mo → release/github/{name}.zip
  *   make-pot      — translations only (.pot + .po update)
@@ -204,8 +204,8 @@ const modes = {
       (await import("./pipelines.mjs")).buildCss(),
     ),
   build: async () => {
-    await build("wporg");
     await build("github");
+    await build("wporg");
   },
   "build:wporg": () => build("wporg"),
   "build:github": () => build("github"),

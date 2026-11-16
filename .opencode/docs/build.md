@@ -53,7 +53,7 @@ All names derive from `package.json` (`name`, `title`, `version`,
 | `bun run dev`          | Watcher: rebuild assets on JS/SCSS change; no ZIP, no i18n                   |
 | `bun run js`           | JS pipeline only (prettier + concat + terser)                                |
 | `bun run css`          | CSS pipeline only (sass + concat + clean-css)                                |
-| `bun run build`        | Both flavors: **wporg first** (with Plugin Check), then github               |
+| `bun run build`        | Both flavors: **github first**, then wporg (with Plugin Check)               |
 | `bun run build:wporg`  | Production → `release/wporg/{name}.zip` + Plugin Check                        |
 | `bun run build:github` | Production + `.mo` → `release/github/{name}.zip`                              |
 | `bun run make-pot`     | Translations only (`.pot` + `.po` update)                                    |
@@ -81,7 +81,7 @@ All names derive from `package.json` (`name`, `title`, `version`,
 7. **done** — progress bar + total time; any failure prints `BUILD FAILED`,
    exit 1.
 
-`bun run build` runs **wporg first**, then github, so the final
+`bun run build` runs **github first**, then wporg, so the final
 PCP/symlink state reflects the wporg release.
 Env vars: `PLUGIN_CHECK_SKIP=1` (skip), `PLUGIN_CHECK_PLUGINS_DIR`
 (plugins dir, defaults to the repo's parent), `PLUGIN_SYMLINK_SKIP=1`
