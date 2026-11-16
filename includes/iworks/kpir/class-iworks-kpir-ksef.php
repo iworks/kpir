@@ -276,6 +276,9 @@ class iworks_kpir_ksef {
 						break;
 					case 'iworks_kpir_expense_purchase':
 					case 'iworks_kpir_expense_vat':
+						if ( empty( $value ) ) {
+							break;
+						}
 						$parts = explode( '.', number_format( $value, 2, '.', '' ) );
 						$value = array(
 							'integer'    => (int) $parts[0],

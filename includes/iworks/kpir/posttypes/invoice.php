@@ -348,6 +348,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'type'          => 'money',
 					'label'         => __( 'The purchase of commercial goods and materials, according to the purchase price', 'kpir' ),
 					'ksef_xml_name' => 'Fa,P_13_1',
+					'ksef_xml_name_fallback' => 'Fa,P_13_2',
 				),
 				'cost_of_purchase' => array(
 					'type'  => 'money',
@@ -361,6 +362,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'type'          => 'money',
 					'label'         => __( 'VAT', 'kpir' ),
 					'ksef_xml_name' => 'Fa,P_14_1',
+					'ksef_xml_name_fallback' => 'Fa,P_14_2',
 				),
 				'vat_rate'         => array(
 					'type'  => 'checkbox',
