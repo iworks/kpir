@@ -115,8 +115,21 @@ class iworks_kpir_ksef {
 				if ( $files['error'][ $i ] === UPLOAD_ERR_OK ) {
 					$ksef_id      = sanitize_file_name( basename( sanitize_file_name( wp_unslash( $files['name'][ $i ] ) ), '.xml' ) );
 					$file_content = file_get_contents( $files['tmp_name'][ $i ] );
-					$xml          = simplexml_load_string( $file_content );
-
+					/**
+					 * Remove namespace from XML
+					 */
+					foreach ( array( 'ns1:', 'tns:' ) as $namespace ) {
+						if ( preg_match( '/' . preg_quote( $namespace, '/' ) . '/', $file_content ) ) {
+							$file_content = str_replace( $namespace, '', $file_content );
+						}
+					}
+					/**
+					 * parse XML
+					 */
+					$xml = simplexml_load_string( $file_content );
+					/**
+					 * check if XML is valid
+					 */
 					if ( $xml ) {
 						if ( $this->process_xml( $xml, $ksef_id ) ) {
 							++$processed;
@@ -126,7 +139,7 @@ class iworks_kpir_ksef {
 					} else {
 						$this->add_notice(
 							// translators: %s: plugin file name.
-			sprintf( __( 'Failed to parse XML file: %s', 'kpir' ), $files['name'][ $i ] ),
+							sprintf( __( 'Failed to parse XML file: %s', 'kpir' ), $files['name'][ $i ] ),
 							'error'
 						);
 						++$failed;
@@ -134,7 +147,7 @@ class iworks_kpir_ksef {
 				} else {
 					$this->add_notice(
 						// translators: %s: uploaded file name.
-				sprintf( __( 'Error uploading file: %s', 'kpir' ), $files['name'][ $i ] ),
+						sprintf( __( 'Error uploading file: %s', 'kpir' ), $files['name'][ $i ] ),
 						'error'
 					);
 					++$failed;
@@ -666,7 +679,7 @@ class iworks_kpir_ksef {
 					'invoice_already_imported',
 					sprintf(
 						// translators: %1$s: invoice number link, %2$s: KSeF number.
-					esc_html__( 'Error: Invoice no. %1$s (KSeF: %2$s) is already imported.', 'kpir' ),
+						esc_html__( 'Error: Invoice no. %1$s (KSeF: %2$s) is already imported.', 'kpir' ),
 						sprintf(
 							'<a href="%s">%s</a>',
 							get_edit_post_link( $query->posts[0] ),

@@ -162,6 +162,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	 */
 	public function filter_add_sortable_columns( $columns ) {
 		$columns['date_of_payment'] = $this->get_custom_field_date_of_cash_name();
+		$columns['ksef_id']         = $this->get_custom_field_basic_ksef_number_name();
 		return $columns;
 	}
 
@@ -345,9 +346,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					),
 				),
 				'purchase'         => array(
-					'type'          => 'money',
-					'label'         => __( 'The purchase of commercial goods and materials, according to the purchase price', 'kpir' ),
-					'ksef_xml_name' => 'Fa,P_13_1',
+					'type'                   => 'money',
+					'label'                  => __( 'The purchase of commercial goods and materials, according to the purchase price', 'kpir' ),
+					'ksef_xml_name'          => 'Fa,P_13_1',
 					'ksef_xml_name_fallback' => 'Fa,P_13_2',
 				),
 				'cost_of_purchase' => array(
@@ -359,9 +360,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 					'label' => __( 'Other expenses', 'kpir' ),
 				),
 				'vat'              => array(
-					'type'          => 'money',
-					'label'         => __( 'VAT', 'kpir' ),
-					'ksef_xml_name' => 'Fa,P_14_1',
+					'type'                   => 'money',
+					'label'                  => __( 'VAT', 'kpir' ),
+					'ksef_xml_name'          => 'Fa,P_14_1',
 					'ksef_xml_name_fallback' => 'Fa,P_14_2',
 				),
 				'vat_rate'         => array(
@@ -1104,6 +1105,17 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	}
 
 	/**
+	 * Get "basic_ksef_number" custom filed name.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return string Custom Field meta_key.
+	 */
+	public function get_custom_field_basic_ksef_number_name() {
+		return $this->options->get_option_name( 'basic_ksef_number' );
+	}
+
+	/**
 	 * Apply filtering for date of payment sorting.
 	 *
 	 * Handles the custom sorting logic for the payment date column
@@ -1121,8 +1133,12 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		if ( ! function_exists( 'get_current_screen' ) ) {
 			return $query;
 		}
-		$key = $this->get_custom_field_date_of_cash_name();
-		if ( get_query_var( 'orderby' ) !== $key ) {
+		$keys = array(
+			$this->get_custom_field_date_of_cash_name(),
+			$this->get_custom_field_basic_ksef_number_name(),
+		);
+		$key  = get_query_var( 'orderby' );
+		if ( ! in_array( $key, $keys, true ) ) {
 			return $query;
 		}
 		$query->set( 'orderby', $key );

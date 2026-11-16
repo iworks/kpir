@@ -82,10 +82,10 @@ class iworks_kpir_reports_monthly {
 	 * @return void
 	 */
 	public function show( $kpir ) {
-		$post_type_object = $kpir->get_post_type_invoice();
+		$post_type_object      = $kpir->get_post_type_invoice();
 		$this->is_use_cash_pit = $kpir->is_use_cash_pit();
 		/**
-		 * check vat 
+		 * check vat
 		 * @since 1.2.0
 		 */
 		$check_vat = boolval( get_option( 'iworks_kpir_check_vat_on_monothly', 0 ) );
@@ -103,7 +103,7 @@ class iworks_kpir_reports_monthly {
 		$this->show_filter( $post_type_object, $current );
 
 		$cf_date_name       = $post_type_object->get_custom_field_basic_date_name();
-		$cf_cash_date_name       = $post_type_object->get_custom_field_date_of_cash_name();
+		$cf_cash_date_name  = $post_type_object->get_custom_field_date_of_cash_name();
 		$cf_contractor_name = $post_type_object->get_custom_field_basic_contractor_name();
 		$date_format        = get_option( 'date_format' );
 
@@ -134,7 +134,7 @@ class iworks_kpir_reports_monthly {
 			);
 			$i   = 1;
 			echo '<table class="kpir-report kpir-report-monthly">';
-			echo $this->html_table_thead(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+			echo $this->html_table_thead(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			echo '<tbody>';
 			while ( $query->have_posts() ) {
 				$query->the_post();
@@ -143,7 +143,7 @@ class iworks_kpir_reports_monthly {
 				/**
 				 * type
 				 */
-				$type  = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
+				$type = get_post_meta( $ID, 'iworks_kpir_basic_type', true );
 				/**
 				 * start produce row
 				 */
@@ -151,20 +151,20 @@ class iworks_kpir_reports_monthly {
 				/**
 				 * ID
 				 */
-				echo $this->html_table_td( $i++, 'id' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( $i++, 'id' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				/**
 				 * Date
 				 */
-				echo $this->html_table_td( date_i18n( $date_format, get_post_meta( $ID, $cf_date_name, true ) ), 'date' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( date_i18n( $date_format, get_post_meta( $ID, $cf_date_name, true ) ), 'date' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				/**
 				 * cash flow date
 				 */
 				if ( $this->is_use_cash_pit ) {
 					if ( 'income' === $type ) {
 						$cash_flow_date = get_post_meta( $ID, $cf_cash_date_name, true );
-						echo $this->html_table_td( date_i18n( $date_format, $cash_flow_date ), 'date' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( date_i18n( $date_format, $cash_flow_date ), 'date' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 					} else {
-						echo $this->html_table_td( '&mdash;', 'date' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( '&mdash;', 'date' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 					}
 				}
 				/**
@@ -175,7 +175,7 @@ class iworks_kpir_reports_monthly {
 					esc_url( get_edit_post_link( $ID ) ),
 					esc_html( get_the_title() )
 				);
-				echo $this->html_table_td( $title, 'title' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( $title, 'title' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				/**
 				 * contractor name
 				 */
@@ -192,11 +192,11 @@ class iworks_kpir_reports_monthly {
 					),
 					esc_html( get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_full_name', true ) )
 				);
-				echo $this->html_table_td( $full_name ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( $full_name ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				/**
 				 * contractor address
 				 */
-				echo $this->html_table_td( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 					sprintf(
 						'<address>%s</address><address>%s %s</address>',
 						esc_html( get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_street1', true ) ),
@@ -212,7 +212,7 @@ class iworks_kpir_reports_monthly {
 				if ( 'no' !== $is_car_related ) {
 					$description .= sprintf( ' <small class="car">%s</small>', esc_html__( '(car related)', 'kpir' ) );
 				}
-				echo $this->html_table_td( $description ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( $description ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				$netto = $value = array(
 					'integer'    => 0,
 					'fractional' => 0,
@@ -222,27 +222,27 @@ class iworks_kpir_reports_monthly {
 					case 'expense':
 					case 'asset':
 					case 'salary':
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
 						switch ( $type ) {
 							case 'asset':
-								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								if ( $this->show_fractional_separetly ) {
-									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								}
 								$netto = $value = get_post_meta( $ID, 'iworks_kpir_asset_depreciation', true );
-								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								break;
 							case 'expense':
-								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								if ( $this->show_fractional_separetly ) {
-									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								}
 								$netto = $value = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
 								if ( empty( $value ) ) {
@@ -267,7 +267,8 @@ class iworks_kpir_reports_monthly {
 										$v += $vat['integer'] / 2;
 									}
 									$v *= 100;
-									if ( 'yes' !== $is_car_related ) {
+									if ( '50' === $is_car_related ) {
+									} elseif ( 'yes' !== $is_car_related ) {
 										$v *= $is_car_related / 100;
 									}
 									/**
@@ -292,20 +293,20 @@ class iworks_kpir_reports_monthly {
 								/**
 								 * echo
 								 */
-								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								break;
 							case 'salary':
 								$netto = get_post_meta( $ID, 'iworks_kpir_salary_salary', true );
-								echo $this->html_helper_money( $netto ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_helper_money( $netto ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								$value = get_post_meta( $ID, 'iworks_kpir_expense_other', true );
-								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								if ( $this->show_fractional_separetly ) {
-									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								}
 								$value = $this->sum( $netto, $value );
 								break;
 						}
-						echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( 'expense' === $type ) {
 							if ( isset( $value['integer'] ) ) {
 								$sum['expense']['integer'] += intval( $value['integer'] );
@@ -325,19 +326,19 @@ class iworks_kpir_reports_monthly {
 						switch ( $type ) {
 							case 'income':
 								$value = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
-								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								if ( $this->show_fractional_separetly ) {
-									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								}
-								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_helper_money( $value ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								if ( $this->show_fractional_separetly ) {
-									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+									echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 								}
 								$sum['income']['integer']    += intval( $value['integer'] );
 								$sum['income']['fractional'] += intval( $value['fractional'] );
@@ -353,18 +354,18 @@ class iworks_kpir_reports_monthly {
 				switch ( $type ) {
 					case 'expense':
 						if ( 'no' !== $is_car_related ) {
-							echo $this->html_helper_money( $netto ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_helper_money( $netto ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						} else {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 							if ( $this->show_fractional_separetly ) {
-								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 							}
 						}
 						break;
 					default:
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
 						break;
 				}
@@ -375,23 +376,23 @@ class iworks_kpir_reports_monthly {
 				switch ( $type ) {
 					case 'asset':
 					case 'salary':
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
 						break;
 					case 'expense':
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
 						$vat = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
 						/**
@@ -414,6 +415,7 @@ class iworks_kpir_reports_monthly {
 							/**
 							 * recalculate
 							 */
+							$v_org                 = $v;
 							$v                     = round( $v / 2 );
 							$vat_car               = array(
 								'integer'    => 0,
@@ -421,9 +423,9 @@ class iworks_kpir_reports_monthly {
 							);
 							$vat_car['fractional'] = $v % 100;
 							$vat_car['integer']    = ( $v - $vat_car['fractional'] ) / 100;
-							echo $this->html_helper_money( $vat_car ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_helper_money( $vat_car ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 							if ( $this->show_fractional_separetly ) {
-								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 							}
 							if ( isset( $vat_car['integer'] ) ) {
 								$sum['vat_expense']['integer'] += intval( $vat_car['integer'] );
@@ -439,41 +441,41 @@ class iworks_kpir_reports_monthly {
 								$sum['vat_expense']['fractional'] += intval( $vat['fractional'] );
 							}
 						}
-						echo $this->html_helper_money( $vat ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_helper_money( $vat ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
 						if ( 'no' === $is_car_related ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 							if ( $this->show_fractional_separetly ) {
-								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+								echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 							}
 						}
 						break;
 					case 'income':
 						$check_vat_class = array();
-						$vat = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
+						$vat             = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
 						if ( is_array( $vat ) ) {
 							$sum['vat_income']['integer']    += intval( $vat['integer'] );
 							$sum['vat_income']['fractional'] += intval( $vat['fractional'] );
 							if ( $check_vat ) {
-								$value = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
-								$n     = ( $value['integer'] * 100 + $value['fractional'] ) * 0.23;
-								$v     = ( $vat['integer'] * 100 + $vat['fractional'] );
-								$check_vat_class[] = intval(abs($n - $v)) ? 'vat-failed' : 'vat-passed';
+								$value             = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
+								$n                 = ( $value['integer'] * 100 + $value['fractional'] ) * 0.23;
+								$v                 = ( $vat['integer'] * 100 + $vat['fractional'] );
+								$check_vat_class[] = intval( abs( $n - $v ) ) ? 'vat-failed' : 'vat-passed';
 							}
 						}
-						echo $this->html_helper_money( $vat, $check_vat_class ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_helper_money( $vat, $check_vat_class ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
-						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+						echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						if ( $this->show_fractional_separetly ) {
-							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+							echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 						}
 						break;
 				}
@@ -486,35 +488,35 @@ class iworks_kpir_reports_monthly {
 			 */
 			echo '<tbody class="sum">';
 			echo '<tr>';
-				if ( $this->is_use_cash_pit ) {
-			echo $this->html_table_td( '&nbsp;', null, 1, 7 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				} else {
-			echo $this->html_table_td( '&nbsp;', null, 1, 6 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+			if ( $this->is_use_cash_pit ) {
+				echo $this->html_table_td( '&nbsp;', null, 1, 7 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			} else {
+				echo $this->html_table_td( '&nbsp;', null, 1, 6 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 
-				}
-			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 4 : 2 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( $sum['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 4 : 2 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( $sum['expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( $sum['expense_netto'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+			}
+			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 4 : 2 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( $sum['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 4 : 2 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( $sum['expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( $sum['expense_netto'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			/**
 			 * check vat
 			 */
 			$check_vat_class = array();
 			if ( $check_vat ) {
-				$n = ( $sum['income']['integer'] * 100 + $sum['income']['fractional'] ) * .23;
-				$v = ( $sum['vat_income']['integer'] * 100 + $sum['vat_income']['fractional'] );
-				$check_vat_class[] = intval(abs($n-$v)) ? 'vat-failed' : 'vat-passed';
+				$n                 = ( $sum['income']['integer'] * 100 + $sum['income']['fractional'] ) * .23;
+				$v                 = ( $sum['vat_income']['integer'] * 100 + $sum['vat_income']['fractional'] );
+				$check_vat_class[] = intval( abs( $n - $v ) ) ? 'vat-failed' : 'vat-passed';
 			}
-			echo $this->html_helper_money( $sum['vat_income'], $check_vat_class ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+			echo $this->html_helper_money( $sum['vat_income'], $check_vat_class ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			if ( $this->show_fractional_separetly ) {
-				echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			}
-			echo $this->html_helper_money( $sum['vat_expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+			echo $this->html_helper_money( $sum['vat_expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			if ( $this->show_fractional_separetly ) {
-				echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( '&nbsp;' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			}
-			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 2 : 1 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+			echo $this->html_table_td( '&nbsp;', null, 1, $this->show_fractional_separetly ? 2 : 1 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			echo '</tr>';
 			echo '</tbody>';
 
@@ -526,7 +528,6 @@ class iworks_kpir_reports_monthly {
 			esc_html_e( 'There is no invoices in this month.', 'kpir' );
 			echo '</p>';
 		}
-
 	}
 
 	/**
@@ -550,7 +551,7 @@ class iworks_kpir_reports_monthly {
 		$content .= '<tr>';
 		$content .= $this->html_table_th( 'Lp.', null, 3 + $fix_row );
 		if ( $this->is_use_cash_pit ) {
-		$content .= $this->html_table_th( 'Data', null, null, 2 );
+			$content .= $this->html_table_th( 'Data', null, null, 2 );
 		} else {
 			$content .= $this->html_table_th( 'Data zdarzenia', null, 3 + $fix_row );
 		}
@@ -696,7 +697,7 @@ class iworks_kpir_reports_monthly {
 			'<%s%s>%s</%s>',
 			$tag,
 			$attributes,
-			esc_html( $args['value'] ),
+			wp_kses_post( $args['value'] ),
 			$tag
 		);
 	}
@@ -767,7 +768,6 @@ class iworks_kpir_reports_monthly {
 		echo '</div>';
 		echo '</div>';
 		echo '</form>';
-
 	}
 
 	/**
@@ -827,4 +827,3 @@ class iworks_kpir_reports_monthly {
 		return $value;
 	}
 }
-

@@ -279,7 +279,7 @@ class iworks_kpir_reports_annually {
 			 * print
 			 */
 			echo '<table class="kpir-report kpir-report-annually">';
-			echo $this->html_table_thead(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+			echo $this->html_table_thead(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			$cumulative = $kpir->zero_sum_table();
 			foreach ( $data as $month => $sum ) {
 				foreach ( $sum as $type => $parts ) {
@@ -289,32 +289,32 @@ class iworks_kpir_reports_annually {
 				}
 				echo '<tbody>';
 				echo '<tr>';
-				echo $this->html_table_td( $month ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $sum['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $sum['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( $month ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $sum['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $sum['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				if ( $options->get_option( 'cash_pit' ) ) {
-					echo $this->html_helper_money( $sum['cash_pit'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+					echo $this->html_helper_money( $sum['cash_pit'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				}
-				echo $this->html_helper_money( $sum['expense_netto'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $sum['expense_other'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $sum['expense_salary'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $sum['expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_helper_money( $sum['expense_netto'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $sum['expense_other'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $sum['expense_salary'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $sum['expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				echo '</tr>';
 				echo '<tr>';
-				echo $this->html_table_td( $month . ' narastająco' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $cumulative['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $cumulative['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_table_td( $month . ' narastająco' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $cumulative['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $cumulative['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				if ( $options->get_option( 'cash_pit' ) ) {
-					echo $this->html_helper_money( $cumulative['cash_pit'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+					echo $this->html_helper_money( $cumulative['cash_pit'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				}
-				echo $this->html_helper_money( $cumulative['expense_netto'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $cumulative['expense_other'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $cumulative['expense_salary'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-				echo $this->html_helper_money( $cumulative['expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_helper_money( $cumulative['expense_netto'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $cumulative['expense_other'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $cumulative['expense_salary'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+				echo $this->html_helper_money( $cumulative['expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 				echo '</tr>';
 				echo '</tbody>';
 			}
@@ -323,18 +323,18 @@ class iworks_kpir_reports_annually {
 			 */
 			echo '<tfoot>';
 			echo '<tr>';
-			echo $this->html_table_td( 'Razem' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( $cumulative['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( $cumulative['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+			echo $this->html_table_td( 'Razem' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( $cumulative['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( $cumulative['income'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			if ( $options->get_option( 'cash_pit' ) ) {
-				echo $this->html_helper_money( $cumulative['cash_pit'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+				echo $this->html_helper_money( $cumulative['cash_pit'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			}
-			echo $this->html_helper_money( $cumulative['expense_netto'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( $cumulative['expense_other'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( $cumulative['expense_salary'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
-			echo $this->html_helper_money( $cumulative['expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with esc_html().
+			echo $this->html_helper_money( $cumulative['expense_netto'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( $cumulative['expense_other'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( $cumulative['expense_salary'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( array( 0, 0 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
+			echo $this->html_helper_money( $cumulative['expense'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- html_table_cell() escapes the cell value with wp_kses_post().
 			echo '</tr>';
 			echo '</tfoot>';
 			echo '</table>';
@@ -426,7 +426,7 @@ class iworks_kpir_reports_annually {
 			'<%s%s>%s</%s>',
 			$tag,
 			$attributes,
-			esc_html( $args['value'] ),
+			wp_kses_post( $args['value'] ),
 			$tag
 		);
 	}
@@ -474,7 +474,6 @@ class iworks_kpir_reports_annually {
 		echo '</div>';
 		echo '</div>';
 		echo '</form>';
-
 	}
 
 	private function html_helper_money( $value ) {

@@ -69,12 +69,14 @@ Older changelog entries (before 1.1.0) are available in [CHANGELOG.md](https://g
 * Added ability to import purchase invoices from KSeF XML files.
 * Added ability to import sales invoices from KSeF XML files.
 * Added fallback mapping for KSeF XML date field for purchase and sale invoices.
+* Added fallback mapping for KSeF XML purchase amount and VAT fields (`P_13_2`, `P_14_2`).
 * Added NIP unification - removed "-", " ", and leading "PL" to make it consistent and compatible with KSeF NIP format.
 * Added PHPUnit tests.
 * Added `ABSPATH` guards to all template parts and option files.
 * Added translators comments for strings with placeholders.
 * Code quality improvements in KSeF XML field mapping.
 * Fixed all Plugin Check (PCP) errors and warnings.
+* Fixed fatal error when importing a KSeF invoice with missing purchase amount.
 * Improved escaping in admin pages, reports, and JPK XML templates.
 * Migrated the build process from Grunt to Bun.
 * Prevent duplication of KSeF data on an invoice.

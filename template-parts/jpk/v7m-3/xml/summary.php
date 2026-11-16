@@ -8,12 +8,12 @@ defined( 'ABSPATH' ) || exit;
 	</Naglowek>
 	<PozycjeSzczegolowe>
 <?php
-for ( $kpir_i = 10; $i < 70; $kpir_i++ ) {
+for ( $kpir_i = 10; $kpir_i < 70; $kpir_i++ ) {
 	$kpir_key = sprintf( 'P_%d', $kpir_i );
 	if ( isset( $args[ $kpir_key ] ) ) {
-?>
+		?>
 		<<?php echo esc_xml( $kpir_key ); ?>><?php echo esc_xml( $args[ $kpir_key ] ); ?></<?php echo esc_xml( $kpir_key ); ?>>
-<?php
+		<?php
 	}
 }
 ?>
