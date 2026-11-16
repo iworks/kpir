@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 function iworks_kpir_options() {
 	$iworks_kpir_options = array();

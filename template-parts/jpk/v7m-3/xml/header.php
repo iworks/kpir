@@ -1,4 +1,7 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+?>
+<?php
 echo '<?xml ';
 echo 'v';
 echo 'ersion="1.0" encoding="utf-8"?>';

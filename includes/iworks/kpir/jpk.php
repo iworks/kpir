@@ -113,7 +113,7 @@ abstract class iworks_kpir_jpk {
 	protected function get_template( $_template_base, $_template_file = '', $args = array() ) {
 		$value = get_template_part( 'kpir/' . $_template_base, $_template_file, $args );
 		if ( ! empty( $value ) ) {
-			echo $value;
+			echo $value; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- template part output is escaped inside the template.
 			return;
 		}
 		$file = sprintf(
@@ -140,7 +140,7 @@ abstract class iworks_kpir_jpk {
 	 * @return void
 	 */
 	public function options_get_field_by_type( $type, $name, $value = '', $args = array() ) {
-		echo $this->options->get_field_by_type( $type, $name, $value, $args );
+		echo $this->options->get_field_by_type( $type, $name, $value, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field HTML is built by the iWorks options module from escaped parts.
 	}
 
 	/**
@@ -237,7 +237,7 @@ abstract class iworks_kpir_jpk {
 	 */
 	protected function expense_row( $data ) {
 		$ID                     = $data['ID'];
-		$data['sale_date']      = $data['create_date'] = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
+		$data['sale_date']      = $data['create_date'] = gmdate( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
 		$data['invoice_number'] = get_the_title();
 		$is_car_related         = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
 		/**
@@ -346,12 +346,12 @@ abstract class iworks_kpir_jpk {
 	 */
 	protected function income_row( $data ) {
 		$ID                = $data['ID'];
-		$data['sale_date'] = $data['create_date'] = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
+		$data['sale_date'] = $data['create_date'] = gmdate( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
 		/**
 		 * sale date for cash method is a cash date
 		 */
 		if ( boolval( get_option( 'iworks_kpir_cash_pit', false ) ) ) {
-			$data['sale_date'] = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date_of_cash', true ) );
+			$data['sale_date'] = gmdate( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date_of_cash', true ) );
 		}
 		$data['invoice_number'] = get_the_title();
 		$type                   = get_post_meta( $ID, 'iworks_kpir_income_vat_type', true );

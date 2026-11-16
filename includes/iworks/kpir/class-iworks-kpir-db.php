@@ -108,7 +108,14 @@ class iworks_kpir_db {
 			 */
 			global $wpdb;
 			foreach ( array( ' ', '-', 'PL' ) as $string_to_remove ) {
-				$wpdb->query( "UPDATE {$wpdb->postmeta} SET meta_value = REPLACE(meta_value, '{$string_to_remove}', '') WHERE meta_key = 'iworks_kpir_contractor_data_nip'" );
+				// Values are hardcoded constants — safe to prepare.
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-time data migration.
+				$wpdb->query(
+					$wpdb->prepare(
+						"UPDATE {$wpdb->postmeta} SET meta_value = REPLACE( meta_value, %s, '' ) WHERE meta_key = 'iworks_kpir_contractor_data_nip'",
+						$string_to_remove
+					)
+				);
 			}
 			update_option( $this->_db_version, $version_to_update );
 			$db_version = intval( get_option( $this->_db_version ) );
@@ -125,17 +132,18 @@ class iworks_kpir_db {
 		global $wpdb;
 
 		// Disable foreign key checks to avoid issues with table dependencies
-		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' );
+		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 0' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- static session-level pragma, nothing to cache.
 
 		// Drop each table
 		foreach ( $this->table_names as $table_name ) {
-			$sql   = 'DROP TABLE IF EXISTS %s';
-			$query = $wpdb->prepare( $sql, $wpdb->$table_name );
-			$wpdb->query( $query );
+			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- intentional uninstall cleanup.
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- intentional uninstall cleanup; table name comes from the internal $table_names list, not user input.
+				'DROP TABLE IF EXISTS ' . $table_name
+			);
 		}
 
 		// Re-enable foreign key checks
-		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 1' );
+		$wpdb->query( 'SET FOREIGN_KEY_CHECKS = 1' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- static session-level pragma, nothing to cache.
 
 		// Delete the database version option
 		delete_option( $this->_db_version );

@@ -1,3 +1,6 @@
+<?php
+defined( 'ABSPATH' ) || exit;
+?>
 <tns:Deklaracja>
 	<tns:Naglowek>
 		<tns:KodFormularzaDekl kodSystemowy="VAT-7 (22)" kodPodatku="VAT" rodzajZobowiazania="Z" wersjaSchemy="1-0E">VAT-7</tns:KodFormularzaDekl>
@@ -5,11 +8,11 @@
 	</tns:Naglowek>
 	<tns:PozycjeSzczegolowe>
 <?php
-for ( $i = 10; $i < 70; $i++ ) {
-	$key = sprintf( 'P_%d', $i );
-	if ( isset( $args[ $key ] ) ) {
+for ( $kpir_i = 10; $i < 70; $kpir_i++ ) {
+	$kpir_key = sprintf( 'P_%d', $kpir_i );
+	if ( isset( $kpir_args[ $kpir_key ] ) ) {
 ?>
-		<tns:<?php echo $key; ?>><?php echo $args[ $key ]; ?></tns:<?php echo $key; ?>>
+		<tns:<?php echo esc_xml( $kpir_key ); ?>><?php echo esc_xml( $kpir_args[ $kpir_key ] ); ?></tns:<?php echo esc_xml( $kpir_key ); ?>>
 <?php
 	}
 }

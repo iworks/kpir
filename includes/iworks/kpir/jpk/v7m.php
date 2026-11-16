@@ -69,8 +69,13 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 	public function show( $kpir ) {
 		global $wpdb;
 		$post_type_object = $kpir->get_post_type_invoice();
-		$sql              = "select distinct meta_value from {$wpdb->postmeta} where meta_key = '{$post_type_object->get_custom_field_year_month_name()}'order by meta_value desc";
-		$values           = $wpdb->get_col( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off meta-key listing, uncached by design.
+		$values          = $wpdb->get_col(
+			$wpdb->prepare(
+				"select distinct meta_value from {$wpdb->postmeta} where meta_key = %s order by meta_value desc",
+				$post_type_object->get_custom_field_year_month_name()
+			)
+		);
 		if ( empty( $values ) ) {
 			$this->get_template( 'jpk', 'no-entries' );
 			return;
@@ -103,13 +108,13 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		) {
 			return;
 		}
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], $this->name ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), $this->name ) ) {
 			return;
 		}
 		/**
 		 * validate input
 		 */
-		$year_month = preg_replace( '/[^0-9\-]/', '', filter_input( INPUT_GET, 'm' ) );
+		$year_month = preg_replace( '/[^0-9\-]/', '', sanitize_text_field( wp_unslash( $_REQUEST['m'] ) ) );
 		$year_month = $this->validate_year_month( $year_month );
 		/**
 		 * Choose template
@@ -136,7 +141,7 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		 * error
 		 */
 		if ( is_wp_error( $year_month ) ) {
-			die( $year_month->get_error_message() );
+			die( esc_html( $year_month->get_error_message() ) );
 		}
 		$purpose            = filter_input( INPUT_GET, 'purpose', FILTER_VALIDATE_INT );
 		$date               = explode( '-', $year_month );
@@ -145,7 +150,7 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 			'year_month' => $year_month,
 			'year'       => $date[0],
 			'month'      => $date[1],
-			'created'    => preg_replace( '/\+00:00$/', '.000Z', date( 'c' ) ),
+			'created'    => preg_replace( '/\+00:00$/', '.000Z', gmdate( 'c' ) ),
 			'taxpayer'   => array(
 				'date_of_birth'         => get_option( $this->options->get_option_name( 'date_of_birth' ) ),
 				'department_of_revenue' => get_option( $this->options->get_option_name( 'department_of_revenue' ) ),

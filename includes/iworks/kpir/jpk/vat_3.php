@@ -66,16 +66,16 @@ class iworks_kpir_jpk_vat_3 {
 		) {
 			return;
 		}
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'kpir-jpk-vat-3' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), 'kpir-jpk-vat-3' ) ) {
 			return;
 		}
 		/**
 		 * validate input
 		 */
-		$year_month = filter_input( INPUT_GET, 'm', FILTER_SANITIZE_STRING );
+		$year_month = sanitize_text_field( wp_unslash( $_REQUEST['m'] ) );
 		$year_month = $this->validate_year_month( $year_month );
 		if ( is_wp_error( $year_month ) ) {
-			die( $year_month->get_error_message() );
+			die( esc_html( $year_month->get_error_message() ) );
 		}
 		$purpose = filter_input( INPUT_GET, 'purpose', FILTER_VALIDATE_INT );
 		/**
@@ -119,23 +119,28 @@ class iworks_kpir_jpk_vat_3 {
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: application/xml' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-		echo $data;
+		echo $data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $data is the generated JPK XML, escaped inside the templates with esc_xml().
 		exit;
 	}
 
 	public function show( $kpir ) {
 		global $wpdb;
 		$post_type_object = $kpir->get_post_type_invoice();
-		$sql              = "select distinct meta_value from {$wpdb->postmeta} where meta_key = '{$post_type_object->get_custom_field_year_month_name()}'order by meta_value desc";
-		$values           = $wpdb->get_col( $sql );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off meta-key listing, uncached by design.
+		$values          = $wpdb->get_col(
+			$wpdb->prepare(
+				"select distinct meta_value from {$wpdb->postmeta} where meta_key = %s order by meta_value desc",
+				$post_type_object->get_custom_field_year_month_name()
+			)
+		);
 		if ( empty( $values ) ) {
-			_e( 'There is no entries to create JPK VAT file.', 'kpir' );
+			esc_html_e( 'There is no entries to create JPK VAT file.', 'kpir' );
 			return;
 		}
 		echo '<form id="kpir-jpk-vat-3" action="edit.php">';
-		echo $this->options->get_field_by_type( 'hidden', 'action', 'iworks_kpir_jpk_vat_3' );
-		echo $this->options->get_field_by_type( 'hidden', 'post_type', 'iworks_kpir_invoice' );
-		echo $this->options->get_field_by_type( 'hidden', 'page', 'iworks_kpir_jpk_vat_3' );
+		echo $this->options->get_field_by_type( 'hidden', 'action', 'iworks_kpir_jpk_vat_3' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field HTML is built by the iWorks options module.
+		echo $this->options->get_field_by_type( 'hidden', 'post_type', 'iworks_kpir_invoice' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field HTML is built by the iWorks options module.
+		echo $this->options->get_field_by_type( 'hidden', 'page', 'iworks_kpir_jpk_vat_3' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field HTML is built by the iWorks options module.
 		wp_nonce_field( 'kpir-jpk-vat-3', 'nonce', false );
 		echo '<table class="form-table">';
 		echo '<tbody>';
@@ -153,7 +158,7 @@ class iworks_kpir_jpk_vat_3 {
 			'min'   => 0,
 			'class' => array( 'small-text' ),
 		);
-		echo $this->options->get_field_by_type( 'number', 'purpose', 0, $args );
+		echo $this->options->get_field_by_type( 'number', 'purpose', 0, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field HTML is built by the iWorks options module.
 		echo '</td>';
 		echo '</tr>';
 		/**
@@ -174,7 +179,7 @@ class iworks_kpir_jpk_vat_3 {
 		foreach ( $values as $value ) {
 			$args['options'][ $value ] = $value;
 		}
-		echo $this->options->get_field_by_type( 'select', 'm', null, $args );
+		echo $this->options->get_field_by_type( 'select', 'm', null, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field HTML is built by the iWorks options module.
 		echo '</td>';
 		echo '</tr>';
 		/**
@@ -185,8 +190,8 @@ class iworks_kpir_jpk_vat_3 {
 		$args = array(
 			'class' => array( 'button', 'button-primary' ),
 		);
-		echo $this->options->get_field_by_type( 'submit', '=iworks_kpir_jpk_vat_3', __( 'Get XML', 'kpir' ), $args );
-		// echo $this->options->get_field_by_type( 'button', 'iworks_kpir_jpk_vat_3', __( 'Get XML', 'kpir' ), $args );
+		echo $this->options->get_field_by_type( 'submit', '=iworks_kpir_jpk_vat_3', esc_html__( 'Get XML', 'kpir' ), $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- field HTML is built by the iWorks options module.
+		// echo $this->options->get_field_by_type( 'button', 'iworks_kpir_jpk_vat_3', esc_html__( 'Get XML', 'kpir' ), $args );
 		echo '</form>';
 	}
 
@@ -226,9 +231,9 @@ class iworks_kpir_jpk_vat_3 {
 		$data  = sprintf(
 			$data,
 			$purpose,
-			date( 'Y-m-d\TH:m:s\Z', time() ),
-			date( 'Y-m-01', $date ),
-			date( 'Y-m-t', $date )
+			gmdate( 'Y-m-d\TH:m:s\Z', time() ),
+			gmdate( 'Y-m-01', $date ),
+			gmdate( 'Y-m-t', $date )
 		);
 		return $data;
 	}
@@ -271,7 +276,7 @@ class iworks_kpir_jpk_vat_3 {
 		$data                                  .= PHP_EOL;
 		$data                                  .= PHP_EOL;
 		$contractor                             = $this->get_contractor( $contractor_id );
-		$sale_date                              = $create_date = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
+		$sale_date                              = $create_date = gmdate( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
 		$number                                 = get_the_title();
 		$k                                      = '';
 		$is_car_related                         = get_post_meta( $ID, 'iworks_kpir_expense_car', true );
@@ -345,7 +350,7 @@ class iworks_kpir_jpk_vat_3 {
 		$data      .= PHP_EOL;
 		$data      .= PHP_EOL;
 		$contractor = $this->get_contractor( $contractor_id );
-		$sale_date  = $create_date = date( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
+		$sale_date  = $create_date = gmdate( 'Y-m-d', get_post_meta( $ID, 'iworks_kpir_basic_date', true ) );
 		$number     = get_the_title();
 		$k          = '';
 		$type       = get_post_meta( $ID, 'iworks_kpir_income_vat_type', true );

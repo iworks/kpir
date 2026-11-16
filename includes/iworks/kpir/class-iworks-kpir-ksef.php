@@ -96,7 +96,7 @@ class iworks_kpir_ksef {
 		if ( ! isset( $_POST['ksef_import_nonce'] ) ) {
 			return;
 		}
-		if ( ! wp_verify_nonce( $_POST['ksef_import_nonce'], 'ksef_import_action' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ksef_import_nonce'] ) ), 'ksef_import_action' ) ) {
 			$this->add_notice(
 				new WP_Error( 'invalid_nonce', __( 'Invalid security token. Please try again.', 'kpir' ) ),
 				'error'
@@ -104,15 +104,16 @@ class iworks_kpir_ksef {
 			return;
 		}
 		$this->init();
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- file upload array; only tmp_name is read (via file_get_contents) and name is sanitized below.
 		if ( isset( $_FILES[ $this->filename ] ) && is_array( $_FILES[ $this->filename ]['name'] ) ) {
-			$files     = $_FILES[ $this->filename ];
+			$files     = $_FILES[ $this->filename ]; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- see above.
 			$count     = count( $files['name'] );
 			$processed = 0;
 			$failed    = 0;
 
 			for ( $i = 0; $i < $count; $i++ ) {
 				if ( $files['error'][ $i ] === UPLOAD_ERR_OK ) {
-					$ksef_id      = basename( $files['name'][ $i ], '.xml' );
+					$ksef_id      = sanitize_file_name( basename( sanitize_file_name( wp_unslash( $files['name'][ $i ] ) ), '.xml' ) );
 					$file_content = file_get_contents( $files['tmp_name'][ $i ] );
 					$xml          = simplexml_load_string( $file_content );
 
@@ -124,14 +125,16 @@ class iworks_kpir_ksef {
 						}
 					} else {
 						$this->add_notice(
-							sprintf( __( 'Failed to parse XML file: %s', 'kpir' ), $files['name'][ $i ] ),
+							// translators: %s: plugin file name.
+			sprintf( __( 'Failed to parse XML file: %s', 'kpir' ), $files['name'][ $i ] ),
 							'error'
 						);
 						++$failed;
 					}
 				} else {
 					$this->add_notice(
-						sprintf( __( 'Error uploading file: %s', 'kpir' ), $files['name'][ $i ] ),
+						// translators: %s: uploaded file name.
+				sprintf( __( 'Error uploading file: %s', 'kpir' ), $files['name'][ $i ] ),
 						'error'
 					);
 					++$failed;
@@ -141,6 +144,7 @@ class iworks_kpir_ksef {
 			if ( $processed > 0 ) {
 				$this->add_notice(
 					sprintf(
+						// translators: %d: number of invoices.
 						_n( 'Successfully imported %d invoice.', 'Successfully imported %d invoices.', $processed, 'kpir' ),
 						$processed
 					),
@@ -151,6 +155,7 @@ class iworks_kpir_ksef {
 			if ( $failed > 0 ) {
 				$this->add_notice(
 					sprintf(
+						// translators: %d: number of invoices.
 						_n( 'Failed to import %d invoice.', 'Failed to import %d invoices.', $failed, 'kpir' ),
 						$failed
 					),
@@ -290,6 +295,7 @@ class iworks_kpir_ksef {
 		}
 		$this->add_notice(
 			sprintf(
+				// translators: %s: link to the imported invoice.
 				esc_html__( 'Imported KSeF invoice: %s.', 'kpir' ),
 				sprintf(
 					'<a href="%s">%s - KSeF: %s</a>',
@@ -369,6 +375,7 @@ class iworks_kpir_ksef {
 		}
 		$this->add_notice(
 			sprintf(
+				// translators: %s: link to the imported invoice.
 				esc_html__( 'Imported KSeF invoice: %s.', 'kpir' ),
 				sprintf(
 					'<a href="%s">%s - KSeF: %s</a>',
@@ -480,20 +487,20 @@ class iworks_kpir_ksef {
 	 */
 	public function render_form() {
 		echo '<div class="wrap">';
-		echo '<h1>' . __( 'KSeF Import', 'kpir' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'KSeF Import', 'kpir' ) . '</h1>';
 		echo '<form method="post" enctype="multipart/form-data" id="ksef-import-form">';
 		wp_nonce_field( 'ksef_import_action', 'ksef_import_nonce' );
 		echo '<div id="ksef-dropzone" class="ksef-dropzone">';
 		echo '<div class="ksef-dropzone-content">';
 		echo '<span class="dashicons dashicons-upload"></span>';
-		echo '<p>' . __( 'Drag & drop XML files here or click to select', 'kpir' ) . '</p>';
-		echo '<p class="description">' . __( 'Multiple .xml files are supported', 'kpir' ) . '</p>';
+		echo '<p>' . esc_html__( 'Drag & drop XML files here or click to select', 'kpir' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Multiple .xml files are supported', 'kpir' ) . '</p>';
 		echo '</div>';
 		echo '<input type="file" name="' . esc_attr( $this->filename ) . '[]" id="ksef-file-input" accept=".xml" multiple style="display:none;" />';
 		echo '<div id="ksef-file-list" class="ksef-file-list"></div>';
 		echo '</div>';
 		echo '<p class="submit">';
-		echo '<input type="submit" name="ksef_import_submit" class="button button-primary" value="' . __( 'Import', 'kpir' ) . '" />';
+		echo '<input type="submit" name="ksef_import_submit" class="button button-primary" value="' . esc_attr__( 'Import', 'kpir' ) . '" />';
 		echo '</p>';
 		echo '</form>';
 		echo '<style>
@@ -655,7 +662,8 @@ class iworks_kpir_ksef {
 				new WP_Error(
 					'invoice_already_imported',
 					sprintf(
-						esc_html__( 'Error: Invoice no. %1$s (KSeF: %2$s) is already imported.', 'kpir' ),
+						// translators: %1$s: invoice number link, %2$s: KSeF number.
+					esc_html__( 'Error: Invoice no. %1$s (KSeF: %2$s) is already imported.', 'kpir' ),
 						sprintf(
 							'<a href="%s">%s</a>',
 							get_edit_post_link( $query->posts[0] ),

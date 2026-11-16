@@ -151,7 +151,7 @@ class iworks_kpir_posttypes {
 			$content .= '</div>';
 			$content .= '</div>';
 		}
-		echo $content;
+		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $content is built internally from escaped parts and static HTML.
 	}
 
 	/**
@@ -177,11 +177,13 @@ class iworks_kpir_posttypes {
 
 		foreach ( $fields as $group => $group_data ) {
 			$post_key = $this->options->get_option_name( $group );
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- hooked into save_post; WordPress core has already verified the edit-post nonce.
 			if ( isset( $_POST[ $post_key ] ) ) {
 				foreach ( $group_data as $key => $data ) {
-					$value = isset( $_POST[ $post_key ][ $key ] ) ? $_POST[ $post_key ][ $key ] : null;
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput -- hooked into save_post; core verified the nonce; strings are sanitized below, arrays are split into integer parts.
+					$value = isset( $_POST[ $post_key ][ $key ] ) ? wp_unslash( $_POST[ $post_key ][ $key ] ) : null;
 					if ( is_string( $value ) ) {
-						$value = trim( $value );
+						$value = trim( wp_kses_post( $value ) );
 					} elseif ( is_array( $value ) ) {
 						if (
 							isset( $value['integer'] ) && 0 == $value['integer']

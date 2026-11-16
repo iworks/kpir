@@ -185,8 +185,9 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 			'order'            => 'ASC',
 			'suppress_filters' => true,
 		);
-		if ( isset( $_REQUEST['q'] ) ) {
-			$args['s'] = $_REQUEST['q'];
+		if ( isset( $_REQUEST['q'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin search.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin search.
+			$args['s'] = sanitize_text_field( wp_unslash( $_REQUEST['q'] ) );
 		}
 		$the_query = new WP_Query( $args );
 		if ( $the_query->have_posts() ) {
@@ -223,10 +224,10 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 	public function custom_columns( $column, $post_id ) {
 		switch ( $column ) {
 			case 'full_name':
-				echo get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_full_name' ), true );
+				echo esc_html( get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_full_name' ), true ) );
 				break;
 			case 'nip':
-				echo get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_nip' ), true );
+				echo esc_html( get_post_meta( $post_id, $this->options->get_option_name( 'contractor_data_nip' ), true ) );
 				break;
 		}
 	}
@@ -257,7 +258,7 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		/**
 		 * do not change if it is already set by request
 		 */
-		if ( isset( $_REQUEST['orderby'] ) ) {
+		if ( isset( $_REQUEST['orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin sort check.
 			return $query;
 		}
 		/**
@@ -297,7 +298,7 @@ class iworks_kpir_posttypes_contractor extends iworks_kpir_posttypes {
 		if ( empty( $data['items'] ) ) {
 			return;
 		}
-		$id = isset( $_REQUEST['contractor'] ) ? $_REQUEST['contractor'] : 0;
+		$id = isset( $_REQUEST['contractor'] ) ? intval( $_REQUEST['contractor'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin list filter.
 		echo '<select name="contractor">';
 		printf( '<option value="">%s</option>', esc_html__( 'All contractors', 'kpir' ) );
 		foreach ( $data['items'] as $one ) {

@@ -146,6 +146,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				'exclude_from_search'       => false,
 				'show_in_admin_all_list'    => true,
 				'show_in_admin_status_list' => true,
+				// translators: %s: number of imported entries.
 				'label_count'               => _n_noop( 'Imported <span class="count">(%s)</span>', 'Imported <span class="count">(%s)</span>', 'kpir' ),
 			)
 		);
@@ -676,7 +677,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	public function save_year_month_to_extra_field( $post_id, $option_name, $value, $key, $data ) {
 		if ( 'date' == $key ) {
 			$name   = $this->get_custom_field_year_month_name();
-			$value  = date( 'Y-m', $value );
+			$value  = gmdate( 'Y-m', $value );
 			$result = add_post_meta( $post_id, $name, $value, true );
 			if ( ! $result ) {
 				update_post_meta( $post_id, $name, $value );
@@ -699,7 +700,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		if ( 'date_of_cash' == $key ) {
 			if ( get_post_meta( $post_id, 'iworks_kpir_basic_type', true ) === 'income' ) {
 				$name   = $this->get_custom_field_year_month_cash_name();
-				$value  = date( 'Y-m', $value );
+				$value  = gmdate( 'Y-m', $value );
 				$result = add_post_meta( $post_id, $name, $value, true );
 				if ( ! $result ) {
 					update_post_meta( $post_id, $name, $value );
@@ -803,8 +804,8 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		echo '<tbody>';
 		foreach ( $labels as $key => $label ) {
 			echo '<tr>';
-			printf( '<td>%s</td>', $label );
-			printf( '<td class="textright">%0.2f</td>', $data[ $key ] / 100 );
+			printf( '<td>%s</td>', esc_html( $label ) );
+			printf( '<td class="textright">%0.2f</td>', esc_html( $data[ $key ] / 100 ) );
 			echo '</tr>';
 		}
 		echo '</tbody>';
@@ -857,14 +858,16 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				} else {
 					printf(
 						'<a href="%s">%s</a>',
-						add_query_arg(
-							array(
-								'contractor' => $id,
-								'post_type'  => 'iworks_kpir_invoice',
-							),
-							admin_url( 'edit.php' )
+						esc_url(
+							add_query_arg(
+								array(
+									'contractor' => $id,
+									'post_type'  => 'iworks_kpir_invoice',
+								),
+								admin_url( 'edit.php' )
+							)
 						),
-						get_post_meta( $id, 'iworks_kpir_contractor_data_full_name', true )
+						esc_html( get_post_meta( $id, 'iworks_kpir_contractor_data_full_name', true ) )
 					);
 				}
 				break;
@@ -878,7 +881,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				if ( 0 == $expense ) {
 					echo '&nbsp;';
 				} else {
-					printf( '%0.2f', $expense / 100 );
+					printf( '%0.2f', esc_html( $expense / 100 ) );
 				}
 				break;
 			case 'income':
@@ -889,7 +892,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				if ( 0 == $income ) {
 					echo '&nbsp;';
 				} else {
-					printf( '%0.2f', $income / 100 );
+					printf( '%0.2f', esc_html( $income / 100 ) );
 				}
 				break;
 			case 'date_of_invoice':
@@ -897,7 +900,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				if ( empty( $timestamp ) ) {
 					echo '-';
 				} else {
-					echo date( 'Y-m-d', $timestamp );
+					echo esc_html( gmdate( 'Y-m-d', $timestamp ) );
 				}
 				break;
 			case 'date_of_payment':
@@ -909,14 +912,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 						esc_html_e( '&mdash; not paid yet &mdash;', 'kpir' );
 						echo '</small>';
 					} else {
-						echo date( 'Y-m-d', $timestamp );
+						echo esc_html( gmdate( 'Y-m-d', $timestamp ) );
 					}
 				} else {
 					echo '&mdash;';
 				}
 				break;
 			case 'description':
-				echo get_post_meta( $post_id, $this->options->get_option_name( 'basic_description' ), true );
+				echo esc_html( get_post_meta( $post_id, $this->options->get_option_name( 'basic_description' ), true ) );
 				break;
 			case 'ksef_id':
 				$ksef_id = get_post_meta( $post_id, $this->options->get_option_name( 'basic_ksef_number' ), true );
@@ -975,13 +978,14 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		/**
 		 * do not change if it is already set by request
 		 */
-		if ( isset( $_REQUEST['orderby'] ) ) {
+		if ( isset( $_REQUEST['orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin sort check.
 			return $query;
 		}
 		/**
 		 * do not change if it is already set by request and post status is "imported" or "trash"
 		 */
-		if ( isset( $_REQUEST['post_status'] ) && in_array( $_REQUEST['post_status'], array( 'imported', 'trash' ) ) ) {
+		$post_status = isset( $_REQUEST['post_status'] ) ? sanitize_key( wp_unslash( $_REQUEST['post_status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin list check.
+		if ( in_array( $post_status, array( 'imported', 'trash' ), true ) ) {
 			return $query;
 		}
 		/**
@@ -1008,7 +1012,8 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 		$screen = get_current_screen();
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
 			$query->set( 'orderby', 'meta_value_num' );
-			if ( isset( $_REQUEST['contractor'] ) && $_REQUEST['contractor'] ) {
+			$contractor = isset( $_REQUEST['contractor'] ) ? intval( $_REQUEST['contractor'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin list filter.
+			if ( $contractor ) {
 				$query->set(
 					'meta_query',
 					array(
@@ -1019,7 +1024,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 						),
 						array(
 							'key'   => $this->options->get_option_name( 'basic_contractor' ),
-							'value' => intval( $_REQUEST['contractor'] ),
+							'value' => $contractor,
 						),
 					)
 				);
@@ -1160,24 +1165,24 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 			foreach ( $query->posts as $post_id ) {
 				$year_month_of_cash = '';
 				$type               = get_post_meta( $post_id, 'iworks_kpir_basic_type', true );
-				echo $post_id . ' - ' . $type;
+				echo esc_html( $post_id . ' - ' . $type );
 
 				if ( 'income' === $type ) {
 					$date_of_cash = get_post_meta( $post_id, 'iworks_kpir_basic_date_of_cash', true );
-					echo ' - ' . $date_of_cash;
+					echo esc_html( ' - ' . $date_of_cash );
 					if ( ! empty( $date_of_cash ) ) {
-						$year_month_of_cash = date( 'Y-m', $date_of_cash );
+						$year_month_of_cash = gmdate( 'Y-m', $date_of_cash );
 					}
 				} else {
 					$date_of_issue = get_post_meta( $post_id, 'iworks_kpir_basic_date_of_issue', true );
-					echo ' - ' . $date_of_issue;
+					echo esc_html( ' - ' . $date_of_issue );
 					if ( ! empty( $date_of_issue ) ) {
-						$year_month_of_cash = date( 'Y-m', $date_of_issue );
+						$year_month_of_cash = gmdate( 'Y-m', $date_of_issue );
 					}
 				}
-				echo ' - ' . $year_month_of_cash;
+				echo esc_html( ' - ' . $year_month_of_cash );
 				echo ' - ';
-				echo add_post_meta( $post_id, $this->get_custom_field_year_month_cash_name(), $year_month_of_cash );
+				echo esc_html( add_post_meta( $post_id, $this->get_custom_field_year_month_cash_name(), $year_month_of_cash ) );
 				echo "\n";
 			}
 			echo '</pre>';

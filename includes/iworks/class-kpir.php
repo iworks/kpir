@@ -153,8 +153,10 @@ class iworks_kpir extends iworks {
 	 * @return void
 	 */
 	public function plugins_loaded() {
-		if ( isset( $_REQUEST['action'] ) ) {
-			switch ( $_REQUEST['action'] ) {
+		if ( isset( $_REQUEST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only action routing; each handler verifies its own nonce.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only action routing; each handler verifies its own nonce.
+			$action = sanitize_key( wp_unslash( $_REQUEST['action'] ) );
+			switch ( $action ) {
 				case 'iworks_kpir_jpk_vat_3':
 					$file = $this->get_module_file( 'jpk/vat_3' );
 					if ( is_readable( $file ) ) {
@@ -191,7 +193,7 @@ class iworks_kpir extends iworks {
 		if ( ! is_object( $this->post_type_invoice ) ) {
 			return;
 		}
-		$date = date( 'Y-m', time() );
+		$date = gmdate( 'Y-m', time() );
 		$this->post_type_invoice->month_table( $date );
 	}
 
@@ -211,8 +213,8 @@ class iworks_kpir extends iworks {
 		if ( ! is_object( $this->post_type_invoice ) ) {
 			return;
 		}
-		$date = sprintf( '%s -1 month', date( 'c', time() ) );
-		$date = date( 'Y-m', strtotime( $date ) );
+		$date = sprintf( '%s -1 month', gmdate( 'c', time() ) );
+		$date = gmdate( 'Y-m', strtotime( $date ) );
 		$this->post_type_invoice->month_table( $date );
 	}
 
@@ -227,11 +229,13 @@ class iworks_kpir extends iworks {
 	 * @return void
 	 */
 	public function add_dashboard_widgets() {
-		$current = date( _x( 'Y F', 'date admin dashbord widget', 'kpir' ), time() );
-		$date    = strtotime( sprintf( '%s -1 month', date( 'c', time() ) ) );
-		$past    = date( _x( 'Y F', 'date admin dashbord widget', 'kpir' ), $date );
+		$current = current_time( _x( 'Y F', 'date admin dashbord widget', 'kpir' ) );
+		$date    = strtotime( sprintf( '%s -1 month', gmdate( 'c', time() ) ) );
+		$past    = gmdate( _x( 'Y F', 'date admin dashbord widget', 'kpir' ), $date );
 		$widgets = array(
+			// translators: %s: month name.
 			'current_month' => sprintf( __( 'Current month: %s', 'kpir' ), $current ),
+			// translators: %s: month name.
 			'past_month'    => sprintf( __( 'Past month: %s', 'kpir' ), $past ),
 		);
 		foreach ( $widgets as $widget_id => $widget_name ) {
@@ -425,7 +429,7 @@ class iworks_kpir extends iworks {
 			$page = new iworks_kpir_jpk_vat_3();
 			$page->show( $this );
 		} else {
-			_e( 'Something went wrong!', 'kpir' );
+			esc_html_e( 'Something went wrong!', 'kpir' );
 		}
 		echo '</div>';
 	}
@@ -449,7 +453,7 @@ class iworks_kpir extends iworks {
 			$page = new iworks_kpir_jpk_v7m();
 			$page->show( $this );
 		} else {
-			_e( 'Something went wrong!', 'kpir' );
+			esc_html_e( 'Something went wrong!', 'kpir' );
 		}
 		echo '</div>';
 	}
@@ -541,21 +545,22 @@ class iworks_kpir extends iworks {
 		if ( ! isset( $_POST['ID'] ) || ! isset( $_POST['nonce'] ) ) {
 			wp_send_json_error();
 		}
+		$post_id = absint( wp_unslash( $_POST['ID'] ) );
 		/**
 		 * check nonce
 		 */
-		$nonce_action = $this->get_nonce_action( $_POST['ID'] );
-		if ( ! wp_verify_nonce( $_POST['nonce'], $nonce_action ) ) {
+		$nonce_action = $this->get_nonce_action( $post_id );
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), $nonce_action ) ) {
 			wp_send_json_error();
 		}
 		/**
 		 * check post type
 		 */
-		$is_correct_post_type = $this->post_type_invoice->check_post_type_by_id( $_POST['ID'] );
+		$is_correct_post_type = $this->post_type_invoice->check_post_type_by_id( $post_id );
 		if ( ! $is_correct_post_type ) {
 			wp_send_json_error();
 		}
-		$source_post_data = get_post( $_POST['ID'], ARRAY_A );
+		$source_post_data = get_post( $post_id, ARRAY_A );
 		$post_data        = array();
 		/**
 		 * data to add
@@ -573,7 +578,7 @@ class iworks_kpir extends iworks {
 		/**
 		 * set post meta
 		 */
-		$post_meta = get_post_meta( $_POST['ID'] );
+		$post_meta = get_post_meta( $post_id );
 		foreach ( $post_meta as $key => $value ) {
 			if ( ! preg_match( '/^iworks_kpir/', $key ) ) {
 				continue;
@@ -583,6 +588,7 @@ class iworks_kpir extends iworks {
 			}
 			$post_data['meta_input'][ $key ] = maybe_unserialize( array_shift( $value ) );
 		}
+		// translators: %s: original invoice title.
 		$post_data['post_title']  = sprintf( __( 'Copy of %s', 'kpir' ), $post_data['post_title'] );
 		$post_data['post_status'] = 'draft';
 		$result                   = wp_insert_post( $post_data );

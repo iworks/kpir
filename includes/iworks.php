@@ -51,7 +51,7 @@ class iworks {
 					return md5_file( $file );
 				}
 			}
-			return rand( 0, PHP_INT_MAX );
+			return wp_rand( 0, PHP_INT_MAX );
 		}
 		return $this->version;
 	}
@@ -94,7 +94,7 @@ class iworks {
 			 * start row
 			 */
 			echo '<tr>';
-			printf( '<th scope="row" style="width: 130px">%s</th>', $data['title'] );
+			printf( '<th scope="row" style="width: 130px">%s</th>', esc_html( $data['title'] ) );
 			echo '<td>';
 			switch ( $data['type'] ) {
 				case 'number':
@@ -107,7 +107,7 @@ class iworks {
 						'<input type="number" name="%s" value="%d" %s />',
 						esc_attr( $key ),
 						intval( $value ),
-						$extra
+						esc_attr( $extra ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $extra holds number attributes from intval() above.
 					);
 					break;
 				case 'date':
@@ -117,8 +117,8 @@ class iworks {
 					}
 					printf(
 						'<input type="text" class="datepicker" name="%s" value="%s" />',
-						$this->get_meta_name( $name ),
-						$date
+						esc_attr( $this->get_meta_name( $name ) ),
+						esc_attr( $date )
 					);
 					break;
 			}

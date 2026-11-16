@@ -1,16 +1,19 @@
-<tns:ZakupWiersz>
-	<tns:LpZakupu><?php echo $args['counter']; ?></tns:LpZakupu>
-	<tns:NrDostawcy><?php echo $args['contractor']['nip']; ?></tns:NrDostawcy>
-	<tns:NazwaDostawcy><?php echo $args['contractor']['name']; ?></tns:NazwaDostawcy>
-	<tns:DowodZakupu><?php echo $args['invoice_number']; ?></tns:DowodZakupu>
-	<tns:DataZakupu><?php echo $args['create_date']; ?></tns:DataZakupu>
-	<tns:DataWplywu><?php echo $args['sale_date']; ?></tns:DataWplywu>
 <?php
-for ( $i = 40; $i < 48; $i++ ) {
-	$key = sprintf( 'K_%d', $i );
-	if ( isset( $args[ $key ] ) ) {
+defined( 'ABSPATH' ) || exit;
+?>
+<tns:ZakupWiersz>
+	<tns:LpZakupu><?php echo esc_xml( $kpir_args['counter'] ); ?></tns:LpZakupu>
+	<tns:NrDostawcy><?php echo esc_xml( $kpir_args['contractor']['nip'] ); ?></tns:NrDostawcy>
+	<tns:NazwaDostawcy><?php echo esc_xml( $kpir_args['contractor']['name'] ); ?></tns:NazwaDostawcy>
+	<tns:DowodZakupu><?php echo esc_xml( $kpir_args['invoice_number'] ); ?></tns:DowodZakupu>
+	<tns:DataZakupu><?php echo esc_xml( $kpir_args['create_date'] ); ?></tns:DataZakupu>
+	<tns:DataWplywu><?php echo esc_xml( $kpir_args['sale_date'] ); ?></tns:DataWplywu>
+<?php
+for ( $kpir_i = 40; $kpir_i < 48; $kpir_i++ ) {
+	$kpir_key = sprintf( 'K_%d', $kpir_i );
+	if ( isset( $kpir_args[ $kpir_key ] ) ) {
 		?>
-	<tns:<?php echo $key; ?>><?php echo $args[ $key ]; ?></tns:<?php echo $key; ?>>
+	<tns:<?php echo esc_xml( $kpir_key ); ?>><?php echo esc_xml( $kpir_args[ $kpir_key ] ); ?></tns:<?php echo esc_xml( $kpir_key ); ?>>
 		<?php
 	}
 }

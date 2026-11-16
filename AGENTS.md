@@ -68,10 +68,11 @@ Git: the default branch is `master` (not `main`).
   `includes/iworks/kpir/jpk/v7m.php`.
 - `includes/iworks/kpir/class-iworks-kpir-db.php` contains a stray
   "chemistry table" comment — legacy copy-paste, harmless.
-- Plugin Check (PCP) currently reports ~280 errors (mostly
-  `EscapeOutput.OutputNotEscaped` and `date()` vs `gmdate()`) — the build
-  fails on them; use `PLUGIN_CHECK_SKIP=1` for ZIPs without fixes, or fix
-  findings explicitly.
+- Plugin Check (PCP) passes with 0 errors and 0 warnings (`bun run
+  build:wporg` enforces this). The plugin name "KPiR" and the
+  already-prefixed `kpir_` variables are ignored via `ignoreCodes` in
+  `bundler/index.js` (PCP's prefix scanner cannot derive "kpir" from the
+  4-letter plugin name).
 
 ## Commands
 

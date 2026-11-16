@@ -32,24 +32,24 @@ defined( 'ABSPATH' ) || exit; // Exit if accessed directly
  */
 define( 'IWORKS_KPIR_VERSION', 'PLUGIN_VERSION' );
 define( 'IWORKS_KPIR_PREFIX', 'iworks_kpir_' );
-$base   = __DIR__;
-$vendor = $base . '/includes';
+$kpir_base   = __DIR__;
+$kpir_vendor = $kpir_base . '/includes';
 
 /**
  * require: IworksKPiR Class
  */
 if ( ! class_exists( 'iworks_kpir' ) ) {
-	require_once $vendor . '/iworks/class-kpir.php';
+	require_once $kpir_vendor . '/iworks/class-kpir.php';
 }
 /**
  * configuration
  */
-require_once $base . '/etc/options.php';
+require_once $kpir_base . '/etc/options.php';
 /**
  * require: IworksOptions Class
  */
 if ( ! class_exists( 'iworks_options' ) ) {
-	require_once $vendor . '/iworks/options/options.php';
+	require_once $kpir_vendor . '/iworks/options/options.php';
 }
 
 /**

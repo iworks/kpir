@@ -173,9 +173,11 @@ function printSummary(errors, warnings, perFile, fileCounts) {
  *
  * @param {string} slug Plugin slug (directory name in the release).
  * @param {string} version Plugin version (staging subdirectory).
+ * @param {Object} options Optional settings.
+ * @param {string[]} options.ignoreCodes PCP result codes to exclude.
  * @return {Promise<{errors: number, warnings: number}>} Result counts.
  */
-export async function pluginCheck(slug, version) {
+export async function pluginCheck(slug, version, options = {}) {
   if (Bun.env.PLUGIN_CHECK_SKIP === "1") {
     log("plugin-check — skipped (PLUGIN_CHECK_SKIP=1)", "w");
     return { errors: 0, warnings: 0 };
@@ -209,22 +211,21 @@ export async function pluginCheck(slug, version) {
   let errors = 0;
   let warnings = 0;
   try {
-    const result = await spawnAsync(
-      "php",
-      [
-        "-d",
-        "error_reporting=225",
-        wpCli,
-        "plugin",
-        "check",
-        slug,
-        "--categories=plugin_repo",
-        "--exclude-directories=includes/iworks/options",
-        "--format=csv",
-      ],
-      "wp plugin check",
-      false,
-    );
+    const args = [
+      "-d",
+      "error_reporting=225",
+      wpCli,
+      "plugin",
+      "check",
+      slug,
+      "--categories=plugin_repo",
+      "--exclude-directories=includes/iworks/options",
+      "--format=csv",
+    ];
+    if (options.ignoreCodes?.length) {
+      args.push(`--ignore-codes=${options.ignoreCodes.join(",")}`);
+    }
+    const result = await spawnAsync("php", args, "wp plugin check", false);
     if (result.code !== 0 && !result.stdout.trim()) {
       const err = new Error(
         `plugin-check — wp plugin check failed with no output (exit ${result.code}):\n${result.stderr.split("\n").filter(Boolean).slice(0, 5).join("\n")}`,
