@@ -62,6 +62,7 @@ There are 3 ways to install this plugin:
 == Changelog ==
 
 Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
+Older changelog entries (before 1.1.0) are available in [CHANGELOG.md](https://github.com/iworks/kpir/blob/master/CHANGELOG.md).
 
 
 = 1.3.0 - 2026-xx-xx =
@@ -69,9 +70,17 @@ Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 * Added ability to import sales invoices from KSeF XML files.
 * Added fallback mapping for KSeF XML date field for purchase and sale invoices.
 * Added NIP unification - removed "-", " ", and leading "PL" to make it consistent and compatible with KSeF NIP format.
+* Added PHPUnit tests.
+* Added `ABSPATH` guards to all template parts and option files.
+* Added translators comments for strings with placeholders.
 * Code quality improvements in KSeF XML field mapping.
+* Fixed all Plugin Check (PCP) errors and warnings.
+* Improved escaping in admin pages, reports, and JPK XML templates.
+* Migrated the build process from Grunt to Bun.
 * Prevent duplication of KSeF data on an invoice.
 * Removed default sorting for invoices in "imported" or "trash" status.
+* Replaced `date()` with `gmdate()`/`current_time()` to avoid timezone issues.
+* Secured all database queries with `$wpdb->prepare()`.
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.1.1.
 
 = 1.2.0 - 2026-03-24 =
@@ -107,86 +116,5 @@ Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 = 1.1.0 - 2025-05-08 =
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.0.0.
 * The cash method of settling income tax has been added. [#1](https://github.com/iworks/kpir/issues/1).
-
-= 1.0.3 - 2025-03-31 =
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.9.9.
-* The plugin repository has been moved to GitHub.
-* Missing translation domain names have been added.
-
-= 1.0.2 - 2025-02-22 =
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.9.5.
-* Empty vat field has been fixed.
-
-= 1.0.1 - 2024-03-25 =
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.8.9.
-* The P_20 field has been temoved from JPK-VAT xml if is empty.
-
-= 1.0.0 - 2023-06-07 =
-* The BDO number has been added.
-
-= 0.1.9 - 2023-02-21 =
-* The person type for JPK V7M has been changed.
-
-= 0.1.8 - 2022-02-24 =
-* Added JPK V7M(2) report.
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.8.1.
-
-= 0.1.7 - 2022-01-20 =
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.8.0.
-
-= 0.1.6 - 2021-05-12 =
-* Rename directory `vendor` into `includes`.
-* Added VAT rates.
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.6.9.
-
-= 0.1.5 - 2020-11-24 =
-* Fixed VAT calculation for a car.
-
-= 0.1.4 - 2020-11-24 =
-* Added JPK V7M report.
-* Removed JPK VAT(3) report.
-
-= 0.1.3 - 2020-01-20 =
-* Added annually report.
-
-= 0.1.2 - 2019-11-12 =
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 2.6.8.
-
-= 0.1.1 =
-* Added new car related count: 20%, 75% and 100% for expenses.
-
-= 0.1.0 =
-* Netto expenses count only from expenses.
-
-= 0.0.9 =
-* Convert '&' char to entity in output JPK VAT fields.
-
-= 0.0.8 =
-* Added few checks to avoid PHP warnings.
-* Added input sanitization and validation for JPK VAT(3) inputs.
-
-= 0.0.7 =
-* Added ability to sum two values.
-* Added few checks to avoid PHP warnings.
-
-= 0.0.6 =
-* Improved "Asset" type, "Expense" is visible too.
-
-= 0.0.5 =
-* Added input month in JPK VAT sanitization.
-* Handle translation.
-
-= 0.0.4 =
-* Added input sanitization.
-* Added button to copy "Date of issue" value into "Event date" field.
-
-= 0.0.3 =
-* Improved post types labels.
-
-= 0.0.2 =
-* Fixed fractional part of money with leading zero for JPK VAT (3).
-
-= 0.0.1 =
-* init version
 
 == Upgrade Notice ==

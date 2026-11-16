@@ -20,6 +20,7 @@ node_modules
 vendor/
 composer.lock
 package-lock.json
+o
 
 # ─── Local environment & editor junk ──────────────────────────────────────────
 local.*
@@ -29,3 +30,6 @@ tests/php/readme.txt
 
 # ─── Local tooling (downloaded, not committed) ────────────────────────────────
 wp-cli.phar
+
+# ─── Compiled ─────────────────────────────────────────────────────────────────
+languages/*.mo
