@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-16T10:52:37+00:00\n"
+"POT-Creation-Date: 2026-11-16T17:41:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: kpir\n"
@@ -294,7 +294,7 @@ msgstr ""
 
 #: includes/iworks/kpir/jpk/vat_3.php:176
 #: includes/iworks/kpir/reports/annually.php:463
-#: includes/iworks/kpir/reports/monthly.php:756
+#: includes/iworks/kpir/reports/monthly.php:757
 #: template-parts/jpk/v7m-2/show.php:59
 #: template-parts/jpk/v7m-3/show.php:59
 #: template-parts/jpk/v7m/show.php:59
@@ -878,12 +878,12 @@ msgid "Cash-in"
 msgstr ""
 
 #: includes/iworks/kpir/reports/annually.php:461
-#: includes/iworks/kpir/reports/monthly.php:754
+#: includes/iworks/kpir/reports/monthly.php:755
 msgid "Filter by date"
 msgstr ""
 
 #: includes/iworks/kpir/reports/annually.php:473
-#: includes/iworks/kpir/reports/monthly.php:766
+#: includes/iworks/kpir/reports/monthly.php:767
 msgid "Filter"
 msgstr ""
 
@@ -891,7 +891,7 @@ msgstr ""
 msgid "(car related)"
 msgstr ""
 
-#: includes/iworks/kpir/reports/monthly.php:526
+#: includes/iworks/kpir/reports/monthly.php:528
 msgid "There is no invoices in this month."
 msgstr ""
 

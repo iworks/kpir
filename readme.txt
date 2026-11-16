@@ -62,10 +62,8 @@ There are 3 ways to install this plugin:
 == Changelog ==
 
 Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
-Older changelog entries (before 1.1.0) are available in [CHANGELOG.md](https://github.com/iworks/kpir/blob/master/CHANGELOG.md).
 
-
-= 1.3.0 - 2026-xx-xx =
+= 1.3.0 - 2026-11-16 =
 * Added ability to import purchase invoices from KSeF XML files.
 * Added ability to import sales invoices from KSeF XML files.
 * Added fallback mapping for KSeF XML date field for purchase and sale invoices.
@@ -118,5 +116,7 @@ Older changelog entries (before 1.1.0) are available in [CHANGELOG.md](https://g
 = 1.1.0 - 2025-05-08 =
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.0.0.
 * The cash method of settling income tax has been added. [#1](https://github.com/iworks/kpir/issues/1).
+
+Older changelog entries (before 1.1.0) are available in [CHANGELOG.md](https://github.com/iworks/kpir/blob/master/CHANGELOG.md).
 
 == Upgrade Notice ==

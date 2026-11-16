@@ -101,7 +101,7 @@ export async function makePot(makeMo = false) {
     : [];
   for (const po of poFiles) {
     await wpCliI18n(
-      ["update-po", join(config.languagesDir, po)],
+      ["update-po", potFile, join(config.languagesDir, po)],
       `update-po ${po}`,
     );
   }
