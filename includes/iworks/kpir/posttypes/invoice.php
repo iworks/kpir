@@ -1148,6 +1148,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 	 * @return void
 	 */
 	public function action_shutdown_calculate_year_month_cash() {
+		$this->check_option_object();
 		$wp_query_args = array(
 			'post_type'  => $this->get_name(),
 			'meta_query' => array(

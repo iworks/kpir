@@ -10,9 +10,9 @@ defined( 'ABSPATH' ) || exit;
 <?php
 for ( $kpir_i = 10; $i < 70; $kpir_i++ ) {
 	$kpir_key = sprintf( 'P_%d', $kpir_i );
-	if ( isset( $kpir_args[ $kpir_key ] ) ) {
+	if ( isset( $args[ $kpir_key ] ) ) {
 ?>
-		<tns:<?php echo esc_xml( $kpir_key ); ?>><?php echo esc_xml( $kpir_args[ $kpir_key ] ); ?></tns:<?php echo esc_xml( $kpir_key ); ?>>
+		<tns:<?php echo esc_xml( $kpir_key ); ?>><?php echo esc_xml( $args[ $kpir_key ] ); ?></tns:<?php echo esc_xml( $kpir_key ); ?>>
 <?php
 	}
 }

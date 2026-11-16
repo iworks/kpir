@@ -65,10 +65,10 @@ async function build(flavor) {
         // derive the initial slug, which does not apply here.
         ignoreCodes: [
           "plugin_header_unsupported_plugin_name",
-          // All plugin globals and template-scope variables are already
-          // prefixed with "kpir_" (e.g. $kpir_args, $kpir_base), but PCP's
-          // prefix scanner cannot derive "kpir" from the 4-letter plugin
-          // name, so it reports every assignment as non-prefixed.
+          // Template parts receive $args from get_template_part() — that name
+          // is a WordPress contract and must stay. PCP's prefix scanner
+          // cannot derive "kpir" from the 4-letter plugin name, so template
+          // assignments ($args, $kpir_atts, …) are reported as non-prefixed.
           "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
         ],
       });

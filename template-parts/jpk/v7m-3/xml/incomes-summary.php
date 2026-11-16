@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <SprzedazCtrl>
-	<LiczbaWierszySprzedazy><?php echo esc_xml( $kpir_args['rows'] ); ?></LiczbaWierszySprzedazy>
-	<PodatekNalezny><?php echo esc_xml( $kpir_args['sum'] ); ?></PodatekNalezny>
+	<LiczbaWierszySprzedazy><?php echo esc_xml( $args['rows'] ); ?></LiczbaWierszySprzedazy>
+	<PodatekNalezny><?php echo esc_xml( $args['sum'] ); ?></PodatekNalezny>
 </SprzedazCtrl>
 

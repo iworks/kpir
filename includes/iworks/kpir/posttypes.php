@@ -79,7 +79,7 @@ class iworks_kpir_posttypes {
 	 * Hooked to 'init' action with priority 7020.
 	 */
 	public function action_init_set_options() {
-		$this->options      = iworks_kpir_get_options();
+		$this->check_option_object();
 		$this->use_cash_pit = boolval( $this->options->get_option( 'cash_pit' ) );
 	}
 
@@ -90,6 +90,14 @@ class iworks_kpir_posttypes {
 	 */
 	public function get_name() {
 		return $this->post_type_name;
+	}
+
+
+	protected function check_option_object() {
+		if ( is_a( $this->options, 'iworks_kpir_options' ) ) {
+			return;
+		}
+		$this->options = iworks_kpir_get_options();
 	}
 
 	/**
