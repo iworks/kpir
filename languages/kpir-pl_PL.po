@@ -1,26 +1,24 @@
-# Translation of Plugins - KPiR - Development (trunk) in Polish
-# This file is distributed under the same license as the Plugins - KPiR - Development (trunk) package.
 msgid ""
 msgstr ""
 "Project-Id-Version: Plugins - KPiR - Development (trunk)\n"
 "Report-Msgid-Bugs-To: http://iworks.pl\n"
-"POT-Creation-Date: 2026-10-19 14:13:20+00:00\n"
-"PO-Revision-Date: 2026-03-24 12:27+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 "
-"&& (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
+"POT-Creation-Date: 2026-10-19 14:13:20+00:00\n"
+"PO-Revision-Date: 2026-03-24 12:27+0100\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
 "X-Generator: Poedit 3.4.2\n"
 
 #: etc/options.php:10
 msgid "Configuration"
 msgstr "Konfiguracja"
 
-#: etc/options.php:23 includes/iworks/kpir/posttypes/contractor.php:76
+#: etc/options.php:23
+#: includes/iworks/kpir/posttypes/contractor.php:76
 #: includes/iworks/kpir/posttypes/contractor.php:245
 msgid "NIP"
 msgstr "NIP"
@@ -37,7 +35,8 @@ msgstr "Osoba"
 msgid "Company"
 msgstr "Firma"
 
-#: etc/options.php:47 includes/iworks/kpir/posttypes/contractor.php:244
+#: etc/options.php:47
+#: includes/iworks/kpir/posttypes/contractor.php:244
 msgid "Full Name"
 msgstr "Pełna nazwa"
 
@@ -70,12 +69,8 @@ msgid "Cash PIT"
 msgstr "Kasowy PIT"
 
 #: etc/options.php:99
-msgid ""
-"Cash PIT allows for the application of personal income tax only after "
-"receiving payment from the contractor."
-msgstr ""
-"Kasowy PIT pozwala na zastosowanie podatku dochodowego od osób fizycznych "
-"dopiero po otrzymaniu zapłaty od kontrahenta."
+msgid "Cash PIT allows for the application of personal income tax only after receiving payment from the contractor."
+msgstr "Kasowy PIT pozwala na zastosowanie podatku dochodowego od osób fizycznych dopiero po otrzymaniu zapłaty od kontrahenta."
 
 #: etc/options.php:108
 msgid "Check VAT on Monthly Report"
@@ -83,9 +78,7 @@ msgstr "Sprawdź VAT w raporcie miesięcznym"
 
 #: etc/options.php:109
 msgid "Simple check VAT on Monthly Report as netto sum multiple basic rate."
-msgstr ""
-"Proste sprawdzenie podatku VAT w Raporcie Miesięcznym jako wielokrotności "
-"sumy netto stawki podstawowej."
+msgstr "Proste sprawdzenie podatku VAT w Raporcie Miesięcznym jako wielokrotności sumy netto stawki podstawowej."
 
 #: etc/options.php:117
 msgid "Monthly Report"
@@ -95,7 +88,8 @@ msgstr "Raport miesięczny"
 msgid "Monthly"
 msgstr "Miesięcznie"
 
-#: etc/options.php:142 includes/iworks/class-kpir.php:441
+#: etc/options.php:142
+#: includes/iworks/class-kpir.php:441
 msgid "JPK V7M"
 msgstr "JPK V7M"
 
@@ -121,9 +115,7 @@ msgstr "Czy na pewno powielić dokument księgowy?"
 
 #: includes/iworks/class-kpir.php:326
 msgid "An error occurred duplicating invoice. Please try again."
-msgstr ""
-"Wystąpił błąd w czasie powielania dokumentu księgowego. Proszę spróbować "
-"ponownie."
+msgstr "Wystąpił błąd w czasie powielania dokumentu księgowego. Proszę spróbować ponownie."
 
 #: includes/iworks/class-kpir.php:329
 msgid "Please select month first!"
@@ -145,7 +137,8 @@ msgstr "Raporty"
 msgid "JPK VAT(3)"
 msgstr "JPK VAT(3)"
 
-#: includes/iworks/class-kpir.php:421 includes/iworks/class-kpir.php:445
+#: includes/iworks/class-kpir.php:421
+#: includes/iworks/class-kpir.php:445
 msgid "Something went wrong!"
 msgstr "Coś poszło nie tak!"
 
@@ -165,7 +158,8 @@ msgstr "Powiel"
 msgid "Copy of %s"
 msgstr "Kopia %s"
 
-#: includes/iworks/class-kpir.php:790 includes/iworks/class-kpir.php:791
+#: includes/iworks/class-kpir.php:790
+#: includes/iworks/class-kpir.php:791
 #: includes/iworks/kpir/class-iworks-kpir-ksef.php:129
 #, fuzzy
 msgid "KSeF Import"
@@ -188,34 +182,43 @@ msgstr ""
 msgid "Import"
 msgstr "Raporty"
 
-#: includes/iworks/kpir/jpk/vat_3.php:132 template-parts/jpk/no-entries.php:2
+#: includes/iworks/kpir/jpk/vat_3.php:132
+#: template-parts/jpk/no-entries.php:2
 msgid "There is no entries to create JPK VAT file."
 msgstr "Brak wpisów potrzebnych do utworzenia pliku JPK VAT."
 
-#: includes/iworks/kpir/jpk/vat_3.php:149 template-parts/jpk/v7m/show.php:32
-#: template-parts/jpk/v7m-2/show.php:32 template-parts/jpk/v7m-3/show.php:32
+#: includes/iworks/kpir/jpk/vat_3.php:149
+#: template-parts/jpk/v7m/show.php:32
+#: template-parts/jpk/v7m-2/show.php:32
+#: template-parts/jpk/v7m-3/show.php:32
 msgid "Purpose"
 msgstr "Cel"
 
-#: includes/iworks/kpir/jpk/vat_3.php:166 template-parts/jpk/v7m/show.php:51
-#: template-parts/jpk/v7m-2/show.php:51 template-parts/jpk/v7m-3/show.php:51
+#: includes/iworks/kpir/jpk/vat_3.php:166
+#: template-parts/jpk/v7m/show.php:51
+#: template-parts/jpk/v7m-2/show.php:51
+#: template-parts/jpk/v7m-3/show.php:51
 msgid "Month"
 msgstr "Miesiąc"
 
 #: includes/iworks/kpir/jpk/vat_3.php:171
 #: includes/iworks/kpir/reports/annually.php:465
 #: includes/iworks/kpir/reports/monthly.php:764
-#: template-parts/jpk/v7m/show.php:56 template-parts/jpk/v7m-2/show.php:56
+#: template-parts/jpk/v7m/show.php:56
+#: template-parts/jpk/v7m-2/show.php:56
 #: template-parts/jpk/v7m-3/show.php:56
 msgid "Select month"
 msgstr "Wybierz miesiąc"
 
-#: includes/iworks/kpir/jpk/vat_3.php:188 template-parts/jpk/v7m/show.php:77
-#: template-parts/jpk/v7m-2/show.php:77 template-parts/jpk/v7m-3/show.php:77
+#: includes/iworks/kpir/jpk/vat_3.php:188
+#: template-parts/jpk/v7m/show.php:77
+#: template-parts/jpk/v7m-2/show.php:77
+#: template-parts/jpk/v7m-3/show.php:77
 msgid "Get XML"
 msgstr "Pobierz XML"
 
-#: includes/iworks/kpir/jpk/vat_3.php:479 includes/iworks/kpir/jpk.php:160
+#: includes/iworks/kpir/jpk/vat_3.php:479
+#: includes/iworks/kpir/jpk.php:160
 msgid "Wrong date, please try again!"
 msgstr "Błędna data, proszę spróbować ponownie!"
 
@@ -436,12 +439,8 @@ msgid "KSeF Number"
 msgstr "Numer KSeF"
 
 #: includes/iworks/kpir/posttypes/invoice.php:223
-msgid ""
-"An invoice that, on the date of submission of the records, does not have a "
-"number identifying this invoice in the National e-Invoice System"
-msgstr ""
-"Faktura, która na dzień złożenia ewidencji nie posiada numeru "
-"identyfikującego tę fakturę w Krajowym Systemie e-Faktur"
+msgid "An invoice that, on the date of submission of the records, does not have a number identifying this invoice in the National e-Invoice System"
+msgstr "Faktura, która na dzień złożenia ewidencji nie posiada numeru identyfikującego tę fakturę w Krajowym Systemie e-Faktur"
 
 #: includes/iworks/kpir/posttypes/invoice.php:226
 msgid "Electronic invoice or invoice in paper form"
@@ -504,35 +503,19 @@ msgid "VAT"
 msgstr "VAT"
 
 #: includes/iworks/kpir/posttypes/invoice.php:299
-msgid ""
-"Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
-"świadczenia usług na terytorium kraju, zwolnionych od podatku"
-msgstr ""
-"Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
-"świadczenia usług na terytorium kraju, zwolnionych od podatku"
+msgid "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz świadczenia usług na terytorium kraju, zwolnionych od podatku"
+msgstr "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz świadczenia usług na terytorium kraju, zwolnionych od podatku"
 
 #: includes/iworks/kpir/posttypes/invoice.php:302
-msgid ""
-"Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
-"świadczenia usług poza terytorium kraju"
-msgstr ""
-"Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
-"świadczenia usług poza terytorium kraju"
+msgid "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz świadczenia usług poza terytorium kraju"
+msgstr "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz świadczenia usług poza terytorium kraju"
 
 #: includes/iworks/kpir/posttypes/invoice.php:305
-msgid ""
-"Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
-"świadczenia usług na terytorium kraju, opodatkowanych stawką 22% albo 23%, z "
-"uwzględnieniem korekty dokonanej zgodnie z art. 89a ust. 1 i 4 ustawy"
-msgstr ""
-"Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz "
-"świadczenia usług na terytorium kraju, opodatkowanych stawką 22% albo 23%, z "
-"uwzględnieniem korekty dokonanej zgodnie z art. 89a ust. 1 i 4 ustawy"
+msgid "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz świadczenia usług na terytorium kraju, opodatkowanych stawką 22% albo 23%, z uwzględnieniem korekty dokonanej zgodnie z art. 89a ust. 1 i 4 ustawy"
+msgstr "Wysokość podstawy opodatkowania wynikająca z dostawy towarów oraz świadczenia usług na terytorium kraju, opodatkowanych stawką 22% albo 23%, z uwzględnieniem korekty dokonanej zgodnie z art. 89a ust. 1 i 4 ustawy"
 
 #: includes/iworks/kpir/posttypes/invoice.php:322
-msgid ""
-"The purchase of commercial goods and materials, according to the purchase "
-"price"
+msgid "The purchase of commercial goods and materials, according to the purchase price"
 msgstr "Zakup towarów handlowych i materiałów wg cen zakupu"
 
 #: includes/iworks/kpir/posttypes/invoice.php:327
@@ -798,9 +781,7 @@ msgid "There is no invoices in this month."
 msgstr "Brak dokumentów księgowych w tym miesiącu."
 
 #: includes/iworks/options/includes/class-iworks-options-logger.php:99
-msgid ""
-"Option \"{option_name}\" has been updated. From \"{old_value}\" to "
-"\"{new_value}\"."
+msgid "Option \"{option_name}\" has been updated. From \"{old_value}\" to \"{new_value}\"."
 msgstr ""
 
 #: includes/iworks/options/options.php:247
@@ -844,17 +825,20 @@ msgstr "Włącz"
 msgid "Failed Security Check"
 msgstr "Nieudana kontrola bezpieczeństwa"
 
-#: template-parts/jpk/v7m/show.php:11 template-parts/jpk/v7m-2/show.php:11
+#: template-parts/jpk/v7m/show.php:11
+#: template-parts/jpk/v7m-2/show.php:11
 #: template-parts/jpk/v7m-3/show.php:11
 msgid "Excess tax"
 msgstr "Nadpłata podatku"
 
-#: template-parts/jpk/v7m/show.php:37 template-parts/jpk/v7m-2/show.php:37
+#: template-parts/jpk/v7m/show.php:37
+#: template-parts/jpk/v7m-2/show.php:37
 #: template-parts/jpk/v7m-3/show.php:37
 msgid "submission of a declaration"
 msgstr "wysłanie deklaracji"
 
-#: template-parts/jpk/v7m/show.php:38 template-parts/jpk/v7m-2/show.php:38
+#: template-parts/jpk/v7m/show.php:38
+#: template-parts/jpk/v7m-2/show.php:38
 #: template-parts/jpk/v7m-3/show.php:38
 msgid "correction of the declaration"
 msgstr "korekta deklaracji"
@@ -875,7 +859,8 @@ msgstr "Marcin Pietrzak"
 msgid "http://iworks.pl/"
 msgstr "http://iworks.pl/"
 
-#: includes/iworks/class-kpir.php:223 includes/iworks/class-kpir.php:225
+#: includes/iworks/class-kpir.php:223
+#: includes/iworks/class-kpir.php:225
 msgctxt "date admin dashbord widget"
 msgid "Y F"
 msgstr "Y F"
@@ -900,11 +885,5 @@ msgctxt "Invoice Singular Name"
 msgid "Invoice"
 msgstr "Faktura"
 
-#~ msgid ""
-#~ "**KPiR** streamlines small business bookkeeping for entrepreneurs in "
-#~ "Poland. It’s designed for simplicity, compliance, and seamless "
-#~ "integration with your WordPress website."
-#~ msgstr ""
-#~ "**KPiR** usprawnia prowadzenie księgowości dla małych firm w Polsce. "
-#~ "Zostało zaprojektowane z myślą o prostocie, zgodności z przepisami i "
-#~ "płynnej integracji z WordPressem."
+#~ msgid "**KPiR** streamlines small business bookkeeping for entrepreneurs in Poland. It’s designed for simplicity, compliance, and seamless integration with your WordPress website."
+#~ msgstr "**KPiR** usprawnia prowadzenie księgowości dla małych firm w Polsce. Zostało zaprojektowane z myślą o prostocie, zgodności z przepisami i płynnej integracji z WordPressem."

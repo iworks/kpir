@@ -13,17 +13,17 @@
   width: 3em;
 }
 .kpir-report td.vat-passed {
-  background-color: #00701730;
+  background-color: rgba(0, 112, 23, 0.1882352941);
 }
 .kpir-report td.vat-failed {
-  background-color: #d6363830;
+  background-color: rgba(214, 54, 56, 0.1882352941);
 }
 .kpir-report tr:nth-child(even) td {
   background-color: #ddd;
 }
 .kpir-report tr:nth-child(even) td.vat-passed {
-  background-color: #00701750;
+  background-color: rgba(0, 112, 23, 0.3137254902);
 }
 .kpir-report tr:nth-child(even) td.vat-failed {
-  background-color: #d6363850;
+  background-color: rgba(214, 54, 56, 0.3137254902);
 }
