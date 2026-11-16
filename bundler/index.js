@@ -183,6 +183,40 @@ async function test() {
 }
 
 /**
+ * Update the iWorks git submodules (grunt never had this; parity with
+ * dev-sierotki). Pulls latest changes for each submodule and fails when any
+ * of them cannot be updated.
+ */
+async function updateLibraries() {
+  const submodules = [
+    { path: "includes/iworks/options", label: "iWorks Options" },
+  ];
+  let failed = false;
+  for (const { path, label } of submodules) {
+    if (!existsSync(join(root, path))) {
+      log(`update-libs — ${path} not found, skipped`, "w");
+      continue;
+    }
+    log(`update-libs — updating ${label} (${path})`, "i");
+    const result = await spawnAsync("git", ["-C", path, "pull"], label, false);
+    if (result.stdout.trim()) {
+      console.log(result.stdout.trim());
+    }
+    if (result.stderr.trim()) {
+      console.log(result.stderr.trim());
+    }
+    if (result.code !== 0) {
+      failed = true;
+    }
+  }
+  if (failed) {
+    log("update-libs — one or more submodules failed to update", "e");
+    process.exit(1);
+  }
+  log("update-libs — all iWorks libraries updated", "s");
+}
+
+/**
  * Plugin Check (PCP) on the wporg build — builds the wporg ZIP first when
  * it is missing, then runs the check against the staged release.
  */
@@ -224,6 +258,7 @@ const modes = {
   pcp: () => pcp(),
   "make-pot": () => executionTime("make-pot", () => makePot(false)),
   test: () => test(),
+  "update-libs": () => updateLibraries(),
 };
 
 if (!modes[mode]) {

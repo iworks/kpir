@@ -85,5 +85,7 @@ Check) ·
 `bun run make-pot` (translations) ·
 `bun run pcp` (Plugin Check only; builds the wporg ZIP first if missing) ·
 `bun run test` (PHPUnit via composer, `tests/php/phpunit.xml`; uses
-`tests/php/wp-stubs.php` — no WordPress install needed).
+`tests/php/wp-stubs.php` — no WordPress install needed) ·
+`bun run update-libs` (pulls latest changes for the `includes/iworks/options`
+submodule).
 Requires PHP ≥ 8.0, WordPress ≥ 6.0, Bun ≥ 1.3.

@@ -81,7 +81,7 @@ Older changelog entries (before 1.1.0) are available in [CHANGELOG.md](https://g
 * Removed default sorting for invoices in "imported" or "trash" status.
 * Replaced `date()` with `gmdate()`/`current_time()` to avoid timezone issues.
 * Secured all database queries with `$wpdb->prepare()`.
-* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.1.1.
+* The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.1.2.
 
 = 1.2.0 - 2026-03-24 =
 * Added KSeF number to JPK reports.
