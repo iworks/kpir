@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-10-19 14:13:20+00:00\n"
-"PO-Revision-Date: 2026-11-16 18:42+0100\n"
+"PO-Revision-Date: 2026-11-16 18:46+0100\n"
 "Language: pl\n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);\n"
 "X-Generator: Poedit 3.9\n"
@@ -863,18 +863,18 @@ msgstr "Błąd podczas przesyłania pliku: %s"
 #, php-format
 msgid "Successfully imported %d invoice."
 msgid_plural "Successfully imported %d invoices."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Zaimportowano %d fakturę."
+msgstr[1] "Zaimportowano %d faktury."
+msgstr[2] "Zaimportowano %d faktur."
 
 #. translators: %d: number of invoices.
 #: includes/iworks/kpir/class-iworks-kpir-ksef.php:172
 #, php-format
 msgid "Failed to import %d invoice."
 msgid_plural "Failed to import %d invoices."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Nie udało się zaimportować %d faktury."
+msgstr[1] "Nie udało się zaimportować %d faktur."
+msgstr[2] "Nie udało się zaimportować %d faktur."
 
 #. translators: %s: link to the imported invoice.
 #: includes/iworks/kpir/class-iworks-kpir-ksef.php:315
