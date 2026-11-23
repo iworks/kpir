@@ -83,13 +83,18 @@ if ( ! function_exists( 'esc_attr__' ) ) {
 
 if ( ! function_exists( 'esc_html' ) ) {
 	/**
-	 * Stub: escape string (returns input).
+	 * Stub: escape string for HTML output.
+	 *
+	 * Mirrors core esc_html(): encodes <, >, &, " and '. A faithful
+	 * implementation (instead of an identity pass-through) matters for
+	 * the options security tests, where esc_html is used as a
+	 * sanitize_callback.
 	 *
 	 * @param string $text Text to escape.
-	 * @return string
+	 * @return string Escaped text.
 	 */
 	function esc_html( $text ) {
-		return $text;
+		return htmlspecialchars( (string) $text, ENT_QUOTES );
 	}
 }
 

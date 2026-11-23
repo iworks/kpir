@@ -26,11 +26,11 @@ Git: the default branch is `master` (not `main`).
 
 ## Docs map — read only what the task needs
 
-| Task | Read first |
-| --- | --- |
-| Bun bundler, build, ZIPs, placeholders, translations (.pot/.po/.mo), Plugin Check | `.opencode/docs/build.md` |
-| Loading flow, post types, meta/custom fields, JPK templates, reports, KSeF, options, conventions | `.opencode/docs/project.md` |
-| Feature class internals | the class file's header comment + method docblocks |
+| Task                                                                                             | Read first                                         |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| Bun bundler, build, ZIPs, placeholders, translations (.pot/.po/.mo), Plugin Check                | `.opencode/docs/build.md`                          |
+| Loading flow, post types, meta/custom fields, JPK templates, reports, KSeF, options, conventions | `.opencode/docs/project.md`                        |
+| Feature class internals                                                                          | the class file's header comment + method docblocks |
 
 - When a change alters documented behavior, update the corresponding doc in
   the same task.
@@ -69,7 +69,7 @@ Git: the default branch is `master` (not `main`).
 - `includes/iworks/kpir/class-iworks-kpir-db.php` contains a stray
   "chemistry table" comment — legacy copy-paste, harmless.
 - Plugin Check (PCP) passes with 0 errors and 0 warnings (`bun run
-  build:wporg` enforces this). The plugin name "KPiR" and the
+pcp` enforces this). The plugin name "KPiR" and the
   already-prefixed `kpir_` variables are ignored via `ignoreCodes` in
   `bundler/index.js` (PCP's prefix scanner cannot derive "kpir" from the
   4-letter plugin name).
@@ -78,9 +78,9 @@ Git: the default branch is `master` (not `main`).
 
 `bun run dev` (watcher: rebuilds assets on JS/SCSS change) ·
 `bun run js` / `bun run css` (asset pipelines only) ·
-`bun run build` (both flavors: github first, then wporg with Plugin
-Check) ·
-`bun run build:wporg` (wp.org ZIP + Plugin Check) ·
+`bun run build` (both flavors: github first, then wporg; PHPUnit runs
+first and fails the build on any failing test) ·
+`bun run build:wporg` (wp.org ZIP) ·
 `bun run build:github` (GitHub ZIP + .mo) ·
 `bun run make-pot` (translations) ·
 `bun run pcp` (Plugin Check only; builds the wporg ZIP first if missing) ·

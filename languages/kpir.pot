@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-16T17:41:25+00:00\n"
+"POT-Creation-Date: 2026-11-23T17:39:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: kpir\n"
@@ -396,7 +396,7 @@ msgstr ""
 #: includes/iworks/kpir/posttypes/contractor.php:111
 #: includes/iworks/kpir/posttypes/contractor.php:137
 #: includes/iworks/kpir/posttypes/invoice.php:265
-#: includes/iworks/kpir/posttypes/invoice.php:955
+#: includes/iworks/kpir/posttypes/invoice.php:959
 msgid "Contractor"
 msgstr ""
 
@@ -565,12 +565,12 @@ msgid "Invoice description"
 msgstr ""
 
 #: includes/iworks/kpir/posttypes/invoice.php:280
-#: includes/iworks/kpir/posttypes/invoice.php:964
+#: includes/iworks/kpir/posttypes/invoice.php:968
 msgid "Income"
 msgstr ""
 
 #: includes/iworks/kpir/posttypes/invoice.php:283
-#: includes/iworks/kpir/posttypes/invoice.php:963
+#: includes/iworks/kpir/posttypes/invoice.php:967
 msgid "Expense"
 msgstr ""
 
@@ -845,27 +845,27 @@ msgstr ""
 msgid "Depreciation of assets"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/invoice.php:915
+#: includes/iworks/kpir/posttypes/invoice.php:919
 msgid "&mdash; not paid yet &mdash;"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/invoice.php:956
+#: includes/iworks/kpir/posttypes/invoice.php:960
 msgid "Date of invoice"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/invoice.php:958
+#: includes/iworks/kpir/posttypes/invoice.php:962
 msgid "Payment Date"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/invoice.php:960
+#: includes/iworks/kpir/posttypes/invoice.php:964
 msgid "KSeF ID"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/invoice.php:962
+#: includes/iworks/kpir/posttypes/invoice.php:966
 msgid "Description"
 msgstr ""
 
-#: includes/iworks/kpir/posttypes/invoice.php:965
+#: includes/iworks/kpir/posttypes/invoice.php:969
 msgid "Invoice Number"
 msgstr ""
 

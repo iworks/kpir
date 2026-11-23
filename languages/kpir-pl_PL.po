@@ -300,7 +300,7 @@ msgstr "Kontrahenci"
 #: includes/iworks/kpir/posttypes/contractor.php:111
 #: includes/iworks/kpir/posttypes/contractor.php:137
 #: includes/iworks/kpir/posttypes/invoice.php:265
-#: includes/iworks/kpir/posttypes/invoice.php:955
+#: includes/iworks/kpir/posttypes/invoice.php:959
 msgid "Contractor"
 msgstr "Kontrahent"
 
@@ -456,12 +456,12 @@ msgid "Invoice description"
 msgstr "Opis dokumentu księgowego"
 
 #: includes/iworks/kpir/posttypes/invoice.php:280
-#: includes/iworks/kpir/posttypes/invoice.php:964
+#: includes/iworks/kpir/posttypes/invoice.php:968
 msgid "Income"
 msgstr "Przychód"
 
 #: includes/iworks/kpir/posttypes/invoice.php:283
-#: includes/iworks/kpir/posttypes/invoice.php:963
+#: includes/iworks/kpir/posttypes/invoice.php:967
 msgid "Expense"
 msgstr "Wydatek"
 
@@ -732,23 +732,23 @@ msgstr "VAT (zero)"
 msgid "Depreciation of assets"
 msgstr "Amortyzacja środków trwałych"
 
-#: includes/iworks/kpir/posttypes/invoice.php:915
+#: includes/iworks/kpir/posttypes/invoice.php:919
 msgid "&mdash; not paid yet &mdash;"
 msgstr "&mdash; jeszcze nie zapłacone &mdash;"
 
-#: includes/iworks/kpir/posttypes/invoice.php:956
+#: includes/iworks/kpir/posttypes/invoice.php:960
 msgid "Date of invoice"
 msgstr "Data wystawienia faktury"
 
-#: includes/iworks/kpir/posttypes/invoice.php:958
+#: includes/iworks/kpir/posttypes/invoice.php:962
 msgid "Payment Date"
 msgstr "Data płatności"
 
-#: includes/iworks/kpir/posttypes/invoice.php:962
+#: includes/iworks/kpir/posttypes/invoice.php:966
 msgid "Description"
 msgstr "Opis"
 
-#: includes/iworks/kpir/posttypes/invoice.php:965
+#: includes/iworks/kpir/posttypes/invoice.php:969
 msgid "Invoice Number"
 msgstr "Numer dokumentu księgowego"
 
@@ -911,6 +911,6 @@ msgstr[0] "Zaimportowane <span class=\"count\">(%s)</span>"
 msgstr[1] "Zaimportowane <span class=\"count\">(%s)</span>"
 msgstr[2] "Zaimportowane <span class=\"count\">(%s)</span>"
 
-#: includes/iworks/kpir/posttypes/invoice.php:960
+#: includes/iworks/kpir/posttypes/invoice.php:964
 msgid "KSeF ID"
 msgstr "Identyfikator KSeF"

@@ -9,6 +9,7 @@
  * @package KPIR
  */
 
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 require_once dirname( __DIR__, 3 ) . '/includes/iworks/kpir/jpk.php';
@@ -39,6 +40,7 @@ class IworksKpirJpkTestDouble extends iworks_kpir_jpk {
 /**
  * Test cases for JPK money normalization.
  */
+#[TestDox('iWorks KPiR JPK money normalization')]
 class IworksJpkTest extends TestCase {
 
 	/**

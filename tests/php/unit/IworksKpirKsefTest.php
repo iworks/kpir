@@ -9,6 +9,7 @@
  * @package KPIR
  */
 
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 require_once dirname( __DIR__, 3 ) . '/includes/iworks/kpir/class-iworks-kpir-ksef.php';
@@ -16,6 +17,7 @@ require_once dirname( __DIR__, 3 ) . '/includes/iworks/kpir/class-iworks-kpir-ks
 /**
  * Test cases for the KSeF XML field value resolver.
  */
+#[TestDox('iWorks KPiR KSeF XML field mapping')]
 class IworksKpirKsefTest extends TestCase {
 
 	/**

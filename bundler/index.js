@@ -45,8 +45,10 @@ function printError(error) {
 async function build(flavor) {
   const start = Date.now();
   try {
-    const steps = flavor === "wporg" ? 7 : 6;
+    const steps = 7;
     const bar = new ProgressBar(steps);
+    bar.tick("tests");
+    await testQuiet();
     bar.tick("clean");
     await cleanCompiled();
     bar.tick("prettier");
@@ -57,22 +59,6 @@ async function build(flavor) {
     await makePot(flavor === "github");
     bar.tick("zip");
     await makeZip(flavor);
-    if (flavor === "wporg") {
-      bar.tick("plugin-check");
-      await pluginCheck(config.name, config.version, {
-        // The plugin name "KPiR" is intentionally short (4 letters) — it is
-        // the product brand. PCP requires ≥5 latin letters in the name to
-        // derive the initial slug, which does not apply here.
-        ignoreCodes: [
-          "plugin_header_unsupported_plugin_name",
-          // Template parts receive $args from get_template_part() — that name
-          // is a WordPress contract and must stay. PCP's prefix scanner
-          // cannot derive "kpir" from the 4-letter plugin name, so template
-          // assignments ($args, $kpir_atts, …) are reported as non-prefixed.
-          "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
-        ],
-      });
-    }
     bar.tick("done");
     log(
       `BUILD OK (${flavor}) in ${((Date.now() - start) / 1000).toFixed(2)}s`,
@@ -157,7 +143,38 @@ function dev() {
 }
 
 /**
- * PHPUnit (grunt `test` parity, jshint dropped).
+ * Run PHPUnit quietly (dots only) and throw on failure — used as the
+ * first build step. Verbose testdox output remains on `bun run test`.
+ *
+ * @throws {Error} When any test fails or PHPUnit cannot run.
+ */
+async function testQuiet() {
+  const bin = existsSync(join(root, "vendor/bin/phpunit"))
+    ? join(root, "vendor/bin/phpunit")
+    : "phpunit";
+  const result = await spawnAsync(
+    bin,
+    ["--configuration", "tests/php/phpunit.xml", "--colors=never"],
+    "PHPUnit",
+    false,
+  );
+  const summary = result.stdout
+    .split("\n")
+    .filter((line) => /^(OK|FAILURES|ERRORS|WARNINGS)/.test(line.trim()))
+    .join("; ");
+  if (result.code !== 0) {
+    console.log(result.stdout.trim());
+    console.error(result.stderr.trim());
+    throw new Error(
+      summary ||
+        "If phpunit is not installed, run `composer install` or set up a WordPress test environment (see tests/php/bootstrap.php).",
+    );
+  }
+  log(`tests ${summary}`, "i");
+}
+
+/**
+ * PHPUnit with full testdox output (bun run test).
  */
 async function test() {
   const bin = existsSync(join(root, "vendor/bin/phpunit"))
@@ -165,7 +182,12 @@ async function test() {
     : "phpunit";
   const result = await spawnAsync(
     bin,
-    ["--configuration", "tests/php/phpunit.xml", "--colors=always"],
+    [
+      "--configuration",
+      "tests/php/phpunit.xml",
+      "--colors=always",
+      "--testdox",
+    ],
     "PHPUnit",
     false,
   );
@@ -225,10 +247,21 @@ async function pcp() {
   if (!existsSync(zipPath)) {
     log("pcp — no wporg ZIP found, building first…", "i");
     await build("wporg");
-    return;
   }
   try {
-    await pluginCheck(config.name, config.version);
+    await pluginCheck(config.name, config.version, {
+      // The plugin name "KPiR" is intentionally short (4 letters) — it is
+      // the product brand. PCP requires ≥5 latin letters in the name to
+      // derive the initial slug, which does not apply here.
+      ignoreCodes: [
+        "plugin_header_unsupported_plugin_name",
+        // Template parts receive $args from get_template_part() — that name
+        // is a WordPress contract and must stay. PCP's prefix scanner
+        // cannot derive "kpir" from the 4-letter plugin name, so template
+        // assignments ($args, $kpir_atts, …) are reported as non-prefixed.
+        "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound",
+      ],
+    });
   } catch (error) {
     printError(error);
     process.exit(1);

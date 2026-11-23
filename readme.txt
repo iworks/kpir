@@ -83,6 +83,13 @@ Project maintained on GitHub at [iworks/kpir](https://github.com/iworks/kpir).
 * Secured all database queries with `$wpdb->prepare()`.
 * The [iWorks Options](https://github.com/iworks/wordpress-options-class) module has been updated to 3.1.2.
 
+= 1.3.1 - 2026-11-23 =
+* Added country code detection for foreign NIPs in JPK V7M (3) reports - leading ISO 3166-1 letters (e.g. `CZ`) are used as `KodKrajuNadaniaTIN` instead of the default `PL`.
+* Added contractor NIP in the "Contractor" column on the invoice admin list.
+* Fixed fatal error when generating JPK XML with an invalid month parameter.
+* Fixed fatal error when generating JPK XML for invoices with missing amount or VAT data.
+* Fixed broken loops in JPK XML templates (summary and income rows could be generated incorrectly).
+
 = 1.2.0 - 2026-03-24 =
 * Added KSeF number to JPK reports.
 * Added JPK V7M (3) support.

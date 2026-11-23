@@ -16,17 +16,17 @@
 
 ## Files (`bundler/`)
 
-| File               | Role                                                                                     |
-| ------------------ | ---------------------------------------------------------------------------------------- |
-| `index.js`         | Modes: `dev` (default) / `js` / `css` / `build` / `build:wporg` / `build:github` / `make-pot` / `pcp` / `test` |
-| `config.mjs`       | Paths, names (from `package.json`), placeholder patterns, release copy rules per flavor  |
-| `pipelines.mjs`    | Asset pipelines: JS concat+min, SCSS compile+concat+min; prettier pass; clean            |
-| `tools.mjs`        | In-process APIs (prettier, sass, terser, clean-css, concat, atomic writes, glob helpers) |
-| `makeZip.mjs`      | Staging copy → placeholder replacement → ZIP (archiver, level 9)                          |
-| `makePot.mjs`      | wp-cli i18n: `make-pot` → `update-po` (→ `make-mo` for github)                            |
-| `pluginCheck.mjs`  | Plugin Check (PCP) on the wporg release; summary tables; `plugin-check.log`               |
-| `spawnAsync.mjs`   | `child_process.spawn` wrapper with captured output                                        |
-| `consoleHelpers.mjs`, `progressBar.mjs` | Logging, timing, build progress bar                                  |
+| File                                    | Role                                                                                                           |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `index.js`                              | Modes: `dev` (default) / `js` / `css` / `build` / `build:wporg` / `build:github` / `make-pot` / `pcp` / `test` |
+| `config.mjs`                            | Paths, names (from `package.json`), placeholder patterns, release copy rules per flavor                        |
+| `pipelines.mjs`                         | Asset pipelines: JS concat+min, SCSS compile+concat+min; prettier pass; clean                                  |
+| `tools.mjs`                             | In-process APIs (prettier, sass, terser, clean-css, concat, atomic writes, glob helpers)                       |
+| `makeZip.mjs`                           | Staging copy → placeholder replacement → ZIP (archiver, level 9)                                               |
+| `makePot.mjs`                           | wp-cli i18n: `make-pot` → `update-po` (→ `make-mo` for github)                                                 |
+| `pluginCheck.mjs`                       | Plugin Check (PCP) on the wporg release; summary tables; `plugin-check.log`                                    |
+| `spawnAsync.mjs`                        | `child_process.spawn` wrapper with captured output                                                             |
+| `consoleHelpers.mjs`, `progressBar.mjs` | Logging, timing, build progress bar                                                                            |
 
 All names derive from `package.json` (`name`, `title`, `version`,
 `homepage`, `repository.website`, `requires`, `tested`, `tags`,
@@ -48,41 +48,45 @@ All names derive from `package.json` (`name`, `title`, `version`,
 
 ## Modes (`bun run ...`)
 
-| Command                | Description                                                                 |
-| ---------------------- | --------------------------------------------------------------------------- |
-| `bun run dev`          | Watcher: rebuild assets on JS/SCSS change; no ZIP, no i18n                   |
-| `bun run js`           | JS pipeline only (prettier + concat + terser)                                |
-| `bun run css`          | CSS pipeline only (sass + concat + clean-css)                                |
-| `bun run build`        | Both flavors: **github first**, then wporg (with Plugin Check)               |
-| `bun run build:wporg`  | Production → `release/wporg/{name}.zip` + Plugin Check                        |
-| `bun run build:github` | Production + `.mo` → `release/github/{name}.zip`                              |
-| `bun run make-pot`     | Translations only (`.pot` + `.po` update)                                    |
-| `bun run pcp`          | Plugin Check only — reuses the existing wporg ZIP, builds it first if missing |
-| `bun run test`         | PHPUnit (`tests/php/phpunit.xml`; `vendor/bin/phpunit` if present)            |
+| Command                | Description                                                                            |
+| ---------------------- | -------------------------------------------------------------------------------------- |
+| `bun run dev`          | Watcher: rebuild assets on JS/SCSS change; no ZIP, no i18n                             |
+| `bun run js`           | JS pipeline only (prettier + concat + terser)                                          |
+| `bun run css`          | CSS pipeline only (sass + concat + clean-css)                                          |
+| `bun run build`        | Both flavors: **github first**, then wporg                                             |
+| `bun run build:wporg`  | Production → `release/wporg/{name}.zip`                                                |
+| `bun run build:github` | Production + `.mo` → `release/github/{name}.zip`                                       |
+| `bun run make-pot`     | Translations only (`.pot` + `.po` update)                                              |
+| `bun run pcp`          | Plugin Check only — reuses the existing wporg ZIP, builds it first if missing          |
+| `bun run test`         | PHPUnit with testdox output (`tests/php/phpunit.xml`; `vendor/bin/phpunit` if present) |
 
 ## Build pipeline (`bun run build:wporg`, 7 steps)
 
-1. **clean** — remove `languages/*.mo`;
-2. **prettier** — format sources in place (`assets/scripts/admin/src/**/*.js`,
+1. **tests** — PHPUnit in quiet mode (dots + summary only); the build
+   **fails on any failing test**; verbose testdox output remains on
+   `bun run test`;
+2. **clean** — remove `languages/*.mo`;
+3. **prettier** — format sources in place (`assets/scripts/admin/src/**/*.js`,
    `bundler/**/*.{js,mjs}`, root `*.js`) — the build rewrites sources by design;
-3. **assets** — JS + CSS pipelines (see above);
-4. **i18n** — wp-cli `i18n make-pot` → `languages/{name}.pot`, then
+4. **assets** — JS + CSS pipelines (see above);
+5. **i18n** — wp-cli `i18n make-pot` → `languages/{name}.pot`, then
    `i18n update-po` per existing `.po`; `make-mo` only in `build:github`;
    a timestamp-only `.pot` diff is detected and reverted;
-5. **zip** — staging copy → placeholder replacement →
+6. **zip** — staging copy → placeholder replacement →
    `release/{flavor}/{version}/{name}/` → `release/{flavor}/{name}.zip`;
-6. **plugin-check** (wporg only) — copies the staged release into the local
-   WordPress plugins dir under the real slug and runs `wp plugin check
-   --categories=plugin_repo --format=csv` (PCP) against it; prints detailed
-   findings + summary tables (by file, by check code); writes the raw CSV to
-   `plugin-check.log` (gitignored); the build **fails on any ERROR**. The
-   vendored iWorks submodule (`includes/iworks/options`) is excluded — it
-   lives in an upstream repo;
 7. **done** — progress bar + total time; any failure prints `BUILD FAILED`,
    exit 1.
 
-`bun run build` runs **github first**, then wporg, so the final
-PCP/symlink state reflects the wporg release.
+`bun run build` runs **github first**, then wporg. Plugin Check (PCP) is
+**not** part of the build — run it separately with `bun run pcp`, which
+builds the wporg ZIP first if missing, symlinks the staged release into the
+plugins dir under the real slug and runs `wp plugin check
+--categories=plugin_repo --format=csv` (PCP) against it; prints detailed
+findings + summary tables (by file, by check code); writes the raw CSV to
+`plugin-check.log` (gitignored); **fails on any ERROR**. The vendored iWorks
+submodule (`includes/iworks/options`) is excluded — it lives in an upstream
+repo.
+
 Env vars: `PLUGIN_CHECK_SKIP=1` (skip), `PLUGIN_CHECK_PLUGINS_DIR`
 (plugins dir, defaults to the repo's parent), `PLUGIN_SYMLINK_SKIP=1`
 (no release symlink).
