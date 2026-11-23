@@ -193,6 +193,17 @@ class iworks_kpir_posttypes {
 					if ( is_string( $value ) ) {
 						$value = trim( wp_kses_post( $value ) );
 					} elseif ( is_array( $value ) ) {
+						/**
+						 * money fields: only integer/fractional parts are
+						 * expected — cast them to integers so that no
+						 * markup or other payload can be stored.
+						 */
+						if ( isset( $value['integer'], $value['fractional'] ) ) {
+							$value = array(
+								'integer'    => intval( $value['integer'] ),
+								'fractional' => intval( $value['fractional'] ),
+							);
+						}
 						if (
 							isset( $value['integer'] ) && 0 == $value['integer']
 							&& isset( $value['fractional'] ) && 0 == $value['fractional']
