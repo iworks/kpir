@@ -28,7 +28,7 @@ echo PHP_EOL;
 /**
  * numbers
  */
-for ( $kpir_i = 10; $i < 37; $kpir_i++ ) {
+for ( $kpir_i = 10; $kpir_i < 37; $kpir_i++ ) {
 	$kpir_key = sprintf( 'K_%d', $kpir_i );
 	if ( isset( $args[ $kpir_key ] ) ) {
 		echo "\t";

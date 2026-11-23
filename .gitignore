@@ -23,7 +23,6 @@ package-lock.json
 
 # ─── Local environment & editor junk ──────────────────────────────────────────
 local.*
-o
 .playwright-mcp/
 prepros.json
 .smbdelete*

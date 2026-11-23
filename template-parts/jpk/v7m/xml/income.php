@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 	<tns:DataWystawienia><?php echo esc_xml( $args['create_date'] ); ?></tns:DataWystawienia>
 	<tns:DataSprzedazy><?php echo esc_xml( $args['sale_date'] ); ?></tns:DataSprzedazy>
 <?php
-for ( $kpir_i = 10; $i < 37; $kpir_i++ ) {
+for ( $kpir_i = 10; $kpir_i < 37; $kpir_i++ ) {
 	$kpir_key = sprintf( 'K_%d', $kpir_i );
 	if ( isset( $args[ $kpir_key ] ) ) {
 		?>

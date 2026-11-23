@@ -254,6 +254,12 @@ abstract class iworks_kpir_jpk {
 		 * money & VAT
 		 */
 		$data['money'] = $money = get_post_meta( $ID, 'iworks_kpir_expense_purchase', true );
+		if ( empty( $money ) || ! is_array( $money ) ) {
+			$money = $data['money'] = array(
+				'integer'    => 0,
+				'fractional' => 0,
+			);
+		}
 		$data['vat']   = $vat   = get_post_meta( $ID, 'iworks_kpir_expense_vat', true );
 		if ( empty( $vat ) || is_string( $vat ) ) {
 			$vat = $data['vat'] = array(
@@ -280,9 +286,9 @@ abstract class iworks_kpir_jpk {
 				/**
 				 * recalculate if rest > 100
 				 */
-				if ( 100 < $vat['fractional'] ) {
-					$vat['fractional'] = $v % 100;
-					$vat['integer']    = round( ( $v - $vat['fractional'] ) / 100 );
+				if ( 100 <= $vat['fractional'] ) {
+					$vat['integer']   += intdiv( $vat['fractional'], 100 );
+					$vat['fractional'] = $vat['fractional'] % 100;
 				}
 				/**
 				 * Cut costs by factor
@@ -356,6 +362,12 @@ abstract class iworks_kpir_jpk {
 		$data['invoice_number'] = get_the_title();
 		$type                   = get_post_meta( $ID, 'iworks_kpir_income_vat_type', true );
 		$data['money']          = $money                              = get_post_meta( $ID, 'iworks_kpir_income_sale', true );
+		if ( empty( $money ) || ! is_array( $money ) ) {
+			$money = $data['money'] = array(
+				'integer'    => 0,
+				'fractional' => 0,
+			);
+		}
 		switch ( $type ) {
 			case 'c00':
 				$data['K_10']                       = sprintf( '%d.%02d', $money['integer'], $money['fractional'] );
@@ -375,6 +387,12 @@ abstract class iworks_kpir_jpk {
 				 * VAT
 				 */
 				$money                                  = get_post_meta( $ID, 'iworks_kpir_income_vat', true );
+				if ( empty( $money ) || ! is_array( $money ) ) {
+					$money = array(
+						'integer'    => 0,
+						'fractional' => 0,
+					);
+				}
 				$data['K_20']                           = sprintf( '%d.%02d', $money['integer'], $money['fractional'] );
 				$this->sum['vat_income']['integer']    += $money['integer'];
 				$this->sum['vat_income']['fractional'] += $money['fractional'];

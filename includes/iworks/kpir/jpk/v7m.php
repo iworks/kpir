@@ -117,6 +117,12 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 		$year_month = preg_replace( '/[^0-9\-]/', '', sanitize_text_field( wp_unslash( $_REQUEST['m'] ) ) );
 		$year_month = $this->validate_year_month( $year_month );
 		/**
+		 * error
+		 */
+		if ( is_wp_error( $year_month ) ) {
+			die( esc_html( $year_month->get_error_message() ) );
+		}
+		/**
 		 * Choose template
 		 */
 		$template = 'jpk/v7m/xml';
@@ -136,12 +142,6 @@ class iworks_kpir_jpk_v7m extends iworks_kpir_jpk {
 			&& 1 < intval( preg_replace( '/^.+\-/', '', $year_month ) )
 		) {
 			$template = 'jpk/v7m-3/xml';
-		}
-		/**
-		 * error
-		 */
-		if ( is_wp_error( $year_month ) ) {
-			die( esc_html( $year_month->get_error_message() ) );
 		}
 		$purpose            = filter_input( INPUT_GET, 'purpose', FILTER_VALIDATE_INT );
 		$date               = explode( '-', $year_month );
