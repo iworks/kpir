@@ -202,6 +202,15 @@ abstract class iworks_kpir_jpk {
 	protected function get_contractor( $contractor_id ) {
 		if ( ! isset( $this->contractors[ $contractor_id ] ) ) {
 			$nip = get_post_meta( $contractor_id, 'iworks_kpir_contractor_data_nip', true );
+			/**
+			 * foreign NIP may start with an ISO 3166-1 alpha-2 country code,
+			 * e.g. "CZ12345678" — use it as KodKrajuNadaniaTIN
+			 */
+			$country = 'PL';
+			if ( ! empty( $nip ) && preg_match( '/^[A-Za-z]{2}/', $nip, $matches ) ) {
+				$country = strtoupper( $matches[0] );
+				$nip     = substr( $nip, 2 );
+			}
 			if ( empty( $nip ) ) {
 				$nip = 'brak';
 			} else {
@@ -217,6 +226,7 @@ abstract class iworks_kpir_jpk {
 			 */
 			$this->contractors[ $contractor_id ] = array(
 				'nip'     => $nip,
+				'country' => $country,
 				'name'    => $name,
 				'address' => preg_replace( '/ {2,}/', ' ', $address ),
 			);

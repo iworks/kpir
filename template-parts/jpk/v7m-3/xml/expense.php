@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <ZakupWiersz>
 	<LpZakupu><?php echo esc_xml( $args['counter'] ); ?></LpZakupu>
-	<KodKrajuNadaniaTIN>PL</KodKrajuNadaniaTIN>
+	<KodKrajuNadaniaTIN><?php echo esc_xml( $args['contractor']['country'] ); ?></KodKrajuNadaniaTIN>
 	<NrDostawcy><?php echo esc_xml( $args['contractor']['nip'] ); ?></NrDostawcy>
 	<NazwaDostawcy><?php echo esc_xml( $args['contractor']['name'] ); ?></NazwaDostawcy>
 	<DowodZakupu><?php echo esc_xml( $args['invoice_number'] ); ?></DowodZakupu>

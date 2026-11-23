@@ -859,6 +859,7 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 				if ( empty( $id ) ) {
 					echo '-';
 				} else {
+					$nip = get_post_meta( $id, 'iworks_kpir_contractor_data_nip', true );
 					printf(
 						'<a href="%s">%s</a>',
 						esc_url(
@@ -872,6 +873,9 @@ class iworks_kpir_posttypes_invoice extends iworks_kpir_posttypes {
 						),
 						esc_html( get_post_meta( $id, 'iworks_kpir_contractor_data_full_name', true ) )
 					);
+					if ( ! empty( $nip ) ) {
+						printf( '<br />%s', esc_html( $nip ) );
+					}
 				}
 				break;
 			case 'expense':
